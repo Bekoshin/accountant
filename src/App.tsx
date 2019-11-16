@@ -7,6 +7,8 @@ import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom
 
 import {Provider} from 'react-redux';
 
+import 'reflect-metadata';
+
 import store from './store/store';
 
 import Welcome from './components/screens/welcome/welсome';
