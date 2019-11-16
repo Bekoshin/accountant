@@ -9,11 +9,13 @@ import store from './store/store';
 import Welcome from './components/screens/welcome/welсome';
 import Home from './components/screens/home/home';
 import Shopping from './components/screens/shopping/shopping';
+import Analytics from './components/screens/analytics/analytics';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
     Home: Home,
     Shopping: Shopping,
+    Analytics: Analytics,
   },
   {
     initialRouteName: 'Home',
