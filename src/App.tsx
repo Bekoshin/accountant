@@ -8,10 +8,12 @@ import store from './store/store';
 
 import Welcome from './components/screens/welcome/welсome';
 import Home from './components/screens/home/home';
+import Shopping from './components/screens/shopping/shopping';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
     Home: Home,
+    Shopping: Shopping,
   },
   {
     initialRouteName: 'Home',
