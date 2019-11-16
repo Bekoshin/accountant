@@ -3,13 +3,14 @@ import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 
-export interface HomeProps {
+export interface WelcomeProps {
   navigation: any;
 }
 
-class Home extends React.PureComponent<HomeProps> {
-  componentDidMount(): void {
+class Welcome extends React.PureComponent<WelcomeProps> {
+  componentDidMount() {
     console.log('WELCOME DID MOUNT');
+    this.props.navigation.navigate('App');
   }
 
   componentWillUnmount(): void {
@@ -19,7 +20,7 @@ class Home extends React.PureComponent<HomeProps> {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Home</Text>
+        <Text>Welcome Screen</Text>
       </View>
     );
   }
@@ -30,4 +31,4 @@ const mapStateToProps = (state: AppState) => ({});
 export default connect(
   mapStateToProps,
   {},
-)(Home);
+)(Welcome);

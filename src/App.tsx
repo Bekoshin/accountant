@@ -1,21 +1,29 @@
 import React, {Component} from 'react';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+
 import {Provider} from 'react-redux';
 
 import store from './store/store';
 
+import Welcome from './components/screens/welcome/welсome';
+import Home from './components/screens/home/home';
+
+const BottomNavigator = createMaterialBottomTabNavigator(
+  {
+    Home: Home,
+  },
+  {
+    initialRouteName: 'Home',
+  },
+);
+
 const AppContainer = createAppContainer(
-  createMaterialBottomTabNavigator(
-    {},
+  createSwitchNavigator(
+    {
+      Welcome: Welcome,
+      App: BottomNavigator,
+    },
     {
       initialRouteName: 'Welcome',
     },
@@ -31,5 +39,3 @@ export default class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({});
