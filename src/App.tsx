@@ -10,12 +10,14 @@ import Welcome from './components/screens/welcome/welсome';
 import Home from './components/screens/home/home';
 import Shopping from './components/screens/shopping/shopping';
 import Analytics from './components/screens/analytics/analytics';
+import Settings from './components/screens/settings/settings';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
     Home: Home,
     Shopping: Shopping,
     Analytics: Analytics,
+    Settings: Settings,
   },
   {
     initialRouteName: 'Home',
