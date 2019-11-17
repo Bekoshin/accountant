@@ -6,6 +6,7 @@ import StorageHandler from '../../../storage/StorageHandler';
 import Expense from '../../../entities/Expense';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
+import {actionTypes} from '../../../store/actionTypes';
 
 export interface WelcomeProps {
   navigation: any;
@@ -42,12 +43,13 @@ const loadAllExpenses = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let expenses: Expense[] = await storageHandler.getAllExpensesFromRepo();
-  console.log('expenses: ', expenses);
+  dispatch({
+    type: actionTypes.EXPENSES_LOADED,
+    expenses: expenses,
+  });
 };
 
-
 const mapStateToProps = (state: AppState) => ({
-  expenses: state.expense.expenses,
 });
 
 export default connect(
