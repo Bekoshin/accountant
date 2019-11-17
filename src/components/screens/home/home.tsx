@@ -2,14 +2,14 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
-import Expense from '../../../entities/Expense';
+import Operation from '../../../entities/Operation';
 import NoExpenses from '../../noExpenses/noExpenses';
 import {FAB} from 'react-native-paper';
 
 export interface HomeProps {
   navigation: any;
 
-  expenses: Expense[];
+  expenses: Operation[];
 }
 
 class Home extends React.PureComponent<HomeProps> {

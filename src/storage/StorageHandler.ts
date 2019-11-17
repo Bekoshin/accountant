@@ -5,7 +5,7 @@ import {
   Repository,
 } from 'typeorm/browser';
 import Category from '../entities/Category';
-import Expense from '../entities/Expense';
+import Operation from '../entities/Operation';
 
 const DATABASE_NAME = 'main.db';
 
@@ -13,7 +13,7 @@ export default class StorageHandler {
   private _connection: Connection | undefined;
 
   private _categoryRepo: Repository<Category> | undefined;
-  private _expenseRepo: Repository<Expense> | undefined;
+  private _expenseRepo: Repository<Operation> | undefined;
 
   constructor() {
     this._connection = undefined;
@@ -33,7 +33,7 @@ export default class StorageHandler {
       location: 'default',
       logging: ['error', 'query', 'schema'],
       synchronize: true,
-      entities: [Category, Expense],
+      entities: [Category, Operation],
     });
   };
 
@@ -42,11 +42,11 @@ export default class StorageHandler {
   };
 
   private initExpenseRepo = () => {
-    this._expenseRepo = getRepository(Expense);
+    this._expenseRepo = getRepository(Operation);
   };
 
-  public getAllExpensesFromRepo = async (): Promise<Expense[]> => {
-    let expenses: Expense[] = [];
+  public getAllExpensesFromRepo = async (): Promise<Operation[]> => {
+    let expenses: Operation[] = [];
     if (this._expenseRepo) {
       expenses = await this._expenseRepo.find();
     }

@@ -7,8 +7,15 @@ import {
 } from 'typeorm/browser';
 import Category from './Category';
 
-@Entity('expenses')
-export default class Expense {
+@Entity('operations')
+export default class Operation {
+  get note(): string {
+    return this._note;
+  }
+
+  set note(value: string) {
+    this._note = value;
+  }
   @PrimaryColumn({name: 'id', type: 'bigint'})
   private _id: number;
 
@@ -22,11 +29,21 @@ export default class Expense {
   @Column({name: 'date', type: 'datetime'})
   private _date: Date;
 
-  constructor(id: number, name: string, category: Category, date: Date) {
+  @Column({name: 'note', type: 'varchar'})
+  private _note: string;
+
+  constructor(
+    id: number,
+    name: string,
+    category: Category,
+    date: Date,
+    note: string,
+  ) {
     this._id = id;
     this._name = name;
     this._category = category;
     this._date = date;
+    this._note = note;
   }
 
   get id(): number {

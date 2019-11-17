@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import StorageHandler from '../../../storage/StorageHandler';
-import Expense from '../../../entities/Expense';
+import Operation from '../../../entities/Operation';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {actionTypes} from '../../../store/actionTypes';
@@ -42,7 +42,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
 const loadAllExpenses = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let expenses: Expense[] = await storageHandler.getAllExpensesFromRepo();
+  let expenses: Operation[] = await storageHandler.getAllExpensesFromRepo();
   dispatch({
     type: actionTypes.EXPENSES_LOADED,
     expenses: expenses,
