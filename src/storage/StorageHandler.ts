@@ -5,6 +5,7 @@ import {
   Repository,
 } from 'typeorm/browser';
 import Category from '../entities/Category';
+import Expense from '../entities/Expense';
 
 const DATABASE_NAME = 'main.db';
 
@@ -12,6 +13,7 @@ export default class StorageHandler {
   private _connection: Connection | undefined;
 
   private _categoryRepo: Repository<Category> | undefined;
+  private _expenseRepo: Repository<Expense> | undefined;
 
   constructor() {
     this._connection = undefined;
@@ -25,11 +27,15 @@ export default class StorageHandler {
       location: 'default',
       logging: ['error', 'query', 'schema'],
       synchronize: true,
-      entities: [Category],
+      entities: [Category, Expense],
     });
   };
 
-  public initCategoryRep = () => {
+  public initCategoryRepo = () => {
     this._categoryRepo = getRepository(Category);
+  };
+
+  public initExpenseRepo = () => {
+    this._expenseRepo = getRepository(Expense);
   };
 }

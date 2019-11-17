@@ -3,13 +3,29 @@ import {Entity, PrimaryColumn, Column} from 'typeorm/browser';
 @Entity('categories')
 export default class Category {
   @PrimaryColumn('bigint')
-  id: number;
+  private _id: number;
 
   @Column('varchar')
-  name: string;
+  private _name: string;
 
   constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
+    this._id = id;
+    this._name = name;
+  }
+
+  get id(): number {
+    return this._id;
+  }
+
+  set id(value: number) {
+    this._id = value;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
   }
 }
