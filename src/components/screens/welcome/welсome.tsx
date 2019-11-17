@@ -2,14 +2,18 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
+import StorageHandler from '../../../storage/StorageHandler';
 
 export interface WelcomeProps {
   navigation: any;
 }
 
 class Welcome extends React.PureComponent<WelcomeProps> {
-  componentDidMount() {
+  async componentDidMount() {
     console.log('WELCOME DID MOUNT');
+    let storageHandler = new StorageHandler();
+    await storageHandler.connect();
+
     this.props.navigation.navigate('App');
   }
 

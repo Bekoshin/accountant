@@ -34,7 +34,11 @@ const BottomNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'shopping-cart'} />
+            <Icon
+              style={[{color: tintColor}]}
+              size={25}
+              name={'shopping-cart'}
+            />
           </View>
         ),
       },
