@@ -20,7 +20,13 @@ export default class StorageHandler {
     this._categoryRepo = undefined;
   }
 
-  public connect = async () => {
+  public init = async () => {
+    await this.connect();
+    await this.initCategoryRepo();
+    await this.initExpenseRepo();
+  };
+
+  private connect = async () => {
     this._connection = await createConnection({
       type: 'react-native',
       database: DATABASE_NAME,
@@ -31,11 +37,19 @@ export default class StorageHandler {
     });
   };
 
-  public initCategoryRepo = () => {
+  private initCategoryRepo = () => {
     this._categoryRepo = getRepository(Category);
   };
 
-  public initExpenseRepo = () => {
+  private initExpenseRepo = () => {
     this._expenseRepo = getRepository(Expense);
+  };
+
+  public getAllExpensesFromRepo = async (): Promise<Expense[]> => {
+    let expenses: Expense[] = [];
+    if (this._expenseRepo) {
+      expenses = await this._expenseRepo.find();
+    }
+    return expenses;
   };
 }
