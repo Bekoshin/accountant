@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
+import {createStackNavigator} from 'react-navigation-stack';
 
 import {Provider} from 'react-redux';
 
@@ -16,15 +17,37 @@ import Home from './components/screens/home/home';
 import Shopping from './components/screens/shopping/shopping';
 import Analytics from './components/screens/analytics/analytics';
 import Settings from './components/screens/settings/settings';
+import OperationScreen from './components/screens/operation/operation';
 
-const BottomNavigator = createMaterialBottomTabNavigator(
-  {
+const HomeStackNavigator = createStackNavigator({
     Home: {
       screen: Home,
       navigationOptions: {
+        header: null,
+      },
+    },
+    Operation: {
+      screen: OperationScreen,
+    },
+  },
+  {
+    initialRouteName: 'Home',
+  },
+);
+
+const BottomNavigator = createMaterialBottomTabNavigator(
+  {
+    HomeStackNavigator: {
+      screen: HomeStackNavigator,
+      navigationOptions: {
+        tabBarLabel: 'Home',
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'home'} />
+            <Icon
+              style={[{color: tintColor}]}
+              size={25}
+              name={'home'}
+            />
           </View>
         ),
       },
@@ -48,7 +71,7 @@ const BottomNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'pie-chart'} />
+            <Icon style={[{color: tintColor}]} size={25} name={'pie-chart'}/>
           </View>
         ),
       },
@@ -58,14 +81,14 @@ const BottomNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'cog'} />
+            <Icon style={[{color: tintColor}]} size={25} name={'cog'}/>
           </View>
         ),
       },
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'HomeStackNavigator',
   },
 );
 
@@ -85,7 +108,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <AppContainer/>
       </Provider>
     );
   }

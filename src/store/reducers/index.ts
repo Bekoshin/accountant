@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux';
 import home from './home';
-import expense from './expense';
+import operation from './operation';
 
 export default combineReducers({
   home,
-  expense,
+  operation,
 });

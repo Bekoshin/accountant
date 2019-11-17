@@ -1,3 +1,3 @@
 export const actionTypes = {
-  EXPENSES_LOADED: 'expenses_loaded',
+  OPERATIONS_LOADED: 'operations_loaded',
 };

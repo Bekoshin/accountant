@@ -11,7 +11,7 @@ import {actionTypes} from '../../../store/actionTypes';
 export interface WelcomeProps {
   navigation: any;
 
-  loadAllExpenses: (storageHandler: StorageHandler) => void;
+  loadAllOperations: (storageHandler: StorageHandler) => void;
 }
 
 class Welcome extends React.PureComponent<WelcomeProps> {
@@ -21,7 +21,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     console.log('WELCOME DID MOUNT');
     this._storageHandler = new StorageHandler();
     await this._storageHandler.init();
-    await this.props.loadAllExpenses(this._storageHandler);
+    await this.props.loadAllOperations(this._storageHandler);
 
     this.props.navigation.navigate('App');
   }
@@ -39,13 +39,13 @@ class Welcome extends React.PureComponent<WelcomeProps> {
   }
 }
 
-const loadAllExpenses = (
+const loadAllOperations = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let expenses: Operation[] = await storageHandler.getAllExpensesFromRepo();
+  let operations: Operation[] = await storageHandler.getAllOperationsFromRepo();
   dispatch({
-    type: actionTypes.EXPENSES_LOADED,
-    expenses: expenses,
+    type: actionTypes.OPERATIONS_LOADED,
+    operations: operations,
   });
 };
 
@@ -55,7 +55,7 @@ const mapStateToProps = (state: AppState) => ({
 export default connect(
   mapStateToProps,
   {
-    loadAllExpenses: (storageHandler: StorageHandler) =>
-      loadAllExpenses(storageHandler),
+    loadAllOperations: (storageHandler: StorageHandler) =>
+      loadAllOperations(storageHandler),
   },
 )(Welcome);

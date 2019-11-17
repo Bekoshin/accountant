@@ -13,7 +13,7 @@ export default class StorageHandler {
   private _connection: Connection | undefined;
 
   private _categoryRepo: Repository<Category> | undefined;
-  private _expenseRepo: Repository<Operation> | undefined;
+  private _operationRepo: Repository<Operation> | undefined;
 
   constructor() {
     this._connection = undefined;
@@ -23,7 +23,7 @@ export default class StorageHandler {
   public init = async () => {
     await this.connect();
     await this.initCategoryRepo();
-    await this.initExpenseRepo();
+    await this.initOperationRepo();
   };
 
   private connect = async () => {
@@ -41,15 +41,15 @@ export default class StorageHandler {
     this._categoryRepo = getRepository(Category);
   };
 
-  private initExpenseRepo = () => {
-    this._expenseRepo = getRepository(Operation);
+  private initOperationRepo = () => {
+    this._operationRepo = getRepository(Operation);
   };
 
-  public getAllExpensesFromRepo = async (): Promise<Operation[]> => {
-    let expenses: Operation[] = [];
-    if (this._expenseRepo) {
-      expenses = await this._expenseRepo.find();
+  public getAllOperationsFromRepo = async (): Promise<Operation[]> => {
+    let operations: Operation[] = [];
+    if (this._operationRepo) {
+      operations = await this._operationRepo.find();
     }
-    return expenses;
+    return operations;
   };
 }

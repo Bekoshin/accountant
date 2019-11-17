@@ -9,7 +9,7 @@ import {FAB} from 'react-native-paper';
 export interface HomeProps {
   navigation: any;
 
-  expenses: Operation[];
+  operations: Operation[];
 }
 
 class Home extends React.PureComponent<HomeProps> {
@@ -26,11 +26,11 @@ class Home extends React.PureComponent<HomeProps> {
   }
 
   render() {
-    const {expenses} = this.props;
+    const {operations} = this.props;
 
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {expenses.length > 0 ? <Text>Home</Text> : <NoExpenses />}
+        {operations.length > 0 ? <Text>Home</Text> : <NoExpenses />}
         {this.renderFAB()}
       </View>
     );
@@ -44,7 +44,7 @@ class Home extends React.PureComponent<HomeProps> {
             icon: 'check',
             label: 'add operation',
             onPress: () => {
-              console.log('123');
+              this.props.navigation.navigate('Operation');
             },
           },
         ]}
@@ -58,7 +58,7 @@ class Home extends React.PureComponent<HomeProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  expenses: state.expense.expenses,
+  operations: state.operation.operations,
 });
 
 export default connect(
