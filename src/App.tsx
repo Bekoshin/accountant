@@ -19,35 +19,15 @@ import Analytics from './components/screens/analytics/analytics';
 import Settings from './components/screens/settings/settings';
 import OperationScreen from './components/screens/operation/operation';
 
-const HomeStackNavigator = createStackNavigator({
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Operation: {
-      screen: OperationScreen,
-    },
-  },
-  {
-    initialRouteName: 'Home',
-  },
-);
-
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
     HomeStackNavigator: {
-      screen: HomeStackNavigator,
+      screen: Home,
       navigationOptions: {
         tabBarLabel: 'Home',
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon
-              style={[{color: tintColor}]}
-              size={25}
-              name={'home'}
-            />
+            <Icon style={[{color: tintColor}]} size={25} name={'home'} />
           </View>
         ),
       },
@@ -92,11 +72,27 @@ const BottomNavigator = createMaterialBottomTabNavigator(
   },
 );
 
+const AppStackNavigator = createStackNavigator({
+    BottomNavigator: {
+      screen: BottomNavigator,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Operation: {
+      screen: OperationScreen,
+    },
+  },
+  {
+    initialRouteName: 'BottomNavigator',
+  },
+);
+
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       Welcome: Welcome,
-      App: BottomNavigator,
+      App: AppStackNavigator,
     },
     {
       initialRouteName: 'Welcome',
@@ -108,7 +104,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer/>
+        <AppContainer />
       </Provider>
     );
   }
