@@ -5,6 +5,7 @@ import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpenses from '../../noExpenses/noExpenses';
 import {FAB} from 'react-native-paper';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 export interface HomeProps {
   navigation: any;
@@ -15,6 +16,7 @@ export interface HomeProps {
 class Home extends React.PureComponent<HomeProps> {
   state = {
     open: false,
+    selectedIndex: 0,
   };
 
   componentDidMount(): void {
@@ -27,10 +29,14 @@ class Home extends React.PureComponent<HomeProps> {
 
   render() {
     const {operations} = this.props;
-
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         {operations.length > 0 ? <Text>Home</Text> : <NoExpenses />}
+        <SegmentedControlTab
+          values={['Day', 'Month', 'Year']}
+          selectedIndex={this.state.selectedIndex}
+          onTabPress={index => this.setState({selectedIndex: index})}
+        />
         {this.renderFAB()}
       </View>
     );
