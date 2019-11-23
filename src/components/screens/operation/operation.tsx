@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import NoExpenses from '../../noExpenses/noExpenses';
+import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
 
 export interface OperationProps {
   navigation: any;
@@ -25,7 +25,7 @@ class OperationScreen extends React.PureComponent<OperationProps> {
 
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {operations.length > 0 ? <Text>Operation</Text> : <NoExpenses />}
+        {operations.length > 0 ? <Text>Operation</Text> : <NoExpensesComponent />}
       </View>
     );
   }

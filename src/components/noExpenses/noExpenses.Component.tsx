@@ -1,8 +1,8 @@
 import {Text, View} from 'react-native';
 import React, {Component} from 'react';
-import styles from './styles';
+import styles from './noExpenses.styles';
 
-export default class NoExpenses extends Component{
+export default class NoExpensesComponent extends Component{
   render() {
     return (
       <View style={styles.mainContainer}>

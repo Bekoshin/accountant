@@ -1,11 +1,13 @@
 import React from 'react';
+import moment from 'moment';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import NoExpenses from '../../noExpenses/noExpenses';
+import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
 import {FAB} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import DateSelector from '../../dateSelector/dateSelector.Component';
 
 export interface HomeProps {
   navigation: any;
@@ -30,13 +32,14 @@ class Home extends React.PureComponent<HomeProps> {
   render() {
     const {operations} = this.props;
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {operations.length > 0 ? <Text>Home</Text> : <NoExpenses />}
+      <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <SegmentedControlTab
           values={['Day', 'Month', 'Year']}
           selectedIndex={this.state.selectedIndex}
           onTabPress={index => this.setState({selectedIndex: index})}
         />
+        <DateSelector type="year" date={moment()} />
+        {operations.length > 0 ? <Text>Home</Text> : <NoExpensesComponent />}
         {this.renderFAB()}
       </View>
     );

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import moment from 'moment';
+import 'moment/min/locales';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -51,7 +52,7 @@ const BottomNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'pie-chart'}/>
+            <Icon style={[{color: tintColor}]} size={25} name={'pie-chart'} />
           </View>
         ),
       },
@@ -61,7 +62,7 @@ const BottomNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'cog'}/>
+            <Icon style={[{color: tintColor}]} size={25} name={'cog'} />
           </View>
         ),
       },
@@ -72,7 +73,8 @@ const BottomNavigator = createMaterialBottomTabNavigator(
   },
 );
 
-const AppStackNavigator = createStackNavigator({
+const AppStackNavigator = createStackNavigator(
+  {
     BottomNavigator: {
       screen: BottomNavigator,
       navigationOptions: {
@@ -101,6 +103,10 @@ const AppContainer = createAppContainer(
 );
 
 export default class App extends Component {
+  componentWillMount() {
+    moment.locale('ru');
+  }
+
   render() {
     return (
       <Provider store={store}>
