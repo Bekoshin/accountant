@@ -9,16 +9,26 @@ import {FAB} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 
-export interface HomeProps {
+export type UnitOfDate = 'week' | 'month' | 'year';
+const UNITS_OF_DATE: UnitOfDate[] = ['week', 'month', 'year'];
+
+interface HomeProps {
   navigation: any;
 
   operations: Operation[];
 }
 
-class Home extends React.PureComponent<HomeProps> {
+interface HomeState {
+  open: boolean;
+  selectedIndex: number;
+  selectedDate: moment.Moment;
+}
+
+class Home extends React.PureComponent<HomeProps, HomeState> {
   state = {
     open: false,
-    selectedIndex: 0,
+    selectedIndex: 1,
+    selectedDate: moment(),
   };
 
   componentDidMount(): void {
@@ -31,14 +41,21 @@ class Home extends React.PureComponent<HomeProps> {
 
   render() {
     const {operations} = this.props;
+    let selectedIndex = this.state.selectedIndex;
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <SegmentedControlTab
-          values={['Day', 'Month', 'Year']}
-          selectedIndex={this.state.selectedIndex}
-          onTabPress={index => this.setState({selectedIndex: index})}
+          values={['Week', 'Month', 'Year']}
+          selectedIndex={selectedIndex}
+          onTabPress={index =>
+            this.setState({selectedIndex: index, selectedDate: moment()})
+          }
         />
-        <DateSelector type="year" date={moment()} />
+        <DateSelector
+          type={UNITS_OF_DATE[selectedIndex]}
+          date={this.state.selectedDate}
+          changeDate={date => this.setState({selectedDate: date})}
+        />
         {operations.length > 0 ? <Text>Home</Text> : <NoExpensesComponent />}
         {this.renderFAB()}
       </View>
