@@ -103,7 +103,7 @@ const AppContainer = createAppContainer(
 );
 
 export default class App extends Component {
-  componentWillMount() {
+  componentDidMount(): void {
     moment.locale('ru');
   }
 

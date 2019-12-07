@@ -45,7 +45,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <SegmentedControlTab
-          values={['Week', 'Month', 'Year']}
+          values={['Неделя', 'Месяц', 'Год']}
           selectedIndex={selectedIndex}
           onTabPress={index =>
             this.setState({selectedIndex: index, selectedDate: moment()})

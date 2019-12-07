@@ -3,16 +3,15 @@ import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
 import {Button, TextInput} from 'react-native-paper';
 
-export interface OperationProps {
+export interface CategoriesProps {
   navigation: any;
 
   operations: Operation[];
 }
 
-class OperationScreen extends React.PureComponent<OperationProps> {
+class CategoriesScreen extends React.PureComponent<CategoriesProps> {
   static navigationOptions = {
     title: 'Операция',
     headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
@@ -45,4 +44,4 @@ const mapStateToProps = (state: AppState) => ({
 export default connect(
   mapStateToProps,
   {},
-)(OperationScreen);
+)(CategoriesScreen);
