@@ -1,67 +1,69 @@
 import {
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm/browser';
 
 @Entity('categories')
 export default class Category {
-  @PrimaryColumn('bigint')
-  private _id: number;
+  @PrimaryGeneratedColumn()
+  private readonly _id: number | undefined;
 
   @Column('varchar')
   private _name: string;
 
-  @ManyToOne(type => Category, category => category.childCategories)
-  private _parentCategory: Category | null;
+  @ManyToOne(type => Category, category => category._childCategories)
+  @JoinColumn({name: 'parent_category_id'})
+  private _parentCategory: Category | undefined;
 
-  @OneToMany(type => Category, category => category.parentCategory)
-  private _childCategories: Category[] | null;
+  @OneToMany(type => Category, category => category._parentCategory)
+  private _childCategories: Category[] | undefined;
 
   constructor(
-    id: number,
     name: string,
-    subcategories?: Category[],
     parentCategory?: Category,
+    subcategories?: Category[],
+    id?: number,
   ) {
     this._id = id;
     this._name = name;
     if (subcategories) {
       this._childCategories = subcategories;
     } else {
-      this._childCategories = null;
+      this._childCategories = undefined;
     }
     if (parentCategory) {
       this._parentCategory = parentCategory;
     } else {
-      this._parentCategory = null;
+      this._parentCategory = undefined;
     }
   }
 
-  get parentCategory(): Category | null {
+  get parentCategory(): Category | undefined {
     return this._parentCategory;
   }
 
-  set parentCategory(value: Category | null) {
+  set parentCategory(value: Category | undefined) {
     this._parentCategory = value;
   }
 
-  get childCategories(): Category[] | null {
+  get childCategories(): Category[] | undefined {
     return this._childCategories;
   }
 
-  set childCategories(value: Category[] | null) {
-    this._childCategories = value;
+  public addChildCategory(category: Category) {
+    if (this._childCategories) {
+      this._childCategories.push(category);
+    } else {
+      this._childCategories = [category];
+    }
   }
 
-  get id(): number {
+  get id(): number | undefined {
     return this._id;
-  }
-
-  set id(value: number) {
-    this._id = value;
   }
 
   get name(): string {
