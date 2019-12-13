@@ -6,7 +6,7 @@ import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
 import {Button, TextInput} from 'react-native-paper';
 
-export interface OperationProps {
+interface OperationProps {
   navigation: any;
 
   operations: Operation[];

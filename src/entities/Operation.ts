@@ -3,20 +3,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Category from './Category';
 
 @Entity('operations')
 export default class Operation {
-  get note(): string {
-    return this._note;
-  }
-
-  set note(value: string) {
-    this._note = value;
-  }
-  @PrimaryColumn({name: 'id', type: 'bigint'})
+  @PrimaryGeneratedColumn({name: 'id', type: 'bigint'})
   private _id: number;
 
   @Column({name: 'name', type: 'varchar'})
@@ -76,5 +69,13 @@ export default class Operation {
 
   set date(value: Date) {
     this._date = value;
+  }
+
+  get note(): string {
+    return this._note;
+  }
+
+  set note(value: string) {
+    this._note = value;
   }
 }
