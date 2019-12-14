@@ -4,19 +4,23 @@ import {
   Column,
   OneToMany,
   ManyToOne,
-  JoinColumn,
+  JoinColumn, ColumnOptions, PrimaryColumn,
 } from 'typeorm/browser';
+import {CategoryMeta} from './meta/CategoryMeta';
 
-@Entity('categories')
+@Entity(CategoryMeta.table.name)
 export default class Category {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    name: CategoryMeta.columns.id.name,
+    type: CategoryMeta.columns.id.type,
+  })
   private readonly _id: number | undefined;
 
-  @Column('varchar')
+  @Column(CategoryMeta.columns.name as ColumnOptions)
   private _name: string;
 
   @ManyToOne(type => Category, category => category._childCategories)
-  @JoinColumn({name: 'parent_category_id'})
+  @JoinColumn({name: CategoryMeta.columns.parentCategoryId.name})
   private _parentCategory: Category | undefined;
 
   @OneToMany(type => Category, category => category._parentCategory)

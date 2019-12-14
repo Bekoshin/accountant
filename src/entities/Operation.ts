@@ -1,28 +1,33 @@
 import {
   Column,
+  ColumnOptions,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Category from './Category';
+import {OperationMeta} from './meta/OperationMeta';
 
-@Entity('operations')
+@Entity(OperationMeta.table.name)
 export default class Operation {
-  @PrimaryGeneratedColumn({name: 'id', type: 'bigint'})
+  @PrimaryGeneratedColumn({
+    name: OperationMeta.columns.id.name,
+    type: OperationMeta.columns.id.type,
+  })
   private _id: number;
 
-  @Column({name: 'name', type: 'varchar'})
+  @Column(OperationMeta.columns.name as ColumnOptions)
   private _name: string;
 
   @ManyToOne(() => Category)
-  @JoinColumn({name: 'category_id'})
+  @JoinColumn({name: OperationMeta.columns.categoryId.name})
   private _category: Category;
 
-  @Column({name: 'date', type: 'datetime'})
+  @Column(OperationMeta.columns.date as ColumnOptions)
   private _date: Date;
 
-  @Column({name: 'note', type: 'varchar'})
+  @Column(OperationMeta.columns.note as ColumnOptions)
   private _note: string;
 
   constructor(
