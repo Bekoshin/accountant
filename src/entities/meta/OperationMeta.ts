@@ -5,7 +5,7 @@ export class OperationMeta {
   static columns = {
     id: {
       name: 'id',
-      type: 'bigint',
+      type: 'integer',
       isPrimary: true,
       isGenerated: true,
     },
@@ -15,7 +15,7 @@ export class OperationMeta {
     },
     categoryId: {
       name: 'category_id',
-      type: 'bigint',
+      type: 'integer',
       isNullable: true,
     },
     date: {

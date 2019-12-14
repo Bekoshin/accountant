@@ -18,6 +18,7 @@ export class Init1576240262448 implements MigrationInterface {
             type: CategoryMeta.columns.id.type,
             isPrimary: CategoryMeta.columns.id.isPrimary,
             isGenerated: CategoryMeta.columns.id.isGenerated,
+            generationStrategy: 'increment',
           },
           {
             name: CategoryMeta.columns.name.name,
