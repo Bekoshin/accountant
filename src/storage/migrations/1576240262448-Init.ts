@@ -54,6 +54,7 @@ export class Init1576240262448 implements MigrationInterface {
             type: OperationMeta.columns.id.type,
             isPrimary: OperationMeta.columns.id.isPrimary,
             isGenerated: OperationMeta.columns.id.isGenerated,
+            generationStrategy: 'increment',
           },
           {
             name: OperationMeta.columns.name.name,
@@ -86,6 +87,5 @@ export class Init1576240262448 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {
-  }
+  public async down(queryRunner: QueryRunner): Promise<any> {}
 }

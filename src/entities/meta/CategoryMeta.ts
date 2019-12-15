@@ -1,3 +1,5 @@
+import {ColumnOptions} from 'typeorm';
+
 export class CategoryMeta {
   static table = {
     name: 'categories',
