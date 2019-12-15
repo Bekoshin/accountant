@@ -4,7 +4,8 @@ import {
   Column,
   OneToMany,
   ManyToOne,
-  JoinColumn, ColumnOptions, PrimaryColumn,
+  JoinColumn,
+  ColumnOptions,
 } from 'typeorm/browser';
 import {CategoryMeta} from './meta/CategoryMeta';
 
@@ -21,10 +22,10 @@ export default class Category {
 
   @ManyToOne(type => Category, category => category._childCategories)
   @JoinColumn({name: CategoryMeta.columns.parentCategoryId.name})
-  private _parentCategory: Category | undefined;
+  private _parentCategory: Category | null;
 
   @OneToMany(type => Category, category => category._parentCategory)
-  private _childCategories: Category[] | undefined;
+  private _childCategories: Category[] | null;
 
   constructor(
     name: string,
@@ -37,24 +38,24 @@ export default class Category {
     if (subcategories) {
       this._childCategories = subcategories;
     } else {
-      this._childCategories = undefined;
+      this._childCategories = null;
     }
     if (parentCategory) {
       this._parentCategory = parentCategory;
     } else {
-      this._parentCategory = undefined;
+      this._parentCategory = null;
     }
   }
 
-  get parentCategory(): Category | undefined {
+  get parentCategory(): Category | null {
     return this._parentCategory;
   }
 
-  set parentCategory(value: Category | undefined) {
+  set parentCategory(value: Category | null) {
     this._parentCategory = value;
   }
 
-  get childCategories(): Category[] | undefined {
+  get childCategories(): Category[] | null {
     return this._childCategories;
   }
 

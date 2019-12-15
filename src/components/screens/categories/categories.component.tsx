@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import {Button, TextInput, List} from 'react-native-paper';
 import Category from '../../../entities/Category';
+import CategoryComponent from './category/category.component';
 
 export interface CategoriesProps {
   navigation: any;
@@ -27,9 +28,9 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
 
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start'}}>
+      <ScrollView style={{flex: 1}} bounces={false}>
         {this.renderCategories()}
-      </View>
+      </ScrollView>
     );
   }
 
@@ -37,23 +38,12 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
     const {categories} = this.props;
     let categoryComponents = [];
     for (let category of categories) {
-      categoryComponents.push(
-        <List.Accordion title={category.name} onPress={() => console.log('test')}>
-          {this.renderChildCategories(category.childCategories)}
-        </List.Accordion>,
-      );
+      if (category.childCategories && category.childCategories.length > 0) {
+        console.log('category: ', category)
+        categoryComponents.push(<CategoryComponent category={category}/>);
+      }
     }
     return categoryComponents;
-  }
-
-  renderChildCategories(childCategories: Category[] | undefined) {
-    if (childCategories) {
-      let childCategoryComponents = [];
-      for (let category of childCategories) {
-        childCategoryComponents.push(<List.Item title={category.name} />);
-      }
-      return childCategoryComponents;
-    }
   }
 }
 
