@@ -19,6 +19,7 @@ import Shopping from './components/screens/shopping/shopping';
 import Analytics from './components/screens/analytics/analytics';
 import Settings from './components/screens/settings/settings';
 import OperationScreen from './components/screens/operation/operation';
+import CategoriesSreen from './components/screens/categories/categories.component';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
@@ -83,6 +84,9 @@ const AppStackNavigator = createStackNavigator(
     },
     Operation: {
       screen: OperationScreen,
+    },
+    Categories: {
+      screen: CategoriesSreen,
     },
   },
   {

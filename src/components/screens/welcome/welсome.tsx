@@ -7,11 +7,13 @@ import Operation from '../../../entities/Operation';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {actionTypes} from '../../../store/actionTypes';
+import Category from '../../../entities/Category';
 
 export interface WelcomeProps {
   navigation: any;
 
   loadAllOperations: (storageHandler: StorageHandler) => void;
+  loadAllCategories: (storageHandler: StorageHandler) => void;
 }
 
 class Welcome extends React.PureComponent<WelcomeProps> {
@@ -22,6 +24,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     this._storageHandler = new StorageHandler();
     await this._storageHandler.init();
     await this.props.loadAllOperations(this._storageHandler);
+    await this.props.loadAllCategories(this._storageHandler);
 
     this.props.navigation.navigate('App');
   }
@@ -49,6 +52,16 @@ const loadAllOperations = (
   });
 };
 
+const loadAllCategories = (
+  storageHandler: StorageHandler,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let categories: Category[] = await storageHandler.getAllCategoriesFromRepo();
+  dispatch({
+    type: actionTypes.CATEGORIES_LOADED,
+    categories: categories,
+  });
+};
+
 const mapStateToProps = (state: AppState) => ({
 });
 
@@ -57,5 +70,7 @@ export default connect(
   {
     loadAllOperations: (storageHandler: StorageHandler) =>
       loadAllOperations(storageHandler),
+    loadAllCategories: (storageHandler: StorageHandler) =>
+      loadAllCategories(storageHandler),
   },
 )(Welcome);

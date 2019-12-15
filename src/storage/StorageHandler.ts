@@ -26,15 +26,6 @@ export default class StorageHandler {
     await this.connect();
     await this.initCategoryRepo();
     await this.initOperationRepo();
-    // await this.addDefaultCategoriesToDb();
-    if (this._categoryRepo) {
-      let categories = await this._categoryRepo
-        .createQueryBuilder('category')
-        .leftJoinAndSelect('category._parentCategory', 'pc')
-        .leftJoinAndSelect('category._childCategories', 'cc')
-        .getMany();
-      console.log('CATEGORIES: ', categories);
-    }
   };
 
   private connect = async () => {
@@ -65,13 +56,16 @@ export default class StorageHandler {
     return operations;
   };
 
-  private addDefaultCategoriesToDb = async () => {
-    let categories = StorageHandler.createDefaultCategories();
+  public getAllCategoriesFromRepo = async (): Promise<Category[]> => {
+    let categories: Category[] = [];
     if (this._categoryRepo) {
-      // await this._categoryRepo.clear();
-      console.log('CATEGORIES BEFORE SAVE: ', categories);
-      await this._categoryRepo.save(categories);
+      categories = await this._categoryRepo
+        .createQueryBuilder('category')
+        .leftJoinAndSelect('category._parentCategory', 'pc')
+        .leftJoinAndSelect('category._childCategories', 'cc')
+        .getMany();
     }
+    return categories;
   };
 
   static createDefaultCategories = () => {

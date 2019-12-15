@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 
 interface OperationProps {
   navigation: any;
@@ -15,7 +15,8 @@ interface OperationProps {
 class OperationScreen extends React.PureComponent<OperationProps> {
   static navigationOptions = {
     title: 'Операция',
-    headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
+    headerRight: () => <Button onPress={() => {
+    }}>Сохранить</Button>,
   };
 
   componentDidMount(): void {
@@ -32,7 +33,10 @@ class OperationScreen extends React.PureComponent<OperationProps> {
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <TextInput label="Сумма"/>
-        <TextInput label="Категория"/>
+        <TouchableRipple
+          onPress={() => this.props.navigation.navigate('Categories')}>
+          <Text>Выберите категорию</Text>
+        </TouchableRipple>
       </View>
     );
   }
