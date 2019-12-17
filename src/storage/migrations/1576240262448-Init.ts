@@ -75,6 +75,9 @@ export class Init1576240262448 implements MigrationInterface {
           },
         ],
       }),
+      true,
+      true,
+      true,
     );
 
     await queryRunner.createForeignKey(
