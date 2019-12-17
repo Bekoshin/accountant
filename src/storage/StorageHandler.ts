@@ -29,8 +29,7 @@ export default class StorageHandler {
   };
 
   private connect = async () => {
-    const connectionManager = getConnectionManager();
-    this._connection = connectionManager.create({
+    this._connection = await createConnection({
       type: 'react-native',
       database: DATABASE_NAME,
       location: 'default',
@@ -39,7 +38,6 @@ export default class StorageHandler {
       migrationsRun: true,
       entities: [Category, Operation],
     });
-    await this._connection.connect();
   };
 
   private initCategoryRepo = () => {
