@@ -1,6 +1,6 @@
 import {
   Connection,
-  createConnection,
+  createConnection, getConnectionManager,
   getRepository,
   Repository,
 } from 'typeorm/browser';
@@ -29,7 +29,8 @@ export default class StorageHandler {
   };
 
   private connect = async () => {
-    this._connection = await createConnection({
+    const connectionManager = getConnectionManager();
+    this._connection = connectionManager.create({
       type: 'react-native',
       database: DATABASE_NAME,
       location: 'default',
@@ -38,6 +39,7 @@ export default class StorageHandler {
       migrationsRun: true,
       entities: [Category, Operation],
     });
+    await this._connection.connect();
   };
 
   private initCategoryRepo = () => {
