@@ -6,6 +6,7 @@ import 'moment/min/locales';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
+import I18n from 'i18n-js';
 
 import {Provider} from 'react-redux';
 
@@ -108,7 +109,7 @@ const AppContainer = createAppContainer(
 
 export default class App extends Component {
   componentDidMount(): void {
-    moment.locale('ru');
+    moment.locale(I18n.t('locale'));
   }
 
   render() {

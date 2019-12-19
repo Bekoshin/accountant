@@ -75,7 +75,7 @@ export default class StorageHandler {
     categories.push(transport);
     categories.push(new Category('taxi', transport));
     categories.push(new Category('subway', transport));
-    categories.push(new Category('transportCard', transport));
+    categories.push(new Category('transport_card', transport));
     categories.push(new Category('petrol', transport));
 
     let products = new Category('products');
@@ -97,7 +97,7 @@ export default class StorageHandler {
     categories.push(new Category('bars', cafesAndRestaurants));
     categories.push(new Category('cafes', cafesAndRestaurants));
     categories.push(new Category('restaurants', cafesAndRestaurants));
-    categories.push(new Category('fastFood', cafesAndRestaurants));
+    categories.push(new Category('fast_food', cafesAndRestaurants));
 
     let billsAndUtilities = new Category('bills_and_utilities');
     categories.push(billsAndUtilities);
