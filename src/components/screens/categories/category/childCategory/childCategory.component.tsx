@@ -13,9 +13,11 @@ interface ChildCategoryProps {
 export default class ChildCategoryComponent extends PureComponent<ChildCategoryProps> {
     render() {
         return (
-            <TouchableRipple style={styles.mainContainer} onPress={() => {
+            <TouchableRipple style={{borderRadius: 4, margin: 8}} onPress={() => {
             }}>
-                {this.renderContent()}
+                <View style={styles.mainContainer}>
+                    {this.renderContent()}
+                </View>
             </TouchableRipple>
         );
     }
@@ -25,14 +27,14 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
         if (category) {
             return (
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={styles.headerText}>{I18n.t(category.name,{defaultValue: category.name})}</Text>
+                    <Text style={styles.headerText}>{I18n.t(category.name, {defaultValue: category.name})}</Text>
                 </View>
             );
         } else {
             return (
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}>
                     <Icon name="plus" size={48}/>
-                        <Text style={styles.headerText}>Добавить</Text>
+                    <Text style={styles.headerText}>Добавить</Text>
                 </View>
             );
         }
