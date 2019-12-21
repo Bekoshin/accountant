@@ -8,6 +8,7 @@ import Category from '../entities/Category';
 import Operation from '../entities/Operation';
 import {Init1576240262448} from './migrations/1576240262448-Init';
 import {InsertDefaultValues1576410388275} from './migrations/1576410388275-InsertDefaultValues';
+import IMAGES from '../images';
 
 const DATABASE_NAME = 'main.db';
 
@@ -76,13 +77,14 @@ export default class StorageHandler {
     categories.push(new Category('taxi', transport));
     categories.push(new Category('subway', transport));
     categories.push(new Category('transport_card', transport));
-    categories.push(new Category('petrol', transport));
+    categories.push(new Category('petrol', transport, IMAGES.PETROL));
 
     let products = new Category('products');
     categories.push(products);
 
     let entertainment = new Category('entertainment');
     categories.push(entertainment);
+    categories.push(new Category('concerts_and_theaters', entertainment));
     categories.push(new Category('games', entertainment));
     categories.push(new Category('movies', entertainment));
 
@@ -111,6 +113,7 @@ export default class StorageHandler {
 
     let shopping = new Category('shopping');
     categories.push(shopping);
+    categories.push(new Category('household', shopping));
     categories.push(new Category('clothing', shopping));
     categories.push(new Category('electronics', shopping));
     categories.push(new Category('care', shopping));

@@ -27,14 +27,19 @@ export default class Category {
   @OneToMany(type => Category, category => category._parentCategory)
   private _childCategories: Category[] | null;
 
+  @Column(CategoryMeta.columns.image as ColumnOptions)
+  private _image: string | undefined;
+
   constructor(
     name: string,
     parentCategory?: Category,
+    image?: string,
     subcategories?: Category[],
     id?: number,
   ) {
     this._id = id;
     this._name = name;
+    this._image = image;
     if (subcategories) {
       this._childCategories = subcategories;
     } else {
@@ -77,5 +82,13 @@ export default class Category {
 
   set name(value: string) {
     this._name = value;
+  }
+
+  get image(): string | undefined {
+    return this._image;
+  }
+
+  set image(value: string | undefined) {
+    this._image = value;
   }
 }

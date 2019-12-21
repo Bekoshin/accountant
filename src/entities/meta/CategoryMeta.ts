@@ -20,5 +20,10 @@ export class CategoryMeta {
       type: 'integer',
       isNullable: true,
     },
+    image: {
+      name: 'image',
+      type: 'varchar',
+      isNullable: true,
+    },
   };
 }
