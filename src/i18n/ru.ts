@@ -12,6 +12,7 @@ export default {
     entertainment: 'Развлечения',
     games: 'Игры',
     movies: 'Кино',
+    concerts_and_theaters: 'Концерты и театры',
 
     health: 'Здоровье',
     fitness: 'Фитнес',
@@ -37,6 +38,7 @@ export default {
     clothing: 'Одежда',
     electronics: 'Электроника',
     care: 'Уход',
+    household: 'Товары для дома',
 
     others: 'Другое',
 };

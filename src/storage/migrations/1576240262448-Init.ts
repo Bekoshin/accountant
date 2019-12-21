@@ -29,6 +29,11 @@ export class Init1576240262448 implements MigrationInterface {
             type: CategoryMeta.columns.parentCategoryId.type,
             isNullable: CategoryMeta.columns.parentCategoryId.isNullable,
           },
+          {
+            name: CategoryMeta.columns.image.name,
+            type: CategoryMeta.columns.image.type,
+            isNullable: CategoryMeta.columns.image.isNullable,
+          },
         ],
       }),
       true,

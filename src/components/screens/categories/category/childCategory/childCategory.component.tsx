@@ -28,12 +28,14 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
       let imageSource;
       if (category.name === 'petrol') {
         imageSource = IMAGES.PETROL;
+        console.log('imageSource: ', imageSource)
+        console.log('type: ', typeof imageSource);
       }
 
       return (
         <View
           style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}>
-          {this.renderIcon(imageSource)}
+          {this.renderIcon(category.image)}
           <Text style={styles.headerText}>
             {I18n.t(category.name, {defaultValue: category.name})}
           </Text>
@@ -54,7 +56,7 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
     }
   }
 
-  renderIcon(source: ImageSourcePropType) {
+  renderIcon(source: string | undefined) {
     if (source) {
       return (
         <Image source={source} style={{width: 40, height: 40}}/>

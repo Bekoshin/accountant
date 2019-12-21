@@ -22,7 +22,7 @@ export class CategoryMeta {
     },
     image: {
       name: 'image',
-      type: 'varchar',
+      type: 'integer',
       isNullable: true,
     },
   };

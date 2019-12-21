@@ -28,12 +28,12 @@ export default class Category {
   private _childCategories: Category[] | null;
 
   @Column(CategoryMeta.columns.image as ColumnOptions)
-  private _image: string | undefined;
+  private _image: number | undefined;
 
   constructor(
     name: string,
     parentCategory?: Category,
-    image?: string,
+    image?: number,
     subcategories?: Category[],
     id?: number,
   ) {
@@ -84,11 +84,11 @@ export default class Category {
     this._name = value;
   }
 
-  get image(): string | undefined {
+  get image(): number | undefined {
     return this._image;
   }
 
-  set image(value: string | undefined) {
+  set image(value: number | undefined) {
     this._image = value;
   }
 }

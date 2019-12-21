@@ -12,6 +12,7 @@ export default {
     entertainment: 'Entertainment',
     games: 'Games',
     movies: 'Movies',
+    concerts_and_theaters: 'Concerts and theaters',
 
     health: 'Health',
     fitness: 'Fitness',
@@ -37,6 +38,7 @@ export default {
     clothing: 'Clothing',
     electronics: 'Electronics',
     care: 'Care',
+    household: 'Household',
 
     others: 'Others',
 };

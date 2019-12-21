@@ -1,6 +1,6 @@
 import {
   Connection,
-  createConnection, getConnectionManager,
+  createConnection,
   getRepository,
   Repository,
 } from 'typeorm/browser';
@@ -74,42 +74,49 @@ export default class StorageHandler {
 
     let transport = new Category('transport');
     categories.push(transport);
-    categories.push(new Category('taxi', transport));
-    categories.push(new Category('subway', transport));
-    categories.push(new Category('transport_card', transport));
+    categories.push(new Category('taxi', transport, IMAGES.TAXI));
+    categories.push(new Category('subway', transport, IMAGES.SUBWAY));
+    categories.push(
+      new Category('transport_card', transport, IMAGES.TRANSPORT_CARD),
+    );
     categories.push(new Category('petrol', transport, IMAGES.PETROL));
-
-    let products = new Category('products');
-    categories.push(products);
 
     let entertainment = new Category('entertainment');
     categories.push(entertainment);
     categories.push(new Category('concerts_and_theaters', entertainment));
-    categories.push(new Category('games', entertainment));
-    categories.push(new Category('movies', entertainment));
+    categories.push(new Category('games', entertainment, IMAGES.GAMES));
+    categories.push(new Category('movies', entertainment, IMAGES.MOVIE));
 
     let health = new Category('health');
     categories.push(health);
-    categories.push(new Category('fitness', health));
-    categories.push(new Category('pharmacy', health));
-    categories.push(new Category('doctor', health));
+    categories.push(new Category('fitness', health, IMAGES.FITNESS));
+    categories.push(new Category('pharmacy', health, IMAGES.PHARMACY));
+    categories.push(new Category('doctor', health, IMAGES.DOCTOR));
 
     let cafesAndRestaurants = new Category('cafes_and_restaurants');
     categories.push(cafesAndRestaurants);
-    categories.push(new Category('bars', cafesAndRestaurants));
-    categories.push(new Category('cafes', cafesAndRestaurants));
-    categories.push(new Category('restaurants', cafesAndRestaurants));
-    categories.push(new Category('fast_food', cafesAndRestaurants));
+    categories.push(new Category('bars', cafesAndRestaurants, IMAGES.BARS));
+    categories.push(new Category('cafes', cafesAndRestaurants, IMAGES.CAFES));
+    categories.push(
+      new Category('restaurants', cafesAndRestaurants, IMAGES.RESTAURANTS),
+    );
+    categories.push(
+      new Category('fast_food', cafesAndRestaurants, IMAGES.FAST_FOOD),
+    );
 
     let billsAndUtilities = new Category('bills_and_utilities');
     categories.push(billsAndUtilities);
-    categories.push(new Category('rent', billsAndUtilities));
-    categories.push(new Category('internet', billsAndUtilities));
-    categories.push(new Category('phone', billsAndUtilities));
-    categories.push(new Category('water', billsAndUtilities));
-    categories.push(new Category('gas', billsAndUtilities));
-    categories.push(new Category('electricity', billsAndUtilities));
-    categories.push(new Category('television', billsAndUtilities));
+    categories.push(new Category('rent', billsAndUtilities, IMAGES.RENT));
+    categories.push(
+      new Category('internet', billsAndUtilities, IMAGES.INTERNET),
+    );
+    categories.push(new Category('phone', billsAndUtilities, IMAGES.PHONE));
+    categories.push(new Category('water', billsAndUtilities, IMAGES.WATER));
+    categories.push(new Category('gas', billsAndUtilities, IMAGES.GAS));
+    categories.push(
+      new Category('electricity', billsAndUtilities, IMAGES.ELECTRICITY),
+    );
+    categories.push(new Category('television', billsAndUtilities, IMAGES.TV));
 
     let shopping = new Category('shopping');
     categories.push(shopping);
@@ -117,6 +124,7 @@ export default class StorageHandler {
     categories.push(new Category('clothing', shopping));
     categories.push(new Category('electronics', shopping));
     categories.push(new Category('care', shopping));
+    categories.push(new Category('products', shopping));
 
     let others = new Category('others');
     categories.push(others);
