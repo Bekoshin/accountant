@@ -21,6 +21,7 @@ import Analytics from './components/screens/analytics/analytics';
 import Settings from './components/screens/settings/settings';
 import OperationScreen from './components/screens/operation/operation';
 import CategoriesSreen from './components/screens/categories/categories.component';
+import CategoryScreen from './components/screens/category/category.component';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
@@ -88,6 +89,9 @@ const AppStackNavigator = createStackNavigator(
     },
     Categories: {
       screen: CategoriesSreen,
+    },
+    Category: {
+      screen: CategoryScreen,
     },
   },
   {

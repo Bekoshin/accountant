@@ -1,6 +1,6 @@
 import styles from './childCategory.styles';
 import React, {PureComponent} from 'react';
-import {Text, View, Image, ImageSourcePropType} from 'react-native';
+import {Text, View, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import I18n from 'i18n-js';
 import {TouchableRipple} from 'react-native-paper';
@@ -11,14 +11,14 @@ interface ChildCategoryProps {
   category?: Category;
 }
 
-export default class ChildCategoryComponent extends PureComponent<ChildCategoryProps> {
+export default class ChildCategoryComponent extends PureComponent<
+  ChildCategoryProps
+> {
   render() {
     return (
-      <TouchableRipple style={styles.mainContainer} onPress={() => {
-      }}>
-          {this.renderContent()}
+      <TouchableRipple style={styles.mainContainer} onPress={() => {}}>
+        {this.renderContent()}
       </TouchableRipple>
-
     );
   }
 
@@ -28,13 +28,17 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
       let imageSource;
       if (category.name === 'petrol') {
         imageSource = IMAGES.PETROL;
-        console.log('imageSource: ', imageSource)
+        console.log('imageSource: ', imageSource);
         console.log('type: ', typeof imageSource);
       }
 
       return (
         <View
-          style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}>
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           {this.renderIcon(category.image)}
           <Text style={styles.headerText}>
             {I18n.t(category.name, {defaultValue: category.name})}
@@ -49,18 +53,16 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Icon name="plus" size={48}/>
+          <Icon name="plus" size={48} />
           <Text style={styles.headerText}>Добавить</Text>
         </View>
       );
     }
   }
 
-  renderIcon(source: string | undefined) {
+  renderIcon(source: number | undefined) {
     if (source) {
-      return (
-        <Image source={source} style={{width: 40, height: 40}}/>
-      );
+      return <Image source={source} style={{width: 40, height: 40}} />;
     }
   }
 }
