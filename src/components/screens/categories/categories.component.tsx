@@ -54,7 +54,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
         console.log('category: ', category);
         categoryComponents.push(
           <View key={category.id}>
-            <CategoryComponent category={category} />
+            <CategoryComponent category={category} navigateToCategory={this.navigateToCategory}/>
             <Divider />
           </View>,
         );
@@ -62,6 +62,10 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
     }
     return categoryComponents;
   }
+
+  navigateToCategory = (category: Category) => {
+    this.props.navigation.navigate('Category', {category: category});
+  };
 }
 
 const mapStateToProps = (state: AppState) => ({

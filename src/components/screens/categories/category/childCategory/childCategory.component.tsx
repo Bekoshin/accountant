@@ -9,14 +9,21 @@ import IMAGES from '../../../../../images';
 
 interface ChildCategoryProps {
   category?: Category;
+  navigateToCategory: (category: Category) => void;
 }
 
-export default class ChildCategoryComponent extends PureComponent<
-  ChildCategoryProps
-> {
+export default class ChildCategoryComponent extends PureComponent<ChildCategoryProps> {
+  onPressHandler = () => {
+    const {category, navigateToCategory} = this.props;
+    if (category) {
+      navigateToCategory(category);
+    }
+  };
+
   render() {
     return (
-      <TouchableRipple style={styles.mainContainer} onPress={() => {}}>
+      <TouchableRipple style={styles.mainContainer} onPress={() => {
+      }}>
         {this.renderContent()}
       </TouchableRipple>
     );
@@ -53,7 +60,7 @@ export default class ChildCategoryComponent extends PureComponent<
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Icon name="plus" size={48} />
+          {this.renderIcon(IMAGES.ADD)}
           <Text style={styles.headerText}>Добавить</Text>
         </View>
       );
@@ -62,7 +69,7 @@ export default class ChildCategoryComponent extends PureComponent<
 
   renderIcon(source: number | undefined) {
     if (source) {
-      return <Image source={source} style={{width: 40, height: 40}} />;
+      return <Image source={source} style={{width: 40, height: 40}}/>;
     }
   }
 }
