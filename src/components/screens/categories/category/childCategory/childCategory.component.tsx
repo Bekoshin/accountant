@@ -2,7 +2,7 @@ import styles from './childCategory.styles';
 import React, {PureComponent} from 'react';
 import {Text, View, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import I18n from 'i18n-js';
+import I18n from '../../../../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../../../../entities/Category';
 import IMAGES from '../../../../../images';

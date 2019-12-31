@@ -1,6 +1,6 @@
 import styles from './category.styles';
 import React, {PureComponent} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Category from '../../../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';

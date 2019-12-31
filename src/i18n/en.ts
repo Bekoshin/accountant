@@ -1,6 +1,8 @@
 export default {
     locale: 'en',
 
+    label_required: 'Required',
+
     transport: 'Transport',
     taxi: 'Taxi',
     subway: 'Subway',

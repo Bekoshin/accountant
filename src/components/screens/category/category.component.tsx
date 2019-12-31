@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import Category from '../../../entities/Category';
 import Input from '../../input/input';
+import I18n from '../../../i18n/i18n';
 
 interface CategoryProps {
   navigation: any;
@@ -14,6 +15,7 @@ interface CategoryProps {
 interface CategoryState {
   name: string;
   parentCategory: Category | null;
+  nameError: string;
 }
 
 class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
@@ -22,6 +24,7 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
     parentCategory: this.props.category
       ? this.props.category.parentCategory
       : null,
+    nameError: '',
   };
 
   static navigationOptions = ({navigation}: any) => {
@@ -30,6 +33,14 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
       title: navigation.getParam('category') ? 'Категория' : 'Новая категория',
       headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
     };
+  };
+
+  showNameError = () => {
+    this.setState({nameError: I18n.t('label_required')});
+  };
+
+  hideNameError = () => {
+    this.setState({nameError: ''});
   };
 
   componentDidMount(): void {
@@ -44,15 +55,27 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
   }
 
   render() {
+    const {name, parentCategory} = this.state;
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        <TextInput
-          label="Наименование"
-          mode="outlined"
-          value={this.state.name}
-          onChangeText={this.changeCategoryName}
-        />
-        <Input label="Parent category" value="test" />
+      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+        <ScrollView>
+          <Input
+            label="Наименование"
+            value={name}
+            required={true}
+            errorMessage={this.state.nameError}
+            onFocus={this.hideNameError}
+            onChangeText={this.changeCategoryName}
+          />
+          <Input
+            label="Parent category"
+            value={parentCategory ? parentCategory.name : ''}
+            editable={false}
+            onInputPress={() => {
+
+            }}
+          />
+        </ScrollView>
       </View>
     );
   }

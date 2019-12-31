@@ -1,6 +1,8 @@
 export default {
     locale: 'ru',
 
+    label_required: 'Обязательно',
+
     transport: 'Транспорт',
     taxi: 'Такси',
     subway: 'Метро',
