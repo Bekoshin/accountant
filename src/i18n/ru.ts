@@ -3,6 +3,8 @@ export default {
 
     label_required: 'Обязательно',
 
+    placeholder_search: 'Поиск',
+
     transport: 'Транспорт',
     taxi: 'Такси',
     subway: 'Метро',

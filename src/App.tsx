@@ -22,6 +22,7 @@ import Settings from './components/screens/settings/settings';
 import OperationScreen from './components/screens/operation/operation';
 import CategoriesSreen from './components/screens/categories/categories.component';
 import CategoryScreen from './components/screens/category/category.component';
+import ParentCategoriesScreen from './components/screens/parentCategories/parentCategories.component';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
@@ -92,6 +93,9 @@ const AppStackNavigator = createStackNavigator(
     },
     Category: {
       screen: CategoryScreen,
+    },
+    ParentCategories: {
+      screen: ParentCategoriesScreen,
     },
   },
   {

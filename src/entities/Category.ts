@@ -34,14 +34,14 @@ export default class Category {
     name: string,
     parentCategory?: Category,
     image?: number,
-    subcategories?: Category[],
+    childCategories?: Category[],
     id?: number,
   ) {
     this._id = id;
     this._name = name;
     this._image = image;
-    if (subcategories) {
-      this._childCategories = subcategories;
+    if (childCategories) {
+      this._childCategories = childCategories;
     } else {
       this._childCategories = null;
     }

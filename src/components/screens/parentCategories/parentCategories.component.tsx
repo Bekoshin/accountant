@@ -2,37 +2,29 @@ import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
-import {Button, Divider} from 'react-native-paper';
+import {Button, TextInput, List, Divider} from 'react-native-paper';
 import Category from '../../../entities/Category';
-import CategoryComponent from './category/category.component';
 
-export interface CategoriesProps {
+export interface ParentCategoriesProps {
   navigation: any;
-
   categories: Category[];
 }
 
-class CategoriesScreen extends React.PureComponent<CategoriesProps> {
+class ParentCategoriesScreen extends React.PureComponent<
+  ParentCategoriesProps
+> {
   static navigationOptions = ({navigation}: any) => {
     return {
-      title: 'Категории',
-      headerRight: () => (
-        <Button
-          onPress={() => {
-            navigation.navigate('Category');
-          }}>
-          Добавить
-        </Button>
-      ),
+      title: 'Родительские категории',
     };
   };
 
   componentDidMount(): void {
-    console.log('CATEGORIES DID MOUNT');
+    console.log('PARENT CATEGORIES DID MOUNT');
   }
 
   componentWillUnmount(): void {
-    console.log('CATEGORIES WILL UNMOUNT');
+    console.log('PARENT CATEGORIES WILL UNMOUNT');
   }
 
   render() {
@@ -41,31 +33,26 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
         style={{flex: 1}}
         bounces={false}
         showsVerticalScrollIndicator={false}>
-        {this.renderCategories()}
+        {this.renderParentCategories()}
       </ScrollView>
     );
   }
 
-  renderCategories() {
+  renderParentCategories() {
     const {categories} = this.props;
-    let categoryComponents = [];
+    let parentCategoryComponents = [];
     for (let category of categories) {
       if (category.childCategories && category.childCategories.length > 0) {
-        console.log('category: ', category);
-        categoryComponents.push(
+        parentCategoryComponents.push(
           <View key={category.id}>
-            <CategoryComponent category={category} navigateToCategory={this.navigateToCategory}/>
+            <Text>{category.name}</Text>
             <Divider />
           </View>,
         );
       }
     }
-    return categoryComponents;
+    return parentCategoryComponents;
   }
-
-  navigateToCategory = (category: Category) => {
-    this.props.navigation.navigate('Category', {category: category});
-  };
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -75,4 +62,4 @@ const mapStateToProps = (state: AppState) => ({
 export default connect(
   mapStateToProps,
   {},
-)(CategoriesScreen);
+)(ParentCategoriesScreen);

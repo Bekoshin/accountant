@@ -3,6 +3,8 @@ export default {
 
     label_required: 'Required',
 
+    placeholder_search: 'Search',
+
     transport: 'Transport',
     taxi: 'Taxi',
     subway: 'Subway',
