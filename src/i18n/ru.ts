@@ -3,6 +3,12 @@ export default {
 
     label_required: 'Обязательно',
 
+    category_screen: 'Категория',
+    new_category_screen: 'Новая категория',
+    parent_categories_screen: 'Родительские категории',
+
+    action_save: 'Сохранить',
+
     placeholder_search: 'Поиск',
 
     transport: 'Транспорт',

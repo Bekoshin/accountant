@@ -11,10 +11,20 @@ export interface ParentCategoriesProps {
   categories: Category[];
 }
 
-class ParentCategoriesScreen extends React.PureComponent<ParentCategoriesProps> {
-  static navigationOptions = ({navigation}: any) => {
+class ParentCategoriesScreen extends React.PureComponent<
+  ParentCategoriesProps
+> {
+  private selectCategory: (
+    category: Category,
+  ) => void = this.props.navigation.getParam('selectCategory');
+  private handleCategoryPress = (category: Category) => {
+    this.selectCategory(category);
+    this.props.navigation.goBack();
+  };
+
+  static navigationOptions = () => {
     return {
-      title: 'Родительские категории',
+      title: I18n.t('parent_categories_screen'),
     };
   };
 
@@ -38,21 +48,18 @@ class ParentCategoriesScreen extends React.PureComponent<ParentCategoriesProps> 
   }
 
   renderParentCategories() {
-    const {categories, navigation} = this.props;
+    const {categories} = this.props;
 
     let parentCategoryComponents = [];
     for (let category of categories) {
-      if (category.childCategories && category.childCategories.length > 0) {
+      if (!category.parentCategory) {
         parentCategoryComponents.push(
           <View key={category.id}>
             <List.Item
               title={I18n.t(category.name, {defaultValue: category.name})}
-              onPress={() => {
-                navigation.getParam('selectCategory')(category);
-                navigation.goBack();
-              }}
+              onPress={() => this.handleCategoryPress(category)}
             />
-            <Divider/>
+            <Divider />
           </View>,
         );
       }
@@ -62,7 +69,7 @@ class ParentCategoriesScreen extends React.PureComponent<ParentCategoriesProps> 
 }
 
 const mapStateToProps = (state: AppState) => ({
-  categories: state.category.categories,
+  categories: state.categoryReducer.categories,
 });
 
 export default connect(

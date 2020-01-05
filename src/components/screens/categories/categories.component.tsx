@@ -50,7 +50,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
     const {categories} = this.props;
     let categoryComponents = [];
     for (let category of categories) {
-      if (category.childCategories && category.childCategories.length > 0) {
+      if (!category.parentCategory) {
         console.log('category: ', category);
         categoryComponents.push(
           <View key={category.id}>
@@ -72,7 +72,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  categories: state.category.categories,
+  categories: state.categoryReducer.categories,
 });
 
 export default connect(

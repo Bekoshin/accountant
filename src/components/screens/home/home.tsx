@@ -84,7 +84,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  operations: state.operation.operations,
+  operations: state.operationReducer.operations,
 });
 
 export default connect(

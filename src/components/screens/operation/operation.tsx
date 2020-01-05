@@ -43,7 +43,7 @@ class OperationScreen extends React.PureComponent<OperationProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  operations: state.operation.operations,
+  operations: state.operationReducer.operations,
 });
 
 export default connect(

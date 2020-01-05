@@ -1,16 +1,22 @@
 import React from 'react';
-import {View, ScrollView, Text, Modal, TouchableOpacity} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import {Button} from 'react-native-paper';
 import Category from '../../../entities/Category';
 import Input from '../../input/input';
 import I18n from '../../../i18n/i18n';
+import StorageHandler from '../../../storage/StorageHandler';
+import {ThunkAction} from 'redux-thunk';
+import {Action} from 'redux';
+import {actionTypes} from '../../../store/actionTypes';
 
 interface CategoryProps {
   navigation: any;
   category?: Category;
   categories: Category[];
+
+  saveCategory: (category: Category) => Promise<void>;
 }
 
 interface CategoryState {
@@ -29,11 +35,33 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
   };
 
   static navigationOptions = ({navigation}: any) => {
-    console.log('test: ', navigation.state.params);
+    let params = navigation.state.params;
+    console.log('params: ', params);
     return {
-      title: navigation.getParam('category') ? 'Категория' : 'Новая категория',
-      headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
+      title: I18n.t(
+        params && params.category ? 'category_screen' : 'new_category_screen',
+      ),
+      headerRight: () => (
+        <Button onPress={() => params.saveButtonHandler()}>
+          {I18n.t('action_save')}
+        </Button>
+      ),
     };
+  };
+
+  handleSaveButton = async () => {
+    console.log('HANDLE SAVE BUTTON');
+    const {name, parentCategory} = this.state;
+    if (name) {
+      let category;
+      if (parentCategory) {
+        //todo need check parentCategory for exist
+        category = new Category(name, parentCategory);
+      } else {
+        category = new Category(name);
+      }
+      await this.props.saveCategory(category);
+    }
   };
 
   showNameError = () => {
@@ -44,7 +72,16 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
     this.setState({nameError: ''});
   };
 
+  changeParentCategory = (category: Category) => {
+    this.setState({parentCategory: category});
+  };
+
+  changeCategoryName = (name: string) => {
+    this.setState({name: name});
+  };
+
   componentDidMount(): void {
+    this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
     console.log('CATEGORY DID MOUNT');
   }
 
@@ -67,7 +104,13 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
           />
           <Input
             label="Parent category"
-            value={parentCategory ? I18n.t(parentCategory.name, {defaultValue: parentCategory.name}) : ''}
+            value={
+              parentCategory
+                ? I18n.t(parentCategory.name, {
+                    defaultValue: parentCategory.name,
+                  })
+                : ''
+            }
             editable={false}
             onInputPress={() => {
               this.props.navigation.navigate('ParentCategories', {
@@ -79,21 +122,28 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
       </View>
     );
   }
-
-  changeParentCategory = (category: Category) => {
-    this.setState({parentCategory: category});
-  }
-
-  changeCategoryName = (name: string) => {
-    this.setState({name: name});
-  };
 }
 
+const saveCategory = (
+  category: Category,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.init();
+  await storageHandler.saveCategoryInRepo(category);
+  const categories = await storageHandler.getAllCategoriesFromRepo();
+  dispatch({
+    type: actionTypes.CATEGORIES_LOADED,
+    categories: categories,
+  });
+};
+
 const mapStateToProps = (state: AppState) => ({
-  categories: state.category.categories,
+  categories: state.categoryReducer.categories,
 });
 
 export default connect(
   mapStateToProps,
-  {},
+  {
+    saveCategory: (category: Category) => saveCategory(category),
+  },
 )(CategoryScreen);

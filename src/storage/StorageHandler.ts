@@ -24,12 +24,11 @@ export default class StorageHandler {
   }
 
   public init = async () => {
-    await this.connect();
     await this.initCategoryRepo();
     await this.initOperationRepo();
   };
 
-  private connect = async () => {
+  public connect = async () => {
     this._connection = await createConnection({
       type: 'react-native',
       database: DATABASE_NAME,
@@ -67,6 +66,12 @@ export default class StorageHandler {
         .getMany();
     }
     return categories;
+  };
+
+  public saveCategoryInRepo = async (category: Category) => {
+    if (this._categoryRepo) {
+      await this._categoryRepo.save(category);
+    }
   };
 
   static createDefaultCategories = () => {

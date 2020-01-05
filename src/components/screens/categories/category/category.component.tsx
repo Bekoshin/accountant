@@ -1,12 +1,10 @@
 import styles from './category.styles';
 import React, {PureComponent} from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Category from '../../../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
 import ChildCategoryComponent from './childCategory/childCategory.component';
 import I18n from '../../../../i18n/i18n';
-
 
 interface CategoryProps {
   category: Category;
@@ -17,7 +15,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   render() {
     const {category} = this.props;
     return (
-      <TouchableRipple onPress={() => {this.props.navigateToCategory(category)}}>
+      <TouchableRipple onPress={() => this.props.navigateToCategory(category)}>
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>

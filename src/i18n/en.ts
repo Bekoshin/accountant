@@ -3,6 +3,12 @@ export default {
 
     label_required: 'Required',
 
+    category_screen: 'Category',
+    new_category_screen: 'New category',
+    parent_categories_screen: 'Parent categories',
+
+    action_save: 'Save',
+
     placeholder_search: 'Search',
 
     transport: 'Transport',
