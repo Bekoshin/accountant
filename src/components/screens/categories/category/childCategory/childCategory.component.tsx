@@ -1,7 +1,6 @@
 import styles from './childCategory.styles';
 import React, {PureComponent} from 'react';
 import {Text, View, Image} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import I18n from '../../../../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../../../../entities/Category';
@@ -12,7 +11,9 @@ interface ChildCategoryProps {
   navigateToCategory: (category: Category) => void;
 }
 
-export default class ChildCategoryComponent extends PureComponent<ChildCategoryProps> {
+export default class ChildCategoryComponent extends PureComponent<
+  ChildCategoryProps
+> {
   onPressHandler = () => {
     const {category, navigateToCategory} = this.props;
     if (category) {
@@ -22,8 +23,7 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
 
   render() {
     return (
-      <TouchableRipple style={styles.mainContainer} onPress={() => {
-      }}>
+      <TouchableRipple style={styles.mainContainer} onPress={() => {}}>
         {this.renderContent()}
       </TouchableRipple>
     );
@@ -69,7 +69,7 @@ export default class ChildCategoryComponent extends PureComponent<ChildCategoryP
 
   renderIcon(source: number | undefined) {
     if (source) {
-      return <Image source={source} style={{width: 40, height: 40}}/>;
+      return <Image source={source} style={{width: 40, height: 40}} />;
     }
   }
 }

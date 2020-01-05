@@ -1,18 +1,17 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
-import {Button, TextInput, List, Divider} from 'react-native-paper';
+import {List, Divider} from 'react-native-paper';
 import Category from '../../../entities/Category';
+import I18n from '../../../i18n/i18n';
 
 export interface ParentCategoriesProps {
   navigation: any;
   categories: Category[];
 }
 
-class ParentCategoriesScreen extends React.PureComponent<
-  ParentCategoriesProps
-> {
+class ParentCategoriesScreen extends React.PureComponent<ParentCategoriesProps> {
   static navigationOptions = ({navigation}: any) => {
     return {
       title: 'Родительские категории',
@@ -39,14 +38,21 @@ class ParentCategoriesScreen extends React.PureComponent<
   }
 
   renderParentCategories() {
-    const {categories} = this.props;
+    const {categories, navigation} = this.props;
+
     let parentCategoryComponents = [];
     for (let category of categories) {
       if (category.childCategories && category.childCategories.length > 0) {
         parentCategoryComponents.push(
           <View key={category.id}>
-            <Text>{category.name}</Text>
-            <Divider />
+            <List.Item
+              title={I18n.t(category.name, {defaultValue: category.name})}
+              onPress={() => {
+                navigation.getParam('selectCategory')(category);
+                navigation.goBack();
+              }}
+            />
+            <Divider/>
           </View>,
         );
       }

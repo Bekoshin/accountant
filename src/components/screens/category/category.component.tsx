@@ -67,15 +67,21 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
           />
           <Input
             label="Parent category"
-            value={parentCategory ? parentCategory.name : ''}
+            value={parentCategory ? I18n.t(parentCategory.name, {defaultValue: parentCategory.name}) : ''}
             editable={false}
             onInputPress={() => {
-              this.props.navigation.navigate('ParentCategories');
+              this.props.navigation.navigate('ParentCategories', {
+                selectCategory: this.changeParentCategory,
+              });
             }}
           />
         </ScrollView>
       </View>
     );
+  }
+
+  changeParentCategory = (category: Category) => {
+    this.setState({parentCategory: category});
   }
 
   changeCategoryName = (name: string) => {
