@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
@@ -71,32 +71,42 @@ class OperationScreen extends React.PureComponent<
   }
 
   render() {
-    const {amount, amountError, categoryError} = this.state;
+    const {amount, category, amountError, categoryError} = this.state;
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        <Input
-          label={I18n.t('label_amount')}
-          value={amount.toString()}
-          errorMessage={amountError}
-          onFocus={this.hideAmountError}
-          onChangeText={this.changeAmount}
-        />
-        <Input
-          label={I18n.t('label_category')}
-          value={'category ? '}
-          errorMessage={categoryError}
-        />
-        <TouchableRipple
-          onPress={() => this.props.navigation.navigate('Categories')}>
-          <Text>Выберите категорию</Text>
-        </TouchableRipple>
+      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+        <ScrollView>
+          <Input
+            label={I18n.t('label_amount')}
+            value={amount.toString()}
+            required={true}
+            errorMessage={amountError}
+            onFocus={this.hideAmountError}
+            onChangeText={this.changeAmount}
+          />
+          <Input
+            label={I18n.t('label_category')}
+            value={
+              category
+                ? I18n.t(category.name, {
+                    defaultValue: category.name,
+                  })
+                : ''
+            }
+            required={true}
+            errorMessage={categoryError}
+            onInputPress={() =>
+              this.props.navigation.navigate('Categories', {
+                selectCategory: this.changeCategory,
+              })
+            }
+          />
+        </ScrollView>
       </View>
     );
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-});
+const mapStateToProps = (state: AppState) => ({});
 
 export default connect(
   mapStateToProps,

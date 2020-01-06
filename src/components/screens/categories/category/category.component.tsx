@@ -8,6 +8,7 @@ import I18n from '../../../../i18n/i18n';
 
 interface CategoryProps {
   category: Category;
+  onPress: (category: Category) => void;
   navigateToCategory: (category: Category) => void;
 }
 
@@ -15,7 +16,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   render() {
     const {category} = this.props;
     return (
-      <TouchableRipple onPress={() => this.props.navigateToCategory(category)}>
+      <TouchableRipple onPress={() => this.props.onPress(category)}>
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>

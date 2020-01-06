@@ -8,11 +8,18 @@ import CategoryComponent from './category/category.component';
 
 export interface CategoriesProps {
   navigation: any;
-
   categories: Category[];
 }
 
 class CategoriesScreen extends React.PureComponent<CategoriesProps> {
+  private selectCategory: (
+    category: Category,
+  ) => void = this.props.navigation.getParam('selectCategory');
+  private handleCategoryPress = (category: Category) => {
+    this.selectCategory(category);
+    this.props.navigation.goBack();
+  };
+
   static navigationOptions = ({navigation}: any) => {
     return {
       title: 'Категории',
@@ -57,6 +64,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
             <CategoryComponent
               category={category}
               navigateToCategory={this.navigateToCategory}
+              onPress={this.handleCategoryPress}
             />
             <Divider />
           </View>,
