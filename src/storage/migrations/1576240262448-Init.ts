@@ -66,6 +66,10 @@ export class Init1576240262448 implements MigrationInterface {
             type: OperationMeta.columns.name.type,
           },
           {
+            name: OperationMeta.columns.amount.name,
+            type: OperationMeta.columns.amount.type,
+          },
+          {
             name: OperationMeta.columns.categoryId.name,
             type: OperationMeta.columns.categoryId.type,
             isNullable: OperationMeta.columns.categoryId.isNullable,

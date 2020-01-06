@@ -2,6 +2,8 @@ export default {
     locale: 'ru',
 
     label_required: 'Обязательно',
+    label_amount: 'Сумма',
+    label_category: 'Категория',
 
     category_screen: 'Категория',
     new_category_screen: 'Новая категория',

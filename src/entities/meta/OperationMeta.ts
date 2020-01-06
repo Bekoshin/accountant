@@ -13,6 +13,10 @@ export class OperationMeta {
       name: 'name',
       type: 'varchar',
     },
+    amount: {
+      name: 'amount',
+      type: 'double precision',
+    },
     categoryId: {
       name: 'category_id',
       type: 'integer',

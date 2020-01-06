@@ -2,6 +2,8 @@ export default {
     locale: 'en',
 
     label_required: 'Required',
+    label_amount: 'Amount',
+    label_category: 'Category',
 
     category_screen: 'Category',
     new_category_screen: 'New category',

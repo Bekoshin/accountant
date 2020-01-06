@@ -3,20 +3,63 @@ import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {Button, TextInput, TouchableRipple} from 'react-native-paper';
+import {Button, TouchableRipple} from 'react-native-paper';
+import Input from '../../input/input';
+import I18n from '../../../i18n/i18n';
+import Category from '../../../entities/Category';
 
 interface OperationProps {
   navigation: any;
 
-  operations: Operation[];
+  operation?: Operation;
 }
 
-class OperationScreen extends React.PureComponent<OperationProps> {
+interface OperationState {
+  amount: number;
+  category: Category | null;
+
+  amountError: string;
+  categoryError: string;
+}
+
+class OperationScreen extends React.PureComponent<
+  OperationProps,
+  OperationState
+> {
+  state = {
+    amount: this.props.operation ? this.props.operation.amount : 0,
+    category: this.props.operation ? this.props.operation.category : null,
+    amountError: '',
+    categoryError: '',
+  };
+
   static navigationOptions = {
     title: 'Операция',
-    headerRight: () => <Button onPress={() => {
-    }}>Сохранить</Button>,
+    headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
+  };
+
+  hideAmountError = () => {
+    this.setState({amountError: ''});
+  };
+
+  showAmountError = () => {
+    this.setState({amountError: I18n.t('label_required')});
+  };
+
+  hideCategoryError = () => {
+    this.setState({categoryError: ''});
+  };
+
+  showCategoryError = () => {
+    this.setState({categoryError: I18n.t('label_required')});
+  };
+
+  changeAmount = (amount: string) => {
+    this.setState({amount: parseFloat(amount)});
+  };
+
+  changeCategory = (category: Category | null) => {
+    this.setState({category: category});
   };
 
   componentDidMount(): void {
@@ -28,11 +71,21 @@ class OperationScreen extends React.PureComponent<OperationProps> {
   }
 
   render() {
-    const {operations} = this.props;
-
+    const {amount, amountError, categoryError} = this.state;
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        <TextInput label="Сумма"/>
+        <Input
+          label={I18n.t('label_amount')}
+          value={amount.toString()}
+          errorMessage={amountError}
+          onFocus={this.hideAmountError}
+          onChangeText={this.changeAmount}
+        />
+        <Input
+          label={I18n.t('label_category')}
+          value={'category ? '}
+          errorMessage={categoryError}
+        />
         <TouchableRipple
           onPress={() => this.props.navigation.navigate('Categories')}>
           <Text>Выберите категорию</Text>
@@ -43,7 +96,6 @@ class OperationScreen extends React.PureComponent<OperationProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  operations: state.operationReducer.operations,
 });
 
 export default connect(

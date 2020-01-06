@@ -20,6 +20,9 @@ export default class Operation {
   @Column(OperationMeta.columns.name as ColumnOptions)
   private _name: string;
 
+  @Column(OperationMeta.columns.amount as ColumnOptions)
+  private _amount: number;
+
   @ManyToOne(() => Category)
   @JoinColumn({name: OperationMeta.columns.categoryId.name})
   private _category: Category;
@@ -33,12 +36,14 @@ export default class Operation {
   constructor(
     id: number,
     name: string,
+    amount: number,
     category: Category,
     date: Date,
     note: string,
   ) {
     this._id = id;
     this._name = name;
+    this._amount = amount;
     this._category = category;
     this._date = date;
     this._note = note;
@@ -58,6 +63,14 @@ export default class Operation {
 
   set name(value: string) {
     this._name = value;
+  }
+
+  get amount(): number {
+    return this._amount;
+  }
+
+  set amount(value: number) {
+    this._amount = value;
   }
 
   get category(): Category {

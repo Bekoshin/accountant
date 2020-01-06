@@ -16,7 +16,7 @@ interface CategoryProps {
   category?: Category;
   categories: Category[];
 
-  saveCategory: (category: Category) => Promise<void>;
+  saveCategory: (category: Category) => void;
 }
 
 interface CategoryState {
@@ -53,14 +53,19 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
     console.log('HANDLE SAVE BUTTON');
     const {name, parentCategory} = this.state;
     if (name) {
-      let category;
-      if (parentCategory) {
-        //todo need check parentCategory for exist
-        category = new Category(name, parentCategory);
-      } else {
-        category = new Category(name);
+      try {
+        let category;
+        if (parentCategory) {
+          //todo need check parentCategory for exist
+          category = new Category(name, parentCategory);
+        } else {
+          category = new Category(name);
+        }
+        await this.props.saveCategory(category);
+        this.props.navigation.goBack();
+      } catch (error) {
+        console.log('HANDLE SAVE BUTTON. ERROR: ', error);
       }
-      await this.props.saveCategory(category);
     }
   };
 
