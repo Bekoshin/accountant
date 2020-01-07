@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import {Button, TouchableRipple} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import Input from '../../input/input';
 import I18n from '../../../i18n/i18n';
 import Category from '../../../entities/Category';
@@ -15,7 +15,7 @@ interface OperationProps {
 }
 
 interface OperationState {
-  amount: number;
+  amount: string;
   category: Category | null;
 
   amountError: string;
@@ -27,7 +27,7 @@ class OperationScreen extends React.PureComponent<
   OperationState
 > {
   state = {
-    amount: this.props.operation ? this.props.operation.amount : 0,
+    amount: this.props.operation ? this.props.operation.amount.toString() : '0',
     category: this.props.operation ? this.props.operation.category : null,
     amountError: '',
     categoryError: '',
@@ -38,24 +38,28 @@ class OperationScreen extends React.PureComponent<
     headerRight: () => <Button onPress={() => {}}>Сохранить</Button>,
   };
 
-  hideAmountError = () => {
+  private hideAmountError = () => {
     this.setState({amountError: ''});
   };
 
-  showAmountError = () => {
+  private showAmountError = () => {
     this.setState({amountError: I18n.t('label_required')});
   };
 
-  hideCategoryError = () => {
+  private hideCategoryError = () => {
     this.setState({categoryError: ''});
   };
 
-  showCategoryError = () => {
+  private showCategoryError = () => {
     this.setState({categoryError: I18n.t('label_required')});
   };
 
-  changeAmount = (amount: string) => {
-    this.setState({amount: parseFloat(amount)});
+  private changeAmount = (amount: string) => {
+    if (amount.match(/^\d*\.?\d*$/)) {
+      this.setState({
+        amount: amount,
+      });
+    }
   };
 
   changeCategory = (category: Category | null) => {
@@ -78,7 +82,9 @@ class OperationScreen extends React.PureComponent<
           <Input
             label={I18n.t('label_amount')}
             value={amount.toString()}
+            keyboardType="numeric"
             required={true}
+            selectTextOnFocus={true}
             errorMessage={amountError}
             onFocus={this.hideAmountError}
             onChangeText={this.changeAmount}

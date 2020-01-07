@@ -7,6 +7,7 @@ import {
   Animated,
   Image,
   ImageStyle,
+  KeyboardType,
 } from 'react-native';
 import I18n from '../../i18n/i18n';
 
@@ -29,7 +30,7 @@ export interface InputProps {
   numberOfLines?: number;
   characterCount?: number;
   errorMessage?: string;
-  keyboardType?: any;
+  keyboardType?: KeyboardType;
   selectTextOnFocus?: boolean;
   textAlignVertical?: 'center' | 'auto' | 'top' | 'bottom' | undefined;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' | undefined;

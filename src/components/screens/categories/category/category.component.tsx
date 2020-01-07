@@ -39,7 +39,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     if (categories) {
       for (let category of categories) {
         categoriesComponent.push(
-          <ChildCategoryComponent category={category} key={category.id} />,
+          <ChildCategoryComponent category={category} key={category.id} onPress={this.props.onPress} />,
         );
       }
     }

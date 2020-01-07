@@ -8,22 +8,22 @@ import IMAGES from '../../../../../images';
 
 interface ChildCategoryProps {
   category?: Category;
-  navigateToCategory: (category: Category) => void;
+  onPress: (category: Category) => void;
 }
 
 export default class ChildCategoryComponent extends PureComponent<
   ChildCategoryProps
 > {
   onPressHandler = () => {
-    const {category, navigateToCategory} = this.props;
+    const {category, onPress} = this.props;
     if (category) {
-      navigateToCategory(category);
+      onPress(category);
     }
   };
 
   render() {
     return (
-      <TouchableRipple style={styles.mainContainer} onPress={() => {}}>
+      <TouchableRipple style={styles.mainContainer} onPress={this.onPressHandler}>
         {this.renderContent()}
       </TouchableRipple>
     );
@@ -32,13 +32,6 @@ export default class ChildCategoryComponent extends PureComponent<
   renderContent() {
     const {category} = this.props;
     if (category) {
-      let imageSource;
-      if (category.name === 'petrol') {
-        imageSource = IMAGES.PETROL;
-        console.log('imageSource: ', imageSource);
-        console.log('type: ', typeof imageSource);
-      }
-
       return (
         <View
           style={{
