@@ -4,7 +4,9 @@ export default {
     label_required: 'Обязательно',
     label_amount: 'Сумма',
     label_category: 'Категория',
+    label_date: 'Дата',
 
+    operation_screen: 'Операция',
     category_screen: 'Категория',
     new_category_screen: 'Новая категория',
     parent_categories_screen: 'Родительские категории',
@@ -12,6 +14,11 @@ export default {
     action_save: 'Сохранить',
 
     placeholder_search: 'Поиск',
+
+    today: 'Сегодня',
+    yesterday: 'Вчера',
+    tomorrow: 'Завтра',
+
 
     transport: 'Транспорт',
     taxi: 'Такси',

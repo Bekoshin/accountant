@@ -41,6 +41,7 @@ export interface InputProps {
   onBlur?: (event: any) => void;
   onInputPress?: () => void;
   onClearPress?: () => void;
+  hideClearButton?: boolean;
   ref?: (ref: Input | null) => void;
 }
 
@@ -251,6 +252,7 @@ export default class Input extends React.PureComponent<InputProps> {
       );
     } else if (
       this.props.value &&
+      !this.props.hideClearButton &&
       (this.props.onChangeText ||
         this.props.onInputPress ||
         this.props.editable) &&

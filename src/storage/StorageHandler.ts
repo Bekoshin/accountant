@@ -74,6 +74,12 @@ export default class StorageHandler {
     }
   };
 
+  public saveOperationInRepo = async (operation: Operation) => {
+    if (this._operationRepo) {
+      await this._operationRepo.save(operation);
+    }
+  };
+
   static createDefaultCategories = () => {
     let categories: Category[] = [];
 

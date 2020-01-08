@@ -4,7 +4,9 @@ export default {
     label_required: 'Required',
     label_amount: 'Amount',
     label_category: 'Category',
+    label_date: 'Date',
 
+    operation_screen: 'Operation',
     category_screen: 'Category',
     new_category_screen: 'New category',
     parent_categories_screen: 'Parent categories',
@@ -12,6 +14,11 @@ export default {
     action_save: 'Save',
 
     placeholder_search: 'Search',
+
+    today: 'Today',
+    yesterday: 'Yesterday',
+    tomorrow: 'Tomorrow',
+
 
     transport: 'Transport',
     taxi: 'Taxi',

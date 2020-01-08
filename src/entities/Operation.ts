@@ -15,7 +15,7 @@ export default class Operation {
     name: OperationMeta.columns.id.name,
     type: OperationMeta.columns.id.type,
   })
-  private _id: number;
+  private _id: number | undefined;
 
   @Column(OperationMeta.columns.name as ColumnOptions)
   private _name: string;
@@ -34,12 +34,12 @@ export default class Operation {
   private _note: string;
 
   constructor(
-    id: number,
     name: string,
     amount: number,
     category: Category,
     date: Date,
     note: string,
+    id?: number,
   ) {
     this._id = id;
     this._name = name;
@@ -49,12 +49,8 @@ export default class Operation {
     this._note = note;
   }
 
-  get id(): number {
+  get id(): number | undefined {
     return this._id;
-  }
-
-  set id(value: number) {
-    this._id = value;
   }
 
   get name(): string {
