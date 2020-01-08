@@ -26,6 +26,7 @@ interface OperationState {
   amount: string;
   category: Category | null;
   date: Date | null;
+  note: string;
 
   amountError: string;
   categoryError: string;
@@ -42,43 +43,52 @@ class OperationScreen extends React.PureComponent<
     amount: this.props.operation ? this.props.operation.amount.toString() : '0',
     category: this.props.operation ? this.props.operation.category : null,
     date: this.props.operation ? this.props.operation.date : new Date(),
+    note: this.props.operation ? this.props.operation.note : '',
     amountError: '',
     categoryError: '',
     dateError: '',
     datePickerVisible: false,
   };
 
-  static navigationOptions = {
-    title: I18n.t('operation_screen'),
-    headerRight: () => (
-      <Button onPress={() => {}}>{I18n.t('action_save')}</Button>
-    ),
+  static navigationOptions = ({navigation}: any) => {
+    let params = navigation.state.params;
+    console.log('params: ', params);
+    return {
+      title: I18n.t(
+        params && params.operation
+          ? 'operation_screen'
+          : 'new_operation_screen',
+      ),
+      headerRight: () => (
+        <Button onPress={() => params.saveButtonHandler()}>
+          {I18n.t('action_save')}
+        </Button>
+      ),
+    };
   };
 
   private handleSaveButton = async () => {
-    // console.log('HANDLE SAVE BUTTON');
-    // const {amount, category} = this.state;
-    // if (this.checkFields()) {
-    //   try {
-    //     let operation = new Operation()
-    //     let tegory;
-    //     if (parentCategory) {
-    //       //todo need check parentCategory for exist
-    //       category = new Category(name, parentCategory);
-    //     } else {
-    //       category = new Category(name);
-    //     }
-    //     await this.props.saveCategory(category);
-    //     this.props.navigation.goBack();
-    //   } catch (error) {
-    //     console.log('HANDLE SAVE BUTTON. ERROR: ', error);
-    //   }
-    // }
+    console.log('HANDLE SAVE BUTTON');
+    const {amount, category, date, note} = this.state;
+    if (this.checkFields()) {
+      try {
+        let operation = new Operation(
+          parseFloat(amount),
+          category as Category,
+          date,
+          note,
+        );
+        await this.props.saveOperation(operation);
+        this.props.navigation.goBack();
+      } catch (error) {
+        console.log('HANDLE SAVE BUTTON. ERROR: ', error);
+      }
+    }
   };
 
   private checkFields = () => {
     let allFieldsFilled = true;
-    if (!this.state.amount) {
+    if (!this.state.amount || this.state.amount === '0') {
       allFieldsFilled = false;
       this.showAmountError();
     }
@@ -129,11 +139,7 @@ class OperationScreen extends React.PureComponent<
     this.setState({category: category});
   };
 
-  changeDate = (date: Date | null) => {
-    this.setState({date: date});
-  };
-
-  setDate = (
+  changeDate = (
     event: SyntheticEvent<Readonly<{timestamp: number}>, Event>,
     date?: Date | undefined,
   ) => {
@@ -146,9 +152,12 @@ class OperationScreen extends React.PureComponent<
     });
   };
 
+  changeNote = (note: string) => {
+    this.setState({note: note});
+  };
+
   componentDidMount() {
     this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
-    this.showDate();
     console.log('OPERATION DID MOUNT');
   }
 
@@ -161,6 +170,7 @@ class OperationScreen extends React.PureComponent<
       amount,
       category,
       date,
+      note,
       amountError,
       categoryError,
       dateError,
@@ -171,7 +181,7 @@ class OperationScreen extends React.PureComponent<
         <ScrollView>
           <Input
             label={I18n.t('label_amount')}
-            value={amount.toString()}
+            value={amount}
             keyboardType="numeric"
             required={true}
             selectTextOnFocus={true}
@@ -213,6 +223,12 @@ class OperationScreen extends React.PureComponent<
               this.setState({datePickerVisible: true});
             }}
           />
+          <Input
+            label={I18n.t('label_note')}
+            value={note}
+            onChangeText={this.changeNote}
+            multiline={true}
+          />
         </ScrollView>
         {datePickerVisible && (
           <DateTimePicker
@@ -220,7 +236,8 @@ class OperationScreen extends React.PureComponent<
             mode="date"
             is24Hour={true}
             display="default"
-            onChange={this.setDate}
+            onChange={this.changeDate}
+            maximumDate={new Date()}
           />
         )}
       </View>
@@ -239,7 +256,9 @@ class OperationScreen extends React.PureComponent<
       if (this.compareDates(yesterday, date)) {
         return I18n.t('yesterday');
       }
-      return moment(date).format('LLL');
+      return moment(date)
+        .local()
+        .format('LL');
     }
     return '';
   };

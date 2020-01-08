@@ -5,8 +5,10 @@ export default {
     label_amount: 'Сумма',
     label_category: 'Категория',
     label_date: 'Дата',
+    label_note: 'Заметка',
 
     operation_screen: 'Операция',
+    new_operation_screen: 'Новая операция',
     category_screen: 'Категория',
     new_category_screen: 'Новая категория',
     parent_categories_screen: 'Родительские категории',

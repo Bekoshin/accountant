@@ -9,10 +9,6 @@ export class OperationMeta {
       isPrimary: true,
       isGenerated: true,
     },
-    name: {
-      name: 'name',
-      type: 'varchar',
-    },
     amount: {
       name: 'amount',
       type: 'double precision',

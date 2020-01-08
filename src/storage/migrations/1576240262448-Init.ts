@@ -62,10 +62,6 @@ export class Init1576240262448 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: OperationMeta.columns.name.name,
-            type: OperationMeta.columns.name.type,
-          },
-          {
             name: OperationMeta.columns.amount.name,
             type: OperationMeta.columns.amount.type,
           },

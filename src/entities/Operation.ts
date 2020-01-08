@@ -17,9 +17,6 @@ export default class Operation {
   })
   private _id: number | undefined;
 
-  @Column(OperationMeta.columns.name as ColumnOptions)
-  private _name: string;
-
   @Column(OperationMeta.columns.amount as ColumnOptions)
   private _amount: number;
 
@@ -34,7 +31,6 @@ export default class Operation {
   private _note: string;
 
   constructor(
-    name: string,
     amount: number,
     category: Category,
     date: Date,
@@ -42,7 +38,6 @@ export default class Operation {
     id?: number,
   ) {
     this._id = id;
-    this._name = name;
     this._amount = amount;
     this._category = category;
     this._date = date;
@@ -51,14 +46,6 @@ export default class Operation {
 
   get id(): number | undefined {
     return this._id;
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  set name(value: string) {
-    this._name = value;
   }
 
   get amount(): number {

@@ -5,8 +5,10 @@ export default {
     label_amount: 'Amount',
     label_category: 'Category',
     label_date: 'Date',
+    label_note: 'Note',
 
     operation_screen: 'Operation',
+    new_operation_screen: 'New operation',
     category_screen: 'Category',
     new_category_screen: 'New category',
     parent_categories_screen: 'Parent categories',
