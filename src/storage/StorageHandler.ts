@@ -51,7 +51,10 @@ export default class StorageHandler {
   public getAllOperationsFromRepo = async (): Promise<Operation[]> => {
     let operations: Operation[] = [];
     if (this._operationRepo) {
-      operations = await this._operationRepo.find();
+      operations = await this._operationRepo
+        .createQueryBuilder('o')
+        .leftJoinAndSelect('o._category', 'c')
+        .getMany();
     }
     return operations;
   };

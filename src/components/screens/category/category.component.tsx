@@ -13,9 +13,7 @@ import {actionTypes} from '../../../store/actionTypes';
 
 interface CategoryProps {
   navigation: any;
-  category?: Category;
   categories: Category[];
-
   saveCategory: (category: Category) => void;
 }
 
@@ -26,13 +24,15 @@ interface CategoryState {
 }
 
 class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
-  state = {
-    name: this.props.category ? this.props.category.name : '',
-    parentCategory: this.props.category
-      ? this.props.category.parentCategory
-      : null,
-    nameError: '',
-  };
+  constructor(props: CategoryProps) {
+    super(props);
+    const category = props.navigation.getParam('category');
+    this.state = {
+      name: category ? category.name : '',
+      parentCategory: category ? category.parentCategory : null,
+      nameError: '',
+    };
+  }
 
   static navigationOptions = ({navigation}: any) => {
     let params = navigation.state.params;

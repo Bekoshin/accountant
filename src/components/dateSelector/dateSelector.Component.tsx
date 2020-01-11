@@ -15,10 +15,10 @@ export default class DateSelector extends PureComponent<DateSelectorProps> {
     return (
       <View
         style={{
-          backgroundColor: 'red',
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
+          borderBottomWidth: 1,
         }}>
         <TouchableOpacity onPress={this.handleLeftButton}>
           <Icon size={24} name="chevron-left" color="blue" />

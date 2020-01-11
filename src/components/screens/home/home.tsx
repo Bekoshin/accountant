@@ -1,13 +1,14 @@
 import React from 'react';
 import moment from 'moment';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {FAB} from 'react-native-paper';
+import {FAB, List} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
+import I18n from '../../../i18n/i18n';
 
 export type UnitOfDate = 'week' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['week', 'month', 'year'];
@@ -56,10 +57,45 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           date={this.state.selectedDate}
           changeDate={date => this.setState({selectedDate: date})}
         />
-        {operations.length > 0 ? <Text>Home</Text> : <NoExpensesComponent />}
+        {operations.length > 0 ? (
+          this.renderOperations()
+        ) : (
+          <NoExpensesComponent />
+        )}
         {this.renderFAB()}
       </View>
     );
+  }
+
+  renderOperations() {
+    const operations = this.props.operations;
+    console.log('OPERATIONS: ', operations);
+    let operationComponents = [];
+    for (let operation of operations) {
+      operationComponents.push(
+        <List.Item
+          title={I18n.t(operation.category.name, {
+            defaultValue: operation.category.name,
+          })}
+          onPress={() =>
+            this.props.navigation.navigate('Operation', {operation: operation})
+          }
+          left={
+            operation.category.image
+              ? () => (
+                  <Image
+                    source={operation.category.image}
+                    style={{width: 40, height: 40}}
+                  />
+                )
+              : undefined
+          }
+          right={() => <Text>{operation.amount} ₽</Text>}
+        />,
+      );
+    }
+
+    return <ScrollView>{operationComponents}</ScrollView>;
   }
 
   renderFAB() {

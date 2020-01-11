@@ -25,7 +25,7 @@ interface OperationProps {
 interface OperationState {
   amount: string;
   category: Category | null;
-  date: Date | null;
+  date: Date;
   note: string;
 
   amountError: string;
@@ -39,16 +39,22 @@ class OperationScreen extends React.PureComponent<
   OperationProps,
   OperationState
 > {
-  state = {
-    amount: this.props.operation ? this.props.operation.amount.toString() : '0',
-    category: this.props.operation ? this.props.operation.category : null,
-    date: this.props.operation ? this.props.operation.date : new Date(),
-    note: this.props.operation ? this.props.operation.note : '',
-    amountError: '',
-    categoryError: '',
-    dateError: '',
-    datePickerVisible: false,
-  };
+  constructor(props: OperationProps) {
+    super(props);
+    const operation: Operation | undefined = props.navigation.getParam(
+      'operation',
+    );
+    this.state = {
+      amount: operation ? operation.amount.toString() : '0',
+      category: operation ? operation.category : null,
+      date: operation ? operation.date : new Date(),
+      note: operation ? operation.note : '',
+      amountError: '',
+      categoryError: '',
+      dateError: '',
+      datePickerVisible: false,
+    };
+  }
 
   static navigationOptions = ({navigation}: any) => {
     let params = navigation.state.params;
