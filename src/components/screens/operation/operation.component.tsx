@@ -13,6 +13,7 @@ import {Action} from 'redux';
 import StorageHandler from '../../../storage/StorageHandler';
 import {actionTypes} from '../../../store/actionTypes';
 import moment from 'moment';
+import DateHandler from '../../../utils/DateHandler';
 
 interface OperationProps {
   navigation: any;
@@ -218,7 +219,7 @@ class OperationScreen extends React.PureComponent<
           />
           <Input
             label={I18n.t('label_date')}
-            value={this.showDate()}
+            value={DateHandler.convertDate(this.state.date)}
             required={true}
             editable={false}
             errorMessage={dateError}
@@ -249,33 +250,6 @@ class OperationScreen extends React.PureComponent<
       </View>
     );
   }
-
-  showDate = () => {
-    const date = this.state.date;
-    if (date) {
-      const today = new Date();
-      if (this.compareDates(today, date)) {
-        return I18n.t('today');
-      }
-      let yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-      if (this.compareDates(yesterday, date)) {
-        return I18n.t('yesterday');
-      }
-      return moment(date)
-        .local()
-        .format('LL');
-    }
-    return '';
-  };
-
-  compareDates = (firstDate: Date, secondDate: Date) => {
-    return !!(
-      firstDate.getFullYear() === secondDate.getFullYear() &&
-      firstDate.getMonth() === secondDate.getMonth() &&
-      firstDate.getDate() === secondDate.getDate()
-    );
-  };
 }
 
 const saveOperation = (

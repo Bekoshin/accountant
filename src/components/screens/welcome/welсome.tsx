@@ -47,7 +47,10 @@ class Welcome extends React.PureComponent<WelcomeProps> {
 const loadAllOperations = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let operations: Operation[] = await storageHandler.getAllOperationsFromRepo();
+  let operations: Map<
+    Date,
+    Operation[]
+  > = await storageHandler.getAllOperationsFromRepo();
   dispatch({
     type: actionTypes.OPERATIONS_LOADED,
     operations: operations,

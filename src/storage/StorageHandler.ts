@@ -48,15 +48,31 @@ export default class StorageHandler {
     this._operationRepo = getRepository(Operation);
   };
 
-  public getAllOperationsFromRepo = async (): Promise<Operation[]> => {
-    let operations: Operation[] = [];
+  public getAllOperationsFromRepo = async (): Promise<
+    Map<Date, Operation[]>
+  > => {
+    let operationsMap = new Map();
     if (this._operationRepo) {
+      let operations: Operation[] = [];
       operations = await this._operationRepo
         .createQueryBuilder('o')
         .leftJoinAndSelect('o._category', 'c')
         .getMany();
+
+      operations.forEach(operation => {
+        const operationDate = new Date(
+          operation.date.getFullYear(),
+          operation.date.getMonth(),
+          operation.date.getDate(),
+        );
+        if (!operationsMap.has(operationDate)) {
+          operationsMap.set(operationDate, []);
+        }
+        operationsMap.get(operationDate).push(operation);
+      });
     }
-    return operations;
+    console.log('MAP: ', operationsMap);
+    return operationsMap;
   };
 
   public getAllCategoriesFromRepo = async (): Promise<Category[]> => {
