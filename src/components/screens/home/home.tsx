@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {View, Text, ScrollView, Image} from 'react-native';
+import {Image, ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
@@ -10,8 +10,8 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
 
-export type UnitOfDate = 'week' | 'month' | 'year';
-const UNITS_OF_DATE: UnitOfDate[] = ['week', 'month', 'year'];
+export type UnitOfDate = 'isoWeek' | 'month' | 'year';
+const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
 
 interface HomeProps {
   navigation: any;
@@ -43,6 +43,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   render() {
     const {operations} = this.props;
     let selectedIndex = this.state.selectedIndex;
+    console.log('SELECTED DATE: ', this.state.selectedDate.toDate());
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <SegmentedControlTab
@@ -57,11 +58,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           date={this.state.selectedDate}
           changeDate={date => this.setState({selectedDate: date})}
         />
-        {operations.length > 0 ? (
-          this.renderOperations()
-        ) : (
-          <NoExpensesComponent />
-        )}
+        {this.renderOperations()}
         {this.renderFAB()}
       </View>
     );
@@ -72,30 +69,39 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     console.log('OPERATIONS: ', operations);
     let operationComponents = [];
     for (let operation of operations) {
-      operationComponents.push(
-        <List.Item
-          title={I18n.t(operation.category.name, {
-            defaultValue: operation.category.name,
-          })}
-          onPress={() =>
-            this.props.navigation.navigate('Operation', {operation: operation})
-          }
-          left={
-            operation.category.image
-              ? () => (
-                  <Image
-                    source={operation.category.image}
-                    style={{width: 40, height: 40}}
-                  />
-                )
-              : undefined
-          }
-          right={() => <Text>{operation.amount} ₽</Text>}
-        />,
-      );
+      if (this.isOperationDateInSelectedInterval(operation)) {
+        operationComponents.push(
+          <List.Item
+            key={operation.id}
+            title={I18n.t(operation.category.name, {
+              defaultValue: operation.category.name,
+            })}
+            onPress={() =>
+              this.props.navigation.navigate('Operation', {
+                operation: operation,
+              })
+            }
+            left={
+              operation.category.image
+                ? () => (
+                    <Image
+                      source={operation.category.image}
+                      style={{width: 40, height: 40}}
+                    />
+                  )
+                : undefined
+            }
+            right={() => <Text>{operation.amount} ₽</Text>}
+          />,
+        );
+      }
     }
 
-    return <ScrollView>{operationComponents}</ScrollView>;
+    if (operationComponents.length > 0) {
+      return <ScrollView>{operationComponents}</ScrollView>;
+    } else {
+      return <NoExpensesComponent />;
+    }
   }
 
   renderFAB() {
@@ -117,6 +123,18 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       />
     );
   }
+
+  private isOperationDateInSelectedInterval = (operation: Operation) => {
+    const {selectedIndex, selectedDate} = this.state;
+    const startOfInterval = selectedDate.startOf(UNITS_OF_DATE[selectedIndex]);
+    const endOfInterval = selectedDate.endOf(UNITS_OF_DATE[selectedIndex]);
+    return moment(operation.date).isBetween(
+      startOfInterval,
+      endOfInterval,
+      UNITS_OF_DATE[selectedIndex],
+      '[]',
+    );
+  };
 }
 
 const mapStateToProps = (state: AppState) => ({

@@ -5,7 +5,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface DateSelectorProps {
-  type: 'week' | 'month' | 'year';
+  type: 'isoWeek' | 'month' | 'year';
   date: moment.Moment;
   changeDate: (date: moment.Moment) => void;
 }
@@ -35,12 +35,12 @@ export default class DateSelector extends PureComponent<DateSelectorProps> {
     const {type} = this.props;
     let date = this.props.date;
 
-    if (type === 'week') {
+    if (type === 'isoWeek') {
       return (
         <Text>
-          {date.startOf('week').format('D MMM') +
+          {date.startOf('isoWeek').format('D MMM') +
             ' - ' +
-            date.endOf('week').format('D MMM')}
+            date.endOf('isoWeek').format('D MMM')}
         </Text>
       );
     } else if (type === 'month') {
@@ -54,7 +54,7 @@ export default class DateSelector extends PureComponent<DateSelectorProps> {
     let {type} = this.props;
     let date = moment(this.props.date);
 
-    if (type === 'week') {
+    if (type === 'isoWeek') {
       date.add(1, 'week');
     } else if (type === 'month') {
       date.add(1, 'month');
@@ -68,7 +68,7 @@ export default class DateSelector extends PureComponent<DateSelectorProps> {
     let {type} = this.props;
     let date = moment(this.props.date);
 
-    if (type === 'week') {
+    if (type === 'isoWeek') {
       date.subtract(1, 'week');
     } else if (type === 'month') {
       date.subtract(1, 'month');
