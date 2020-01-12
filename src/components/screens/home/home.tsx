@@ -72,7 +72,9 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       if (this.isDateInSelectedInterval(date)) {
         operationComponents.push(
           <List.Section>
-            <List.Subheader>{DateHandler.convertDate(date)}</List.Subheader>
+            <List.Subheader>
+              {DateHandler.convertDate(moment(date).toDate())}
+            </List.Subheader>
             {this.renderOperations(operations)}
           </List.Section>,
         );

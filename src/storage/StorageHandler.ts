@@ -60,11 +60,8 @@ export default class StorageHandler {
         .getMany();
 
       operations.forEach(operation => {
-        const operationDate = new Date(
-          operation.date.getFullYear(),
-          operation.date.getMonth(),
-          operation.date.getDate(),
-        );
+        const operationDate = new Date(operation.date).setHours(0, 0, 0, 0);
+        console.log('OPERATION DATE: ', operationDate)
         if (!operationsMap.has(operationDate)) {
           operationsMap.set(operationDate, []);
         }
