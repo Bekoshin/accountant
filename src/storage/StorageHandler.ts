@@ -54,6 +54,7 @@ export default class StorageHandler {
       operations = await this._operationRepo
         .createQueryBuilder('o')
         .leftJoinAndSelect('o._category', 'c')
+        .addOrderBy('o._date', 'DESC')
         .getMany();
     }
     return operations;

@@ -27,4 +27,19 @@ export default class DateHandler {
       firstDate.getDate() === secondDate.getDate()
     );
   };
+
+  public static isDateInSelectedInterval = (
+    date: Date,
+    selectedDate: moment.Moment,
+    selectedInterval: 'isoWeek' | 'month' | 'year',
+  ) => {
+    const startOfInterval = selectedDate.startOf(selectedInterval);
+    const endOfInterval = selectedDate.endOf(selectedInterval);
+    return moment(date).isBetween(
+      startOfInterval,
+      endOfInterval,
+      selectedInterval,
+      '[]',
+    );
+  };
 }

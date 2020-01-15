@@ -10,6 +10,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
 import DateHandler from '../../../utils/DateHandler';
+import OperationHandler from '../../../utils/OperationHandler';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -17,7 +18,7 @@ const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
 interface HomeProps {
   navigation: any;
 
-  operations: Map<Date, Operation[]>;
+  operations: Operation[];
 }
 
 interface HomeState {
@@ -65,15 +66,20 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   renderOperationSections() {
-    const operationsMap = this.props.operations;
-    console.log('OPERATIONS: ', operationsMap);
+    const {selectedIndex, selectedDate} = this.state;
+    const filteredOperations = OperationHandler.filterOperationsByDate(
+      this.props.operations,
+      selectedDate,
+      UNITS_OF_DATE[selectedIndex],
+    );
     let operationComponents: any = [];
-    operationsMap.forEach((operations: Operation[], date: Date) => {
-      if (this.isDateInSelectedInterval(date)) {
+    const operationsMap = OperationHandler.groupByDate(filteredOperations);
+    operationsMap.forEach((operations: Operation[]) => {
+      if (operations.length > 0) {
         operationComponents.push(
           <List.Section>
             <List.Subheader>
-              {DateHandler.convertDate(moment(date).toDate())}
+              {DateHandler.convertDate(operations[0].date)}
             </List.Subheader>
             {this.renderOperations(operations)}
           </List.Section>,
@@ -105,16 +111,16 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           left={
             operation.category.image
               ? () => (
-                <Image
-                  source={operation.category.image}
-                  style={{width: 40, height: 40}}
-                />
-              )
+                  <Image
+                    source={operation.category.image}
+                    style={{width: 40, height: 40}}
+                  />
+                )
               : undefined
           }
           right={() => <Text>{operation.amount} ₽</Text>}
-        />
-      )
+        />,
+      );
     }
     return operationComponents;
   }
@@ -138,18 +144,6 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       />
     );
   }
-
-  private isDateInSelectedInterval = (date: Date) => {
-    const {selectedIndex, selectedDate} = this.state;
-    const startOfInterval = selectedDate.startOf(UNITS_OF_DATE[selectedIndex]);
-    const endOfInterval = selectedDate.endOf(UNITS_OF_DATE[selectedIndex]);
-    return moment(date).isBetween(
-      startOfInterval,
-      endOfInterval,
-      UNITS_OF_DATE[selectedIndex],
-      '[]',
-    );
-  };
 }
 
 const mapStateToProps = (state: AppState) => ({
