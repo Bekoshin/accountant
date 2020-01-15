@@ -33,8 +33,9 @@ export default class DateHandler {
     selectedDate: moment.Moment,
     selectedInterval: 'isoWeek' | 'month' | 'year',
   ) => {
-    const startOfInterval = selectedDate.startOf(selectedInterval);
-    const endOfInterval = selectedDate.endOf(selectedInterval);
+    const dateBetweenInterval = moment(selectedDate);
+    const startOfInterval = dateBetweenInterval.startOf(selectedInterval);
+    const endOfInterval = dateBetweenInterval.endOf(selectedInterval);
     return moment(date).isBetween(
       startOfInterval,
       endOfInterval,

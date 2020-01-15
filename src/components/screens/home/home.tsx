@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {FAB, List} from 'react-native-paper';
+import {Button, FAB, List} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
@@ -22,16 +22,49 @@ interface HomeProps {
 }
 
 interface HomeState {
-  open: boolean;
+  fabIsOpen: boolean;
   selectedIndex: number;
   selectedDate: moment.Moment;
+  operationsMap: Map<string, Operation[]>;
 }
 
 class Home extends React.PureComponent<HomeProps, HomeState> {
-  state = {
-    open: false,
-    selectedIndex: 1,
-    selectedDate: moment(),
+  constructor(props: HomeProps) {
+    super(props);
+    const selectedDate = moment();
+    const selectedIndex = 1;
+    const filteredOperations = OperationHandler.filterOperationsByDate(
+      this.props.operations,
+      selectedDate,
+      UNITS_OF_DATE[selectedIndex],
+    );
+    this.setTotalToParam(
+      OperationHandler.calculateTotalAmount(filteredOperations),
+    );
+    const operationsMap = OperationHandler.groupByDate(filteredOperations);
+    this.state = {
+      fabIsOpen: false,
+      selectedIndex: 1,
+      selectedDate: selectedDate,
+      operationsMap: operationsMap,
+    };
+  }
+
+  static navigationOptions = ({navigation}: any) => {
+    let params = navigation.state.params;
+    const total = params && params.total !== undefined ? params.total : '0';
+    return {
+      title: I18n.t('label_total') + ': ' + total + ' ₽',
+      headerRight: () => (
+        <Button onPress={() => params.saveButtonHandler()}>
+          {I18n.t('action_save')}
+        </Button>
+      ),
+    };
+  };
+
+  setTotalToParam = (total: number) => {
+    this.props.navigation.setParams({total: total});
   };
 
   componentDidMount(): void {
@@ -42,22 +75,45 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     console.log('HOME WILL UNMOUNT');
   }
 
+  handleIndexChanged = (index: number) => {
+    this.setState({selectedIndex: index, selectedDate: moment()});
+    this.updateVisibleOperations(this.state.selectedDate, index);
+  };
+
+  handleDateChanged = (date: moment.Moment) => {
+    this.setState({selectedDate: date});
+    this.updateVisibleOperations(date, this.state.selectedIndex);
+  };
+
+  updateVisibleOperations = (
+    selectedDate: moment.Moment,
+    selectedIndex: number,
+  ) => {
+    const filteredOperations = OperationHandler.filterOperationsByDate(
+      this.props.operations,
+      selectedDate,
+      UNITS_OF_DATE[selectedIndex],
+    );
+    this.setTotalToParam(
+      OperationHandler.calculateTotalAmount(filteredOperations),
+    );
+    const operationsMap = OperationHandler.groupByDate(filteredOperations);
+    this.setState({operationsMap: operationsMap});
+  };
+
   render() {
     let selectedIndex = this.state.selectedIndex;
-    console.log('SELECTED DATE: ', this.state.selectedDate.toDate());
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <SegmentedControlTab
           values={['Неделя', 'Месяц', 'Год']}
           selectedIndex={selectedIndex}
-          onTabPress={index =>
-            this.setState({selectedIndex: index, selectedDate: moment()})
-          }
+          onTabPress={this.handleIndexChanged}
         />
         <DateSelector
           type={UNITS_OF_DATE[selectedIndex]}
           date={this.state.selectedDate}
-          changeDate={date => this.setState({selectedDate: date})}
+          changeDate={this.handleDateChanged}
         />
         {this.renderOperationSections()}
         {this.renderFAB()}
@@ -66,18 +122,12 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   renderOperationSections() {
-    const {selectedIndex, selectedDate} = this.state;
-    const filteredOperations = OperationHandler.filterOperationsByDate(
-      this.props.operations,
-      selectedDate,
-      UNITS_OF_DATE[selectedIndex],
-    );
+    const {operationsMap} = this.state;
     let operationComponents: any = [];
-    const operationsMap = OperationHandler.groupByDate(filteredOperations);
     operationsMap.forEach((operations: Operation[]) => {
       if (operations.length > 0) {
         operationComponents.push(
-          <List.Section>
+          <List.Section key={operations[0].date.toString()}>
             <List.Subheader>
               {DateHandler.convertDate(operations[0].date)}
             </List.Subheader>
@@ -139,8 +189,8 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
         ]}
         icon="plus"
         visible={true}
-        open={this.state.open}
-        onStateChange={({open}) => this.setState({open})}
+        open={this.state.fabIsOpen}
+        onStateChange={({open}) => this.setState({fabIsOpen: open})}
       />
     );
   }

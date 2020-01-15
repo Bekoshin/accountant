@@ -56,4 +56,12 @@ export default class OperationHandler {
     }
     return filteredOperations;
   };
+
+  public static calculateTotalAmount = (operations: Operation[]): number => {
+    let total = 0;
+    for (let operation of operations) {
+      total += operation.amount;
+    }
+    return total;
+  };
 }

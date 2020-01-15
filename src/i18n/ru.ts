@@ -6,6 +6,7 @@ export default {
     label_category: 'Категория',
     label_date: 'Дата',
     label_note: 'Заметка',
+    label_total: 'Итог',
 
     operation_screen: 'Операция',
     new_operation_screen: 'Новая операция',

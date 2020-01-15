@@ -12,7 +12,6 @@ import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../../storage/StorageHandler';
 import {actionTypes} from '../../../store/actionTypes';
-import moment from 'moment';
 import DateHandler from '../../../utils/DateHandler';
 
 interface OperationProps {

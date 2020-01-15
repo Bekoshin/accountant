@@ -27,7 +27,9 @@ import ParentCategoriesScreen from './components/screens/parentCategories/parent
 const BottomNavigator = createMaterialBottomTabNavigator(
   {
     HomeStackNavigator: {
-      screen: Home,
+      screen: createStackNavigator({
+        Home: Home,
+      }),
       navigationOptions: {
         tabBarLabel: 'Home',
         tabBarIcon: ({tintColor}) => (
@@ -40,6 +42,7 @@ const BottomNavigator = createMaterialBottomTabNavigator(
     Shopping: {
       screen: Shopping,
       navigationOptions: {
+        headerTitle: 'shop',
         tabBarIcon: ({tintColor}) => (
           <View>
             <Icon

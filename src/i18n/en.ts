@@ -6,6 +6,7 @@ export default {
     label_category: 'Category',
     label_date: 'Date',
     label_note: 'Note',
+    label_total: 'Total',
 
     operation_screen: 'Operation',
     new_operation_screen: 'New operation',
