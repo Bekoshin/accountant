@@ -7,7 +7,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import I18n from 'i18n-js';
-
+import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider} from 'react-redux';
 
 import 'reflect-metadata';
@@ -42,7 +42,6 @@ const BottomNavigator = createMaterialBottomTabNavigator(
     Shopping: {
       screen: Shopping,
       navigationOptions: {
-        headerTitle: 'shop',
         tabBarIcon: ({tintColor}) => (
           <View>
             <Icon
@@ -126,7 +125,9 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <PaperProvider>
+          <AppContainer />
+        </PaperProvider>
       </Provider>
     );
   }

@@ -25,9 +25,9 @@ export default class OperationHandler {
   ): Map<string, Operation[]> => {
     let operationsMap = new Map();
     operations.forEach(operation => {
-      const operationId = operation.category.id;
-      if (operationId) {
-        const operationIdStr = operationId.toString();
+      const categoryId = operation.category.id;
+      if (categoryId) {
+        const operationIdStr = categoryId.toString();
         if (!operationsMap.has(operationIdStr)) {
           operationsMap.set(operationIdStr, []);
         }

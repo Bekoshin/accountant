@@ -15,6 +15,8 @@ export default {
     parent_categories_screen: 'Родительские категории',
 
     action_save: 'Сохранить',
+    action_group_by_date: 'Группировать по дате',
+    action_group_by_category: 'Группировать по категории',
 
     placeholder_search: 'Поиск',
 

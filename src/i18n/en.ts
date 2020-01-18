@@ -15,6 +15,8 @@ export default {
     parent_categories_screen: 'Parent categories',
 
     action_save: 'Save',
+    action_group_by_date: 'Group by date',
+    action_group_by_category: 'Group by category',
 
     placeholder_search: 'Search',
 

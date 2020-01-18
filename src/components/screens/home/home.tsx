@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {Button, FAB, List} from 'react-native-paper';
+import {FAB, Menu, List, Appbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
@@ -26,6 +26,9 @@ interface HomeState {
   selectedIndex: number;
   selectedDate: moment.Moment;
   operationsMap: Map<string, Operation[]>;
+  total: number;
+  isMoreMenuVisible: boolean;
+  groupedBy: 'date' | 'category';
 }
 
 class Home extends React.PureComponent<HomeProps, HomeState> {
@@ -38,33 +41,27 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       selectedDate,
       UNITS_OF_DATE[selectedIndex],
     );
-    this.setTotalToParam(
-      OperationHandler.calculateTotalAmount(filteredOperations),
-    );
     const operationsMap = OperationHandler.groupByDate(filteredOperations);
     this.state = {
       fabIsOpen: false,
       selectedIndex: 1,
       selectedDate: selectedDate,
       operationsMap: operationsMap,
+      total: OperationHandler.calculateTotalAmount(filteredOperations),
+      isMoreMenuVisible: false,
+      groupedBy: 'date',
     };
   }
 
-  static navigationOptions = ({navigation}: any) => {
-    let params = navigation.state.params;
-    const total = params && params.total !== undefined ? params.total : '0';
+  static navigationOptions = () => {
     return {
-      title: I18n.t('label_total') + ': ' + total + ' ₽',
-      headerRight: () => (
-        <Button onPress={() => params.saveButtonHandler()}>
-          {I18n.t('action_save')}
-        </Button>
-      ),
+      header: null,
     };
   };
 
-  setTotalToParam = (total: number) => {
-    this.props.navigation.setParams({total: total});
+  handleGroupBy = async (attribute: 'date' | 'category') => {
+    const {selectedDate, selectedIndex} = this.state;
+    await this.updateVisibleOperations(selectedDate, selectedIndex, attribute);
   };
 
   componentDidMount(): void {
@@ -88,23 +85,63 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   updateVisibleOperations = (
     selectedDate: moment.Moment,
     selectedIndex: number,
+    attribute?: 'date' | 'category',
   ) => {
     const filteredOperations = OperationHandler.filterOperationsByDate(
       this.props.operations,
       selectedDate,
       UNITS_OF_DATE[selectedIndex],
     );
-    this.setTotalToParam(
-      OperationHandler.calculateTotalAmount(filteredOperations),
-    );
-    const operationsMap = OperationHandler.groupByDate(filteredOperations);
-    this.setState({operationsMap: operationsMap});
+    if (!attribute) {
+      attribute = this.state.groupedBy;
+    }
+    let operationsMap;
+    if (attribute === 'date') {
+      operationsMap = OperationHandler.groupByDate(filteredOperations);
+    } else {
+      operationsMap = OperationHandler.groupByCategory(filteredOperations);
+    }
+    this.setState({
+      operationsMap: operationsMap,
+      total: OperationHandler.calculateTotalAmount(filteredOperations),
+      isMoreMenuVisible: false,
+      groupedBy: attribute,
+    });
   };
 
   render() {
-    let selectedIndex = this.state.selectedIndex;
+    console.log('RENDER')
+    const {selectedIndex, total, isMoreMenuVisible, groupedBy} = this.state;
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
+        <Appbar.Header>
+          <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'} />
+          <Appbar.Action icon="magnify" onPress={() => {}} />
+          <Menu
+            onDismiss={() => {
+              this.setState({isMoreMenuVisible: false});
+            }}
+            visible={isMoreMenuVisible}
+            anchor={
+              <Appbar.Action
+                color="white"
+                icon="dots-vertical"
+                onPress={() => this.setState({isMoreMenuVisible: true})}
+              />
+            }>
+            <Menu.Item
+              title={
+                groupedBy === 'date'
+                  ? I18n.t('action_group_by_category')
+                  : I18n.t('action_group_by_date')
+              }
+              onPress={() =>
+                this.handleGroupBy(groupedBy === 'date' ? 'category' : 'date')
+              }
+            />
+            <Menu.Item title="Editar" onPress={() => {}} />
+          </Menu>
+        </Appbar.Header>
         <SegmentedControlTab
           values={['Неделя', 'Месяц', 'Год']}
           selectedIndex={selectedIndex}
@@ -122,15 +159,25 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   renderOperationSections() {
-    const {operationsMap} = this.state;
+    const {operationsMap, groupedBy} = this.state;
     let operationComponents: any = [];
     operationsMap.forEach((operations: Operation[]) => {
       if (operations.length > 0) {
+        let key;
+        let subheader;
+        if (groupedBy === 'date') {
+          key = operations[0].date.toString();
+          subheader = DateHandler.convertDate(operations[0].date);
+        } else {
+          key = operations[0].category.id;
+          subheader = I18n.t(operations[0].category.name, {
+            defaultValue: operations[0].category.name,
+          });
+        }
+        console.log('KEY: ', key);
         operationComponents.push(
-          <List.Section key={operations[0].date.toString()}>
-            <List.Subheader>
-              {DateHandler.convertDate(operations[0].date)}
-            </List.Subheader>
+          <List.Section key={key}>
+            <List.Subheader>{subheader}</List.Subheader>
             {this.renderOperations(operations)}
           </List.Section>,
         );
@@ -145,14 +192,21 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   renderOperations(operations: Operation[]) {
+    const {groupedBy} = this.state;
     let operationComponents = [];
     for (let operation of operations) {
+      let title;
+      if (groupedBy === 'date') {
+        title = I18n.t(operation.category.name, {
+          defaultValue: operation.category.name,
+        });
+      } else {
+        title = DateHandler.convertDate(operations[0].date);
+      }
       operationComponents.push(
         <List.Item
           key={operation.id}
-          title={I18n.t(operation.category.name, {
-            defaultValue: operation.category.name,
-          })}
+          title={title}
           onPress={() =>
             this.props.navigation.navigate('Operation', {
               operation: operation,
