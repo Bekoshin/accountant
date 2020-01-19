@@ -11,6 +11,7 @@ import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
 import DateHandler from '../../../utils/DateHandler';
 import OperationHandler from '../../../utils/OperationHandler';
+import styles from './home.styles';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -170,7 +171,9 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
               this.handleGroupBy(groupedBy === 'date' ? 'category' : 'date')
             }
           />
-          <Menu.Item title={I18n.t('action_set_filters')} onPress={() => {
+          <Menu.Item
+            title={I18n.t('action_set_filters')}
+            onPress={() => {
             navigation.navigate('Filters');
           }}/>
         </Menu>
@@ -280,20 +283,10 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
 
   renderFAB() {
     return (
-      <FAB.Group
-        actions={[
-          {
-            icon: 'check',
-            label: 'add operation',
-            onPress: () => {
-              this.props.navigation.navigate('Operation');
-            },
-          },
-        ]}
+      <FAB
+        style={styles.fab}
         icon="plus"
-        visible={true}
-        open={this.state.fabIsOpen}
-        onStateChange={({open}) => this.setState({fabIsOpen: open})}
+        onPress={() => this.props.navigation.navigate('Operation')}
       />
     );
   }
