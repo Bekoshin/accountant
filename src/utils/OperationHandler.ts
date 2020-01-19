@@ -1,5 +1,4 @@
 import Operation from '../entities/Operation';
-import Category from '../entities/Category';
 import moment from 'moment';
 import DateHandler from './DateHandler';
 
@@ -12,6 +11,23 @@ export default class OperationHandler {
       const operationDate = new Date(operation.date)
         .setHours(0, 0, 0, 0)
         .toString();
+      if (!operationsMap.has(operationDate)) {
+        operationsMap.set(operationDate, []);
+      }
+      operationsMap.get(operationDate).push(operation);
+    });
+    return operationsMap;
+  };
+
+  public static groupByMonth = (
+    operations: Operation[],
+  ): Map<string, Operation[]> => {
+    let operationsMap = new Map();
+    operations.forEach(operation => {
+      const operationDate = new Date(
+        operation.date.getFullYear(),
+        operation.date.getMonth(),
+      ).toString();
       if (!operationsMap.has(operationDate)) {
         operationsMap.set(operationDate, []);
       }

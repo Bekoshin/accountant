@@ -87,17 +87,22 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     selectedIndex: number,
     attribute?: 'date' | 'category',
   ) => {
+    const unitOfDate = UNITS_OF_DATE[selectedIndex];
     const filteredOperations = OperationHandler.filterOperationsByDate(
       this.props.operations,
       selectedDate,
-      UNITS_OF_DATE[selectedIndex],
+      unitOfDate,
     );
     if (!attribute) {
       attribute = this.state.groupedBy;
     }
     let operationsMap;
     if (attribute === 'date') {
-      operationsMap = OperationHandler.groupByDate(filteredOperations);
+      if (unitOfDate === 'year') {
+        operationsMap = OperationHandler.groupByMonth(filteredOperations);
+      } else {
+        operationsMap = OperationHandler.groupByDate(filteredOperations);
+      }
     } else {
       operationsMap = OperationHandler.groupByCategory(filteredOperations);
     }
@@ -159,15 +164,20 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   renderOperationSections() {
-    const {operationsMap, groupedBy} = this.state;
+    const {operationsMap, groupedBy, selectedIndex} = this.state;
     let operationComponents: any = [];
     operationsMap.forEach((operations: Operation[]) => {
       if (operations.length > 0) {
         let key;
         let subheader;
         if (groupedBy === 'date') {
-          key = operations[0].date.toString();
-          subheader = DateHandler.convertDate(operations[0].date);
+          if (UNITS_OF_DATE[selectedIndex] === 'year') {
+            key = operations[0].date.toString();
+            subheader = DateHandler.getMonthName(operations[0].date);
+          } else {
+            key = operations[0].date.toString();
+            subheader = DateHandler.convertDate(operations[0].date);
+          }
         } else {
           key = operations[0].category.id;
           subheader = I18n.t(operations[0].category.name, {
@@ -185,7 +195,11 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     });
 
     if (operationComponents.length > 0) {
-      return <ScrollView>{operationComponents}</ScrollView>;
+      return (
+        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
+          {operationComponents}
+        </ScrollView>
+      );
     } else {
       return <NoExpensesComponent />;
     }
