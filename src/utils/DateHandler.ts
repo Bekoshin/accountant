@@ -20,7 +20,7 @@ export default class DateHandler {
   public static getMonthName = (date: Date) => {
     return moment(date)
       .local()
-      .format('MMM');
+      .format('MMMM');
   };
 
   private static compareDates = (firstDate: Date, secondDate: Date) => {

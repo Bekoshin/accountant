@@ -3,6 +3,8 @@ export default {
 
     label_required: 'Required',
     label_amount: 'Amount',
+    label_amount_from: 'Amount, from',
+    label_amount_to: 'Amount, to',
     label_category: 'Category',
     label_date: 'Date',
     label_note: 'Note',
@@ -17,6 +19,7 @@ export default {
     action_save: 'Save',
     action_group_by_date: 'Group by date',
     action_group_by_category: 'Group by category',
+    action_set_filters: 'Set filters',
 
     placeholder_search: 'Search',
 

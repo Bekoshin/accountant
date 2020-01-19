@@ -3,6 +3,8 @@ export default {
 
     label_required: 'Обязательно',
     label_amount: 'Сумма',
+    label_amount_from: 'Сумма, от',
+    label_amount_to: 'Сумма, до',
     label_category: 'Категория',
     label_date: 'Дата',
     label_note: 'Заметка',
@@ -17,6 +19,7 @@ export default {
     action_save: 'Сохранить',
     action_group_by_date: 'Группировать по дате',
     action_group_by_category: 'Группировать по категории',
+    action_set_filters: 'Установить фильтры',
 
     placeholder_search: 'Поиск',
 

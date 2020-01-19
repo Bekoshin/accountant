@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
-import {FAB, Menu, List, Appbar} from 'react-native-paper';
+import {FAB, Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../dateSelector/dateSelector.Component';
 import I18n from '../../../i18n/i18n';
@@ -29,6 +29,7 @@ interface HomeState {
   total: number;
   isMoreMenuVisible: boolean;
   groupedBy: 'date' | 'category';
+  searchMode: boolean;
 }
 
 class Home extends React.PureComponent<HomeProps, HomeState> {
@@ -50,6 +51,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       total: OperationHandler.calculateTotalAmount(filteredOperations),
       isMoreMenuVisible: false,
       groupedBy: 'date',
+      searchMode: false,
     };
   }
 
@@ -115,38 +117,11 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   };
 
   render() {
-    console.log('RENDER')
-    const {selectedIndex, total, isMoreMenuVisible, groupedBy} = this.state;
+    console.log('HOME RENDER');
+    const {selectedIndex, searchMode} = this.state;
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        <Appbar.Header>
-          <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'} />
-          <Appbar.Action icon="magnify" onPress={() => {}} />
-          <Menu
-            onDismiss={() => {
-              this.setState({isMoreMenuVisible: false});
-            }}
-            visible={isMoreMenuVisible}
-            anchor={
-              <Appbar.Action
-                color="white"
-                icon="dots-vertical"
-                onPress={() => this.setState({isMoreMenuVisible: true})}
-              />
-            }>
-            <Menu.Item
-              title={
-                groupedBy === 'date'
-                  ? I18n.t('action_group_by_category')
-                  : I18n.t('action_group_by_date')
-              }
-              onPress={() =>
-                this.handleGroupBy(groupedBy === 'date' ? 'category' : 'date')
-              }
-            />
-            <Menu.Item title="Editar" onPress={() => {}} />
-          </Menu>
-        </Appbar.Header>
+        {searchMode ? this.renderSearchAppBar() : this.renderMainAppBar()}
         <SegmentedControlTab
           values={['Неделя', 'Месяц', 'Год']}
           selectedIndex={selectedIndex}
@@ -160,6 +135,67 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
         {this.renderOperationSections()}
         {this.renderFAB()}
       </View>
+    );
+  }
+
+  renderMainAppBar() {
+    const {total, isMoreMenuVisible, groupedBy} = this.state;
+    const {navigation} = this.props;
+    return (
+      <Appbar.Header>
+        <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'}/>
+        <Appbar.Action
+          icon="magnify"
+          onPress={() => this.setState({searchMode: true})}
+        />
+        <Menu
+          onDismiss={() => {
+            this.setState({isMoreMenuVisible: false});
+          }}
+          visible={isMoreMenuVisible}
+          anchor={
+            <Appbar.Action
+              color="white"
+              icon="dots-vertical"
+              onPress={() => this.setState({isMoreMenuVisible: true})}
+            />
+          }>
+          <Menu.Item
+            title={
+              groupedBy === 'date'
+                ? I18n.t('action_group_by_category')
+                : I18n.t('action_group_by_date')
+            }
+            onPress={() =>
+              this.handleGroupBy(groupedBy === 'date' ? 'category' : 'date')
+            }
+          />
+          <Menu.Item title={I18n.t('action_set_filters')} onPress={() => {
+            navigation.navigate('Filters');
+          }}/>
+        </Menu>
+      </Appbar.Header>
+    );
+  }
+
+  renderSearchAppBar() {
+    return (
+      <Appbar.Header>
+        <View style={{flex: 0.1}}>
+          <Appbar.Action icon="arrow-left" onPress={() => this.setState({searchMode: false})}/>
+        </View>
+        <View style={{flex: 0.8}}>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={query => {
+            }}
+            value='qwe'
+          />
+        </View>
+        <View style={{flex: 0.1}}>
+          <Appbar.Action icon="magnify" onPress={() => this.setState({searchMode: true})}/>
+        </View>
+      </Appbar.Header>
     );
   }
 
@@ -184,7 +220,6 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
             defaultValue: operations[0].category.name,
           });
         }
-        console.log('KEY: ', key);
         operationComponents.push(
           <List.Section key={key}>
             <List.Subheader>{subheader}</List.Subheader>
@@ -201,7 +236,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
         </ScrollView>
       );
     } else {
-      return <NoExpensesComponent />;
+      return <NoExpensesComponent/>;
     }
   }
 
@@ -229,11 +264,11 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           left={
             operation.category.image
               ? () => (
-                  <Image
-                    source={operation.category.image}
-                    style={{width: 40, height: 40}}
-                  />
-                )
+                <Image
+                  source={operation.category.image}
+                  style={{width: 40, height: 40}}
+                />
+              )
               : undefined
           }
           right={() => <Text>{operation.amount} ₽</Text>}
