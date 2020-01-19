@@ -15,10 +15,11 @@ export default {
     category_screen: 'Категория',
     new_category_screen: 'Новая категория',
     parent_categories_screen: 'Родительские категории',
+    filters_screen: 'Фильтры',
 
     action_save: 'Сохранить',
-    action_group_by_date: 'Группировать по дате',
-    action_group_by_category: 'Группировать по категории',
+    action_group_by_date: 'Группировать по датам',
+    action_group_by_category: 'Группировать по категориям',
     action_set_filters: 'Установить фильтры',
 
     placeholder_search: 'Поиск',

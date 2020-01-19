@@ -13,6 +13,7 @@ import {Action} from 'redux';
 import StorageHandler from '../../../storage/StorageHandler';
 import {actionTypes} from '../../../store/actionTypes';
 import DateHandler from '../../../utils/DateHandler';
+import styles from './filters.styles';
 
 interface FiltersProps {
   navigation: any;
@@ -21,16 +22,19 @@ interface FiltersProps {
 interface FiltersState {
   amountFrom: string;
   amountTo: string;
+  categories: Category[];
 }
 
 export default class FiltersScreen extends React.PureComponent<
   FiltersProps,
-  FiltersState> {
+  FiltersState
+> {
   constructor(props: FiltersProps) {
     super(props);
     this.state = {
       amountFrom: '',
       amountTo: '',
+      categories: [],
     };
   }
 
@@ -47,9 +51,7 @@ export default class FiltersScreen extends React.PureComponent<
     };
   };
 
-  private handleSaveButton = async () => {
-
-  };
+  private handleSaveButton = async () => {};
 
   private changeAmountFrom = (amount: string) => {
     if (amount.match(/^\d*\.?\d*$/)) {
@@ -67,6 +69,10 @@ export default class FiltersScreen extends React.PureComponent<
     }
   };
 
+  private changeCategories = (categories: Category[]) => {
+    this.setState({categories: categories});
+  };
+
   componentDidMount() {
     this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
     console.log('FILTERS DID MOUNT');
@@ -79,10 +85,17 @@ export default class FiltersScreen extends React.PureComponent<
   render() {
     const {amountFrom, amountTo} = this.state;
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+      <View style={styles.mainContainer}>
         <ScrollView>
-          <View style={{flexDirection: 'row'}}>
+          <Input
+            label={I18n.t('label_category')}
+            value={this.createCategoriesString()}
+            editable={false}
+            onClearPress={() => this.changeCategories([])}
+          />
+          <View style={styles.amountContainer}>
             <Input
+              style={styles.leftInput}
               label={I18n.t('label_amount_from')}
               value={amountFrom}
               keyboardType="numeric"
@@ -90,6 +103,7 @@ export default class FiltersScreen extends React.PureComponent<
               onChangeText={this.changeAmountFrom}
             />
             <Input
+              style={styles.rightInput}
               label={I18n.t('label_amount_to')}
               value={amountTo}
               keyboardType="numeric"
@@ -100,5 +114,17 @@ export default class FiltersScreen extends React.PureComponent<
         </ScrollView>
       </View>
     );
+  }
+
+  createCategoriesString() {
+    const {categories} = this.state;
+    let string = '';
+    for (let i = 0; i < categories.length; i++) {
+      string += categories[i].name;
+      if (i !== categories.length - 1) {
+        string += ', ';
+      }
+    }
+    return string;
   }
 }

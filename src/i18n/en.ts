@@ -15,6 +15,7 @@ export default {
     category_screen: 'Category',
     new_category_screen: 'New category',
     parent_categories_screen: 'Parent categories',
+    filters_screen: 'Filters',
 
     action_save: 'Save',
     action_group_by_date: 'Group by date',
