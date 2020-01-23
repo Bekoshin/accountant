@@ -9,21 +9,36 @@ import IMAGES from '../../../../../images';
 interface ChildCategoryProps {
   category?: Category;
   onPress: (category: Category) => void;
+  selectMode?: boolean;
+  onSelectPress?: (category: Category) => void;
+}
+
+interface ChildCategoryState {
+  isSelected: boolean;
 }
 
 export default class ChildCategoryComponent extends PureComponent<
-  ChildCategoryProps
+  ChildCategoryProps,
+  ChildCategoryState
 > {
   onPressHandler = () => {
-    const {category, onPress} = this.props;
+    const {category, onPress, selectMode, onSelectPress} = this.props;
     if (category) {
-      onPress(category);
+      if (selectMode) {
+        if (onSelectPress) {
+          onSelectPress(category);
+        }
+      } else {
+        onPress(category);
+      }
     }
   };
 
   render() {
     return (
-      <TouchableRipple style={styles.mainContainer} onPress={this.onPressHandler}>
+      <TouchableRipple
+        style={styles.mainContainer}
+        onPress={this.onPressHandler}>
         {this.renderContent()}
       </TouchableRipple>
     );

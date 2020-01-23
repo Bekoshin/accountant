@@ -23,7 +23,6 @@ interface HomeProps {
 }
 
 interface HomeState {
-  fabIsOpen: boolean;
   selectedIndex: number;
   selectedDate: moment.Moment;
   operationsMap: Map<string, Operation[]>;
@@ -45,7 +44,6 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     );
     const operationsMap = OperationHandler.groupByDate(filteredOperations);
     this.state = {
-      fabIsOpen: false,
       selectedIndex: 1,
       selectedDate: selectedDate,
       operationsMap: operationsMap,
@@ -144,7 +142,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     const {navigation} = this.props;
     return (
       <Appbar.Header>
-        <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'}/>
+        <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'} />
         <Appbar.Action
           icon="magnify"
           onPress={() => this.setState({searchMode: true})}
@@ -174,8 +172,9 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           <Menu.Item
             title={I18n.t('action_set_filters')}
             onPress={() => {
-            navigation.navigate('Filters');
-          }}/>
+              navigation.navigate('Filters');
+            }}
+          />
         </Menu>
       </Appbar.Header>
     );
@@ -185,18 +184,23 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     return (
       <Appbar.Header>
         <View style={{flex: 0.1}}>
-          <Appbar.Action icon="arrow-left" onPress={() => this.setState({searchMode: false})}/>
+          <Appbar.Action
+            icon="arrow-left"
+            onPress={() => this.setState({searchMode: false})}
+          />
         </View>
         <View style={{flex: 0.8}}>
           <Searchbar
             placeholder="Search"
-            onChangeText={query => {
-            }}
-            value='qwe'
+            onChangeText={query => {}}
+            value="qwe"
           />
         </View>
         <View style={{flex: 0.1}}>
-          <Appbar.Action icon="magnify" onPress={() => this.setState({searchMode: true})}/>
+          <Appbar.Action
+            icon="magnify"
+            onPress={() => this.setState({searchMode: true})}
+          />
         </View>
       </Appbar.Header>
     );
@@ -239,7 +243,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
         </ScrollView>
       );
     } else {
-      return <NoExpensesComponent/>;
+      return <NoExpensesComponent />;
     }
   }
 
@@ -267,11 +271,11 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           left={
             operation.category.image
               ? () => (
-                <Image
-                  source={operation.category.image}
-                  style={{width: 40, height: 40}}
-                />
-              )
+                  <Image
+                    source={operation.category.image}
+                    style={{width: 40, height: 40}}
+                  />
+                )
               : undefined
           }
           right={() => <Text>{operation.amount} ₽</Text>}

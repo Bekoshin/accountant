@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Category from './Category';
 import {OperationMeta} from './meta/OperationMeta';
+import Product from './Product';
 
 @Entity(OperationMeta.table.name)
 export default class Operation {
@@ -30,11 +32,15 @@ export default class Operation {
   @Column(OperationMeta.columns.note as ColumnOptions)
   private _note: string;
 
+  @OneToMany(type => Product, product => product.operation)
+  private _products: Product[];
+
   constructor(
     amount: number,
     category: Category,
     date: Date,
     note: string,
+    products: Product[] = [],
     id?: number,
   ) {
     this._id = id;
@@ -42,6 +48,7 @@ export default class Operation {
     this._category = category;
     this._date = date;
     this._note = note;
+    this._products = products;
   }
 
   get id(): number | undefined {
@@ -78,5 +85,13 @@ export default class Operation {
 
   set note(value: string) {
     this._note = value;
+  }
+
+  get products(): Product[] {
+    return this._products;
+  }
+
+  set products(value: Product[]) {
+    this._products = value;
   }
 }

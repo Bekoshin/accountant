@@ -1,6 +1,6 @@
-export class CategoryMeta {
+export class ProductMeta {
   static table = {
-    name: 'categories',
+    name: 'products',
   };
   static columns = {
     id: {
@@ -13,13 +13,13 @@ export class CategoryMeta {
       name: 'name',
       type: 'varchar',
     },
-    parentCategoryId: {
-      name: 'parent_category_id',
-      type: 'integer',
+    value: {
+      name: 'value',
+      type: 'double precision',
       isNullable: true,
     },
-    image: {
-      name: 'image',
+    operationId: {
+      name: 'operation_id',
       type: 'integer',
       isNullable: true,
     },
