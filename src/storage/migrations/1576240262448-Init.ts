@@ -6,6 +6,7 @@ import {
 } from 'typeorm/browser';
 import {CategoryMeta} from '../../entities/meta/CategoryMeta';
 import {OperationMeta} from '../../entities/meta/OperationMeta';
+import {ProductMeta} from '../../entities/meta/ProductMeta';
 
 export class Init1576240262448 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
@@ -91,6 +92,44 @@ export class Init1576240262448 implements MigrationInterface {
         columnNames: [OperationMeta.columns.categoryId.name],
         referencedColumnNames: [CategoryMeta.columns.id.name],
         referencedTableName: CategoryMeta.table.name,
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: ProductMeta.table.name,
+        columns: [
+          {
+            name: ProductMeta.columns.id.name,
+            type: ProductMeta.columns.id.type,
+            isPrimary: ProductMeta.columns.id.isPrimary,
+            isGenerated: ProductMeta.columns.id.isGenerated,
+            generationStrategy: 'increment',
+          },
+          {
+            name: ProductMeta.columns.name.name,
+            type: ProductMeta.columns.name.type,
+          },
+          {
+            name: ProductMeta.columns.value.name,
+            type: ProductMeta.columns.value.type,
+            isNullable: ProductMeta.columns.value.isNullable,
+          },
+          {
+            name: ProductMeta.columns.operationId.name,
+            type: ProductMeta.columns.operationId.type,
+            isNullable: ProductMeta.columns.operationId.isNullable,
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      ProductMeta.table.name,
+      new TableForeignKey({
+        columnNames: [ProductMeta.columns.operationId.name],
+        referencedColumnNames: [OperationMeta.columns.id.name],
+        referencedTableName: OperationMeta.table.name,
       }),
     );
   }
