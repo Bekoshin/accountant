@@ -85,9 +85,9 @@ class OperationScreen extends React.PureComponent<
           note,
         );
         await this.props.saveOperation(operation);
-        this.props.navigation.goBack();
+        await this.props.navigation.goBack();
       } catch (error) {
-        console.log('HANDLE SAVE BUTTON. ERROR: ', error);
+        console.error('HANDLE SAVE BUTTON. ERROR: ', error);
       }
     }
   };

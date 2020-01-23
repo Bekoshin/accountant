@@ -69,6 +69,19 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     console.log('HOME DID MOUNT');
   }
 
+  componentDidUpdate(prevProps: HomeProps) {
+    console.log('COMPONENT DID UPDATE');
+    // Популярный пример (не забудьте сравнить пропсы):
+    if (this.props.operations !== prevProps.operations) {
+      console.log('THIS PROPS  OPERATIONS: ', this.props.operations);
+      console.log('PREV PROPS  OPERATIONS: ', prevProps.operations);
+      this.updateVisibleOperations(
+        this.state.selectedDate,
+        this.state.selectedIndex,
+      );
+    }
+  }
+
   componentWillUnmount(): void {
     console.log('HOME WILL UNMOUNT');
   }

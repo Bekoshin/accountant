@@ -33,14 +33,14 @@ export default class Operation {
   private _note: string;
 
   @OneToMany(type => Product, product => product.operation)
-  private _products: Product[];
+  private _products: Product[] | null;
 
   constructor(
     amount: number,
     category: Category,
     date: Date,
     note: string,
-    products: Product[] = [],
+    products: Product[] | null = null,
     id?: number,
   ) {
     this._id = id;
@@ -87,11 +87,11 @@ export default class Operation {
     this._note = value;
   }
 
-  get products(): Product[] {
+  get products(): Product[] | null {
     return this._products;
   }
 
-  set products(value: Product[]) {
+  set products(value: Product[] | null) {
     this._products = value;
   }
 }

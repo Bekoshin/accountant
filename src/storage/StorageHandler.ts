@@ -9,6 +9,7 @@ import Operation from '../entities/Operation';
 import {Init1576240262448} from './migrations/1576240262448-Init';
 import {InsertDefaultValues1576410388275} from './migrations/1576410388275-InsertDefaultValues';
 import IMAGES from '../images';
+import Product from '../entities/Product';
 
 const DATABASE_NAME = 'main.db';
 
@@ -36,7 +37,7 @@ export default class StorageHandler {
       logging: ['error', 'query', 'schema'],
       migrations: [Init1576240262448, InsertDefaultValues1576410388275],
       migrationsRun: true,
-      entities: [Category, Operation],
+      entities: [Category, Operation, Product],
     });
   };
 
