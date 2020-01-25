@@ -10,6 +10,7 @@ export default {
     label_note: 'Заметка',
     label_total: 'Итог',
     label_selected: 'выбрано',
+    label_ignore: 'Не учитывать',
 
     operation_screen: 'Операция',
     new_operation_screen: 'Новая операция',

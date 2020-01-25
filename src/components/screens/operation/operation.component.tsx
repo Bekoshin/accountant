@@ -1,10 +1,10 @@
 import React, {SyntheticEvent} from 'react';
-import {View, ScrollView, Platform} from 'react-native';
+import {View, ScrollView, Platform, Text} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
-import {Button} from 'react-native-paper';
+import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
 import Input from '../../input/input';
 import I18n from '../../../i18n/i18n';
 import Category from '../../../entities/Category';
@@ -27,6 +27,7 @@ interface OperationState {
   category: Category | null;
   date: Date;
   note: string;
+  isIgnored: boolean;
 
   amountError: string;
   categoryError: string;
@@ -35,10 +36,8 @@ interface OperationState {
   datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<
-  OperationProps,
-  OperationState
-> {
+class OperationScreen extends React.PureComponent<OperationProps,
+  OperationState> {
   constructor(props: OperationProps) {
     super(props);
     const operation: Operation | undefined = props.navigation.getParam(
@@ -49,6 +48,7 @@ class OperationScreen extends React.PureComponent<
       category: operation ? operation.category : null,
       date: operation ? operation.date : new Date(),
       note: operation ? operation.note : '',
+      isIgnored: operation ? operation.isIgnored : false,
       amountError: '',
       categoryError: '',
       dateError: '',
@@ -146,7 +146,7 @@ class OperationScreen extends React.PureComponent<
   };
 
   changeDate = (
-    event: SyntheticEvent<Readonly<{timestamp: number}>, Event>,
+    event: SyntheticEvent<Readonly<{ timestamp: number }>, Event>,
     date?: Date | undefined,
   ) => {
     console.log('date: ', date);
@@ -160,6 +160,10 @@ class OperationScreen extends React.PureComponent<
 
   changeNote = (note: string) => {
     this.setState({note: note});
+  };
+
+  changeIsIgnored = () => {
+    this.setState({isIgnored: !this.state.isIgnored});
   };
 
   componentDidMount() {
@@ -177,6 +181,7 @@ class OperationScreen extends React.PureComponent<
       category,
       date,
       note,
+      isIgnored,
       amountError,
       categoryError,
       dateError,
@@ -200,8 +205,8 @@ class OperationScreen extends React.PureComponent<
             value={
               category
                 ? I18n.t(category.name, {
-                    defaultValue: category.name,
-                  })
+                  defaultValue: category.name,
+                })
                 : ''
             }
             required={true}
@@ -235,6 +240,12 @@ class OperationScreen extends React.PureComponent<
             onChangeText={this.changeNote}
             multiline={true}
           />
+          <TouchableRipple onPress={this.changeIsIgnored}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
+              <Text>{I18n.t('label_ignore')}</Text>
+            </View>
+          </TouchableRipple>
         </ScrollView>
         {datePickerVisible && (
           <DateTimePicker

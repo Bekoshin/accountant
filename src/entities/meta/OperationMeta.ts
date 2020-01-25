@@ -29,7 +29,7 @@ export class OperationMeta {
     isIgnored: {
       name: 'is_ignored',
       type: 'boolean',
-      default: false,
+      default: 0,
     },
   };
 }

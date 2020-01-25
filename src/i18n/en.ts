@@ -10,6 +10,7 @@ export default {
     label_note: 'Note',
     label_total: 'Total',
     label_selected: 'selected',
+    label_ignore: 'Ignore',
 
     operation_screen: 'Operation',
     new_operation_screen: 'New operation',
