@@ -9,10 +9,12 @@ export default {
     label_date: 'Date',
     label_note: 'Note',
     label_total: 'Total',
+    label_selected: 'selected',
 
     operation_screen: 'Operation',
     new_operation_screen: 'New operation',
     category_screen: 'Category',
+    categories_screen: 'Categories',
     new_category_screen: 'New category',
     parent_categories_screen: 'Parent categories',
     filters_screen: 'Filters',

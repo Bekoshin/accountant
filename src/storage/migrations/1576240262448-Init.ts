@@ -79,6 +79,11 @@ export class Init1576240262448 implements MigrationInterface {
             name: OperationMeta.columns.note.name,
             type: OperationMeta.columns.note.type,
           },
+          {
+            name: OperationMeta.columns.isIgnored.name,
+            type: OperationMeta.columns.isIgnored.type,
+            default: OperationMeta.columns.isIgnored.default,
+          },
         ],
       }),
       true,

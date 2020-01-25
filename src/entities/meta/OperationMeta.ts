@@ -26,5 +26,10 @@ export class OperationMeta {
       name: 'note',
       type: 'varchar',
     },
+    isIgnored: {
+      name: 'is_ignored',
+      type: 'boolean',
+      default: false,
+    },
   };
 }

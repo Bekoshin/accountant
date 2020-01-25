@@ -84,6 +84,7 @@ export default class FiltersScreen extends React.PureComponent<
 
   render() {
     const {amountFrom, amountTo} = this.state;
+    const {navigation} = this.props;
     return (
       <View style={styles.mainContainer}>
         <ScrollView>
@@ -92,6 +93,11 @@ export default class FiltersScreen extends React.PureComponent<
             value={this.createCategoriesString()}
             editable={false}
             onClearPress={() => this.changeCategories([])}
+            onInputPress={() =>
+              navigation.navigate('Categories', {
+                selectCategories: this.changeCategories,
+              })
+            }
           />
           <View style={styles.amountContainer}>
             <Input

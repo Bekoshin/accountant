@@ -32,6 +32,9 @@ export default class Operation {
   @Column(OperationMeta.columns.note as ColumnOptions)
   private _note: string;
 
+  @Column(OperationMeta.columns.isIgnored as ColumnOptions)
+  private _isIgnored: boolean;
+
   @OneToMany(type => Product, product => product.operation)
   private _products: Product[] | null;
 
@@ -40,6 +43,7 @@ export default class Operation {
     category: Category,
     date: Date,
     note: string,
+    isIgnored: boolean = false,
     products: Product[] | null = null,
     id?: number,
   ) {
@@ -48,6 +52,7 @@ export default class Operation {
     this._category = category;
     this._date = date;
     this._note = note;
+    this._isIgnored = isIgnored;
     this._products = products;
   }
 
@@ -93,5 +98,13 @@ export default class Operation {
 
   set products(value: Product[] | null) {
     this._products = value;
+  }
+
+  get isIgnored(): boolean {
+    return this._isIgnored;
+  }
+
+  set isIgnored(value: boolean) {
+    this._isIgnored = value;
   }
 }

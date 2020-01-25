@@ -1,17 +1,25 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
-import {Button, Divider} from 'react-native-paper';
+import {Divider, Appbar} from 'react-native-paper';
 import Category from '../../../entities/Category';
 import CategoryComponent from './category/category.component';
+import I18n from '../../../i18n/i18n';
 
-export interface CategoriesProps {
+interface CategoriesProps {
   navigation: any;
   categories: Category[];
 }
 
-class CategoriesScreen extends React.PureComponent<CategoriesProps> {
+interface CategoriesState {
+  selectedCategories: Category[];
+}
+
+class CategoriesScreen extends React.PureComponent<
+  CategoriesProps,
+  CategoriesState
+> {
   private selectCategory: (
     category: Category,
   ) => void = this.props.navigation.getParam('selectCategory');
@@ -20,18 +28,14 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
     this.props.navigation.goBack();
   };
 
-  static navigationOptions = ({navigation}: any) => {
+  static navigationOptions = () => {
     return {
-      title: 'Категории',
-      headerRight: () => (
-        <Button
-          onPress={() => {
-            navigation.navigate('Category');
-          }}>
-          Добавить
-        </Button>
-      ),
+      header: null,
     };
+  };
+
+  state = {
+    selectedCategories: [],
   };
 
   componentDidMount(): void {
@@ -44,12 +48,55 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps> {
 
   render() {
     return (
-      <ScrollView
-        style={{flex: 1}}
-        bounces={false}
-        showsVerticalScrollIndicator={false}>
-        {this.renderCategories()}
-      </ScrollView>
+      <View style={{flex: 1, justifyContent: 'flex-start'}}>
+        {this.renderAppBar()}
+        <ScrollView
+          style={{flex: 1}}
+          bounces={false}
+          showsVerticalScrollIndicator={false}>
+          {this.renderCategories()}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  renderAppBar() {
+    const {selectedCategories} = this.state;
+    if (selectedCategories.length > 0) {
+      return this.renderSelectAppBar();
+    } else {
+      return this.renderMainAppBar();
+    }
+  }
+
+  renderMainAppBar() {
+    const {navigation} = this.props;
+    return (
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={I18n.t('categories_screen')} />
+        <Appbar.Action
+          icon="plus"
+          onPress={() => {
+            navigation.navigate('Category');
+          }}
+        />
+      </Appbar.Header>
+    );
+  }
+
+  renderSelectAppBar() {
+    const {navigation} = this.props;
+    const {selectedCategories} = this.state;
+    return (
+      <Appbar.Header>
+        <Appbar.Action icon="close" onPress={() => {}} />
+        <Appbar.Content
+          title={selectedCategories.length + ' ' + I18n.t('label_selected')}
+        />
+        <Appbar.Action icon="delete" onPress={() => {}} />
+        <Appbar.Action icon="check" onPress={() => {}} />
+      </Appbar.Header>
     );
   }
 

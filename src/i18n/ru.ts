@@ -9,10 +9,12 @@ export default {
     label_date: 'Дата',
     label_note: 'Заметка',
     label_total: 'Итог',
+    label_selected: 'выбрано',
 
     operation_screen: 'Операция',
     new_operation_screen: 'Новая операция',
     category_screen: 'Категория',
+    categories_screen: 'Категории',
     new_category_screen: 'Новая категория',
     parent_categories_screen: 'Родительские категории',
     filters_screen: 'Фильтры',
