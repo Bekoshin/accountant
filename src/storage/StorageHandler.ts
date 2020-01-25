@@ -88,61 +88,76 @@ export default class StorageHandler {
   static createDefaultCategories = () => {
     let categories: Category[] = [];
 
-    let transport = new Category('transport');
+    let transport = new Category('transport', true);
     categories.push(transport);
-    categories.push(new Category('taxi', transport, IMAGES.TAXI));
-    categories.push(new Category('subway', transport, IMAGES.SUBWAY));
+    categories.push(new Category('taxi', true, transport, IMAGES.TAXI));
+    categories.push(new Category('subway', true, transport, IMAGES.SUBWAY));
     categories.push(
-      new Category('transport_card', transport, IMAGES.TRANSPORT_CARD),
+      new Category('transport_card', true, transport, IMAGES.TRANSPORT_CARD),
     );
-    categories.push(new Category('petrol', transport, IMAGES.PETROL));
+    categories.push(new Category('petrol', true, transport, IMAGES.PETROL));
 
-    let entertainment = new Category('entertainment');
+    let entertainment = new Category('entertainment', true);
     categories.push(entertainment);
-    categories.push(new Category('concerts_and_theaters', entertainment));
-    categories.push(new Category('games', entertainment, IMAGES.GAMES));
-    categories.push(new Category('movies', entertainment, IMAGES.MOVIE));
+    categories.push(new Category('concerts_and_theaters', true, entertainment));
+    categories.push(new Category('games', true, entertainment, IMAGES.GAMES));
+    categories.push(new Category('movies', true, entertainment, IMAGES.MOVIE));
 
-    let health = new Category('health');
+    let health = new Category('health', true);
     categories.push(health);
-    categories.push(new Category('fitness', health, IMAGES.FITNESS));
-    categories.push(new Category('pharmacy', health, IMAGES.PHARMACY));
-    categories.push(new Category('doctor', health, IMAGES.DOCTOR));
+    categories.push(new Category('fitness', true, health, IMAGES.FITNESS));
+    categories.push(new Category('pharmacy', true, health, IMAGES.PHARMACY));
+    categories.push(new Category('doctor', true, health, IMAGES.DOCTOR));
 
-    let cafesAndRestaurants = new Category('cafes_and_restaurants');
+    let cafesAndRestaurants = new Category('cafes_and_restaurants', true);
     categories.push(cafesAndRestaurants);
-    categories.push(new Category('bars', cafesAndRestaurants, IMAGES.BARS));
-    categories.push(new Category('cafes', cafesAndRestaurants, IMAGES.CAFES));
     categories.push(
-      new Category('restaurants', cafesAndRestaurants, IMAGES.RESTAURANTS),
+      new Category('bars', true, cafesAndRestaurants, IMAGES.BARS),
     );
     categories.push(
-      new Category('fast_food', cafesAndRestaurants, IMAGES.FAST_FOOD),
+      new Category('cafes', true, cafesAndRestaurants, IMAGES.CAFES),
+    );
+    categories.push(
+      new Category(
+        'restaurants',
+        true,
+        cafesAndRestaurants,
+        IMAGES.RESTAURANTS,
+      ),
+    );
+    categories.push(
+      new Category('fast_food', true, cafesAndRestaurants, IMAGES.FAST_FOOD),
     );
 
-    let billsAndUtilities = new Category('bills_and_utilities');
+    let billsAndUtilities = new Category('bills_and_utilities', true);
     categories.push(billsAndUtilities);
-    categories.push(new Category('rent', billsAndUtilities, IMAGES.RENT));
+    categories.push(new Category('rent', true, billsAndUtilities, IMAGES.RENT));
     categories.push(
-      new Category('internet', billsAndUtilities, IMAGES.INTERNET),
+      new Category('internet', true, billsAndUtilities, IMAGES.INTERNET),
     );
-    categories.push(new Category('phone', billsAndUtilities, IMAGES.PHONE));
-    categories.push(new Category('water', billsAndUtilities, IMAGES.WATER));
-    categories.push(new Category('gas', billsAndUtilities, IMAGES.GAS));
     categories.push(
-      new Category('electricity', billsAndUtilities, IMAGES.ELECTRICITY),
+      new Category('phone', true, billsAndUtilities, IMAGES.PHONE),
     );
-    categories.push(new Category('television', billsAndUtilities, IMAGES.TV));
+    categories.push(
+      new Category('water', true, billsAndUtilities, IMAGES.WATER),
+    );
+    categories.push(new Category('gas', true, billsAndUtilities, IMAGES.GAS));
+    categories.push(
+      new Category('electricity', true, billsAndUtilities, IMAGES.ELECTRICITY),
+    );
+    categories.push(
+      new Category('television', true, billsAndUtilities, IMAGES.TV),
+    );
 
-    let shopping = new Category('shopping');
+    let shopping = new Category('shopping', true);
     categories.push(shopping);
-    categories.push(new Category('household', shopping));
-    categories.push(new Category('clothing', shopping));
-    categories.push(new Category('electronics', shopping));
-    categories.push(new Category('care', shopping));
-    categories.push(new Category('products', shopping));
+    categories.push(new Category('household', true, shopping));
+    categories.push(new Category('clothing', true, shopping));
+    categories.push(new Category('electronics', true, shopping));
+    categories.push(new Category('care', true, shopping));
+    categories.push(new Category('products', true, shopping));
 
-    let others = new Category('others');
+    let others = new Category('others', true);
     categories.push(others);
 
     return categories;

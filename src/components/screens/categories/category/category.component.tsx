@@ -9,7 +9,9 @@ import I18n from '../../../../i18n/i18n';
 interface CategoryProps {
   category: Category;
   onPress: (category: Category) => void;
+  onLongPress: (category: Category) => void;
   navigateToCategory: (category: Category) => void;
+  selectedCategories: Category[];
 }
 
 export default class CategoryComponent extends PureComponent<CategoryProps> {
@@ -39,11 +41,30 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     if (categories) {
       for (let category of categories) {
         categoriesComponent.push(
-          <ChildCategoryComponent category={category} key={category.id} onPress={this.props.onPress} />,
+          <ChildCategoryComponent
+            category={category}
+            key={category.id}
+            onPress={this.props.onPress}
+            onSelectPress={this.props.onLongPress}
+            isSelected={this.isSelected(category)}
+            selectMode={this.isSelectMode()}
+          />,
         );
       }
     }
     categoriesComponent.push(<ChildCategoryComponent key={-1} />);
     return categoriesComponent;
   }
+
+  isSelected = (category: Category): boolean => {
+    const {selectedCategories} = this.props;
+    let foundCategory = selectedCategories.find(
+      item => item.id === category.id,
+    );
+    return !!foundCategory;
+  };
+
+  isSelectMode = (): boolean => {
+    return this.props.selectedCategories.length > 0;
+  };
 }

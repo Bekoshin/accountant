@@ -23,5 +23,10 @@ export class CategoryMeta {
       type: 'integer',
       isNullable: true,
     },
+    isDefault: {
+      name: 'is_default',
+      type: 'boolean',
+      default: 0,
+    },
   };
 }

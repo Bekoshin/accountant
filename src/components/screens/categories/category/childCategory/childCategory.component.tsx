@@ -8,23 +8,15 @@ import IMAGES from '../../../../../images';
 
 interface ChildCategoryProps {
   category?: Category;
-  onPress: (category: Category) => void;
+  onPress?: (category: Category) => void;
   selectMode?: boolean;
   onSelectPress?: (category: Category) => void;
-}
-
-interface ChildCategoryState {
-  isSelected: boolean;
+  isSelected?: boolean;
 }
 
 export default class ChildCategoryComponent extends PureComponent<
-  ChildCategoryProps,
-  ChildCategoryState
+  ChildCategoryProps
 > {
-  state = {
-    isSelected: false,
-  };
-
   onPressHandler = () => {
     const {category, onPress, selectMode, onSelectPress} = this.props;
     if (category) {
@@ -33,13 +25,22 @@ export default class ChildCategoryComponent extends PureComponent<
           onSelectPress(category);
         }
       } else {
-        onPress(category);
+        if (onPress) {
+          onPress(category);
+        }
       }
     }
   };
 
+  onLongPressHandler = () => {
+    const {category, onSelectPress, selectMode} = this.props;
+    if (category && onSelectPress && !selectMode) {
+      onSelectPress(category);
+    }
+  };
+
   render() {
-    const {isSelected} = this.state;
+    const {isSelected} = this.props;
     let contentStyle = {
       ...styles.contentContainer,
       backgroundColor: isSelected ? '#00000033' : 'transparent',
@@ -47,7 +48,8 @@ export default class ChildCategoryComponent extends PureComponent<
     return (
       <TouchableRipple
         style={styles.touchableContainer}
-        onPress={this.onPressHandler}>
+        onPress={this.onPressHandler}
+        onLongPress={this.onLongPressHandler}>
         <View style={contentStyle}>
           {this.renderContent()}
           {this.renderCheckIcon()}
@@ -94,7 +96,7 @@ export default class ChildCategoryComponent extends PureComponent<
   }
 
   renderCheckIcon() {
-    const {isSelected} = this.state;
+    const {isSelected} = this.props;
     if (isSelected) {
       return (
         <View style={{position: 'absolute', right: 4, top: 4}}>

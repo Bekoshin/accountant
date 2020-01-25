@@ -30,8 +30,12 @@ export default class Category {
   @Column(CategoryMeta.columns.image as ColumnOptions)
   private _image: number | undefined;
 
+  @Column(CategoryMeta.columns.isDefault as ColumnOptions)
+  private _isDefault: boolean;
+
   constructor(
     name: string,
+    isDefault: boolean = false,
     parentCategory?: Category,
     image?: number,
     childCategories?: Category[],
@@ -50,6 +54,7 @@ export default class Category {
     } else {
       this._parentCategory = null;
     }
+    this._isDefault = isDefault;
   }
 
   get parentCategory(): Category | null {
@@ -90,5 +95,13 @@ export default class Category {
 
   set image(value: number | undefined) {
     this._image = value;
+  }
+
+  get isDefault(): boolean {
+    return this._isDefault;
+  }
+
+  set isDefault(value: boolean) {
+    this._isDefault = value;
   }
 }

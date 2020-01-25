@@ -23,8 +23,17 @@ class CategoriesScreen extends React.PureComponent<
   private selectCategory: (
     category: Category,
   ) => void = this.props.navigation.getParam('selectCategory');
+  private selectCategories: (
+    category: Category[],
+  ) => void = this.props.navigation.getParam('selectCategories');
+
   private handleCategoryPress = (category: Category) => {
     this.selectCategory(category);
+    this.props.navigation.goBack();
+  };
+  private handleConfirmSelectButton = () => {
+    const {selectedCategories} = this.state;
+    this.selectCategories(selectedCategories);
     this.props.navigation.goBack();
   };
 
@@ -36,6 +45,26 @@ class CategoriesScreen extends React.PureComponent<
 
   state = {
     selectedCategories: [],
+  };
+
+  dropSelectedCategories = () => {
+    this.setState({selectedCategories: []});
+  };
+
+  addCategoryToSelectedCategories = (category: Category) => {
+    console.log('addCategoryToSelectedCategories');
+    this.setState({
+      selectedCategories: [...this.state.selectedCategories, category],
+    });
+  };
+
+  deleteCategoryFromSelectedCategories = (category: Category) => {
+    let selectedCategories: Category[] = [...this.state.selectedCategories];
+    const index = selectedCategories.findIndex(item => item.id === category.id);
+    if (index !== -1) {
+      selectedCategories.splice(index, 1);
+      this.setState({selectedCategories: selectedCategories});
+    }
   };
 
   componentDidMount(): void {
@@ -87,21 +116,28 @@ class CategoriesScreen extends React.PureComponent<
 
   renderSelectAppBar() {
     const {navigation} = this.props;
-    const {selectedCategories} = this.state;
+    const selectedCategories: Category[] = this.state.selectedCategories;
     return (
       <Appbar.Header>
-        <Appbar.Action icon="close" onPress={() => {}} />
+        <Appbar.Action icon="close" onPress={this.dropSelectedCategories} />
         <Appbar.Content
           title={selectedCategories.length + ' ' + I18n.t('label_selected')}
         />
+        {selectedCategories.length === 1 && !selectedCategories[0].isDefault ? (
+          <Appbar.Action
+            icon="pencil"
+            onPress={() => this.navigateToCategory(selectedCategories[0])}
+          />
+        ) : null}
         <Appbar.Action icon="delete" onPress={() => {}} />
-        <Appbar.Action icon="check" onPress={() => {}} />
+        <Appbar.Action icon="check" onPress={this.handleConfirmSelectButton} />
       </Appbar.Header>
     );
   }
 
   renderCategories() {
     const {categories} = this.props;
+    const {selectedCategories} = this.state;
     let categoryComponents = [];
     for (let category of categories) {
       if (!category.parentCategory) {
@@ -112,6 +148,8 @@ class CategoriesScreen extends React.PureComponent<
               category={category}
               navigateToCategory={this.navigateToCategory}
               onPress={this.handleCategoryPress}
+              onLongPress={this.addCategoryToSelectedCategories}
+              selectedCategories={selectedCategories}
             />
             <Divider />
           </View>,

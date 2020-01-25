@@ -57,7 +57,7 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
         let category;
         if (parentCategory) {
           //todo need check parentCategory for exist
-          category = new Category(name, parentCategory);
+          category = new Category(name, false, parentCategory);
         } else {
           category = new Category(name);
         }
