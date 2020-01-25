@@ -1,10 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    height: 90,
-    width: 90,
-    backgroundColor: '#fcfcfc',
+  touchableContainer: {
     margin: 8,
     borderRadius: 4,
     shadowOpacity: 0.2,
@@ -12,8 +9,15 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    padding: 4,
     elevation: 4,
+    backgroundColor: '#fcfcfc',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 4,
+    height: 90,
+    width: 90,
+    borderRadius: 4,
   },
   header: {
     flex: 1,

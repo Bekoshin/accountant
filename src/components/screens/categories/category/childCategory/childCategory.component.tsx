@@ -21,6 +21,10 @@ export default class ChildCategoryComponent extends PureComponent<
   ChildCategoryProps,
   ChildCategoryState
 > {
+  state = {
+    isSelected: false,
+  };
+
   onPressHandler = () => {
     const {category, onPress, selectMode, onSelectPress} = this.props;
     if (category) {
@@ -35,11 +39,19 @@ export default class ChildCategoryComponent extends PureComponent<
   };
 
   render() {
+    const {isSelected} = this.state;
+    let contentStyle = {
+      ...styles.contentContainer,
+      backgroundColor: isSelected ? '#00000033' : 'transparent',
+    };
     return (
       <TouchableRipple
-        style={styles.mainContainer}
+        style={styles.touchableContainer}
         onPress={this.onPressHandler}>
-        {this.renderContent()}
+        <View style={contentStyle}>
+          {this.renderContent()}
+          {this.renderCheckIcon()}
+        </View>
       </TouchableRipple>
     );
   }
@@ -78,6 +90,17 @@ export default class ChildCategoryComponent extends PureComponent<
   renderIcon(source: number | undefined) {
     if (source) {
       return <Image source={source} style={{width: 40, height: 40}} />;
+    }
+  }
+
+  renderCheckIcon() {
+    const {isSelected} = this.state;
+    if (isSelected) {
+      return (
+        <View style={{position: 'absolute', right: 4, top: 4}}>
+          <Image resizeMode="contain" source={IMAGES.CHECK} />
+        </View>
+      );
     }
   }
 }
