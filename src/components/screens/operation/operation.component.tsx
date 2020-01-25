@@ -217,7 +217,7 @@ class OperationScreen extends React.PureComponent<OperationProps,
             onInputPress={() => {
               this.hideCategoryError();
               this.props.navigation.navigate('Categories', {
-                selectCategory: this.changeCategory,
+                setCategory: this.changeCategory,
               });
             }}
           />

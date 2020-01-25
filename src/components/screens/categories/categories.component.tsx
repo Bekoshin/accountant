@@ -20,20 +20,20 @@ class CategoriesScreen extends React.PureComponent<
   CategoriesProps,
   CategoriesState
 > {
-  private selectCategory: (
+  private setCategory: (
     category: Category,
-  ) => void = this.props.navigation.getParam('selectCategory');
-  private selectCategories: (
+  ) => void = this.props.navigation.getParam('setCategory');
+  private setCategories: (
     category: Category[],
-  ) => void = this.props.navigation.getParam('selectCategories');
+  ) => void = this.props.navigation.getParam('setCategories');
 
   private handleCategoryPress = (category: Category) => {
-    this.selectCategory(category);
+    this.setCategory(category);
     this.props.navigation.goBack();
   };
   private handleConfirmSelectButton = () => {
     const {selectedCategories} = this.state;
-    this.selectCategories(selectedCategories);
+    this.setCategories(selectedCategories);
     this.props.navigation.goBack();
   };
 
@@ -51,14 +51,13 @@ class CategoriesScreen extends React.PureComponent<
     this.setState({selectedCategories: []});
   };
 
-  addCategoryToSelectedCategories = (category: Category) => {
-    console.log('addCategoryToSelectedCategories');
+  selectCategory = (category: Category) => {
     this.setState({
       selectedCategories: [...this.state.selectedCategories, category],
     });
   };
 
-  deleteCategoryFromSelectedCategories = (category: Category) => {
+  unselectCategory = (category: Category) => {
     let selectedCategories: Category[] = [...this.state.selectedCategories];
     const index = selectedCategories.findIndex(item => item.id === category.id);
     if (index !== -1) {
@@ -146,9 +145,9 @@ class CategoriesScreen extends React.PureComponent<
           <View key={category.id}>
             <CategoryComponent
               category={category}
-              navigateToCategory={this.navigateToCategory}
-              onPress={this.handleCategoryPress}
-              onLongPress={this.addCategoryToSelectedCategories}
+              setCategory={this.handleCategoryPress}
+              selectCategory={this.selectCategory}
+              unselectCategory={this.unselectCategory}
               selectedCategories={selectedCategories}
             />
             <Divider />

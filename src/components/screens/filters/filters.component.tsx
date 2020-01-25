@@ -95,7 +95,7 @@ export default class FiltersScreen extends React.PureComponent<
             onClearPress={() => this.changeCategories([])}
             onInputPress={() =>
               navigation.navigate('Categories', {
-                selectCategories: this.changeCategories,
+                setCategories: this.changeCategories,
               })
             }
           />

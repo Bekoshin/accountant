@@ -9,33 +9,24 @@ import IMAGES from '../../../../../images';
 interface ChildCategoryProps {
   category?: Category;
   onPress?: (category: Category) => void;
+  onLongPress?: (category: Category) => void;
   selectMode?: boolean;
-  onSelectPress?: (category: Category) => void;
   isSelected?: boolean;
 }
 
 export default class ChildCategoryComponent extends PureComponent<
   ChildCategoryProps
 > {
-  onPressHandler = () => {
-    const {category, onPress, selectMode, onSelectPress} = this.props;
-    if (category) {
-      if (selectMode) {
-        if (onSelectPress) {
-          onSelectPress(category);
-        }
-      } else {
-        if (onPress) {
-          onPress(category);
-        }
-      }
+  onPressHandle = () => {
+    const {category, onPress} = this.props;
+    if (category && onPress) {
+      onPress(category);
     }
   };
-
-  onLongPressHandler = () => {
-    const {category, onSelectPress, selectMode} = this.props;
-    if (category && onSelectPress && !selectMode) {
-      onSelectPress(category);
+  onLongPressHandle = () => {
+    const {category, onLongPress} = this.props;
+    if (category && onLongPress) {
+      onLongPress(category);
     }
   };
 
@@ -48,8 +39,8 @@ export default class ChildCategoryComponent extends PureComponent<
     return (
       <TouchableRipple
         style={styles.touchableContainer}
-        onPress={this.onPressHandler}
-        onLongPress={this.onLongPressHandler}>
+        onPress={this.onPressHandle}
+        onLongPress={this.onLongPressHandle}>
         <View style={contentStyle}>
           {this.renderContent()}
           {this.renderCheckIcon()}

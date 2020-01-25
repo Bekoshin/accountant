@@ -14,11 +14,11 @@ export interface ParentCategoriesProps {
 class ParentCategoriesScreen extends React.PureComponent<
   ParentCategoriesProps
 > {
-  private selectCategory: (
+  private setCategory: (
     category: Category,
-  ) => void = this.props.navigation.getParam('selectCategory');
+  ) => void = this.props.navigation.getParam('setCategory');
   private handleCategoryPress = (category: Category) => {
-    this.selectCategory(category);
+    this.setCategory(category);
     this.props.navigation.goBack();
   };
 

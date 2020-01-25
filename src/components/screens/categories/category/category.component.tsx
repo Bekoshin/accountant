@@ -8,17 +8,17 @@ import I18n from '../../../../i18n/i18n';
 
 interface CategoryProps {
   category: Category;
-  onPress: (category: Category) => void;
-  onLongPress: (category: Category) => void;
-  navigateToCategory: (category: Category) => void;
+  setCategory: (category: Category) => void;
+  selectCategory: (category: Category) => void;
+  unselectCategory: (category: Category) => void;
   selectedCategories: Category[];
 }
 
 export default class CategoryComponent extends PureComponent<CategoryProps> {
   render() {
-    const {category} = this.props;
+    const {category, setCategory} = this.props;
     return (
-      <TouchableRipple onPress={() => this.props.onPress(category)}>
+      <TouchableRipple onPress={() => setCategory(category)}>
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>
@@ -44,8 +44,8 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
           <ChildCategoryComponent
             category={category}
             key={category.id}
-            onPress={this.props.onPress}
-            onSelectPress={this.props.onLongPress}
+            onPress={this.handleOnPress(category)}
+            onLongPress={this.handleOnLongPress()}
             isSelected={this.isSelected(category)}
             selectMode={this.isSelectMode()}
           />,
@@ -55,6 +55,26 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     categoriesComponent.push(<ChildCategoryComponent key={-1} />);
     return categoriesComponent;
   }
+
+  handleOnPress = (category: Category) => {
+    if (this.isSelectMode()) {
+      if (this.isSelected(category)) {
+        return this.props.unselectCategory;
+      } else {
+        return this.props.selectCategory;
+      }
+    } else {
+      return this.props.setCategory;
+    }
+  };
+
+  handleOnLongPress = () => {
+    if (!this.isSelectMode()) {
+      return this.props.selectCategory;
+    } else {
+      return () => {};
+    }
+  };
 
   isSelected = (category: Category): boolean => {
     const {selectedCategories} = this.props;

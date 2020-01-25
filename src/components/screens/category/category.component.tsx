@@ -119,7 +119,7 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
             editable={false}
             onInputPress={() => {
               this.props.navigation.navigate('ParentCategories', {
-                selectCategory: this.changeParentCategory,
+                setCategory: this.changeParentCategory,
               });
             }}
           />
