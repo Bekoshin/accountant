@@ -26,6 +26,7 @@ class CategoriesScreen extends React.PureComponent<
   private setCategories: (
     category: Category[],
   ) => void = this.props.navigation.getParam('setCategories');
+  private readonly canSetSeveralCategory: boolean = !!this.setCategories;
 
   private handleCategoryPress = (category: Category) => {
     this.setCategory(category);
@@ -129,7 +130,12 @@ class CategoriesScreen extends React.PureComponent<
           />
         ) : null}
         <Appbar.Action icon="delete" onPress={() => {}} />
-        <Appbar.Action icon="check" onPress={this.handleConfirmSelectButton} />
+        {this.canSetSeveralCategory ? (
+          <Appbar.Action
+            icon="check"
+            onPress={this.handleConfirmSelectButton}
+          />
+        ) : null}
       </Appbar.Header>
     );
   }
@@ -140,7 +146,6 @@ class CategoriesScreen extends React.PureComponent<
     let categoryComponents = [];
     for (let category of categories) {
       if (!category.parentCategory) {
-        console.log('category: ', category);
         categoryComponents.push(
           <View key={category.id}>
             <CategoryComponent

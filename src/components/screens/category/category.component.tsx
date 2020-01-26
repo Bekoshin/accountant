@@ -24,12 +24,13 @@ interface CategoryState {
 }
 
 class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
+  private readonly category: Category | undefined = undefined;
   constructor(props: CategoryProps) {
     super(props);
-    const category = props.navigation.getParam('category');
+    this.category = props.navigation.getParam('category');
     this.state = {
-      name: category ? category.name : '',
-      parentCategory: category ? category.parentCategory : null,
+      name: this.category ? this.category.name : '',
+      parentCategory: this.category ? this.category.parentCategory : null,
       nameError: '',
     };
   }
@@ -55,12 +56,16 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
     if (name) {
       try {
         let category;
-        if (parentCategory) {
-          //todo need check parentCategory for exist
-          category = new Category(name, false, parentCategory);
+        if (this.category) {
+          category = this.category;
         } else {
           category = new Category(name);
         }
+        if (parentCategory) {
+          //todo need check parentCategory for exist
+          category.parentCategory = parentCategory;
+        }
+        console.log('handle save button. category: ')
         await this.props.saveCategory(category);
         this.props.navigation.goBack();
       } catch (error) {
@@ -134,6 +139,7 @@ const saveCategory = (
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
   await storageHandler.init();
+  console.log('saveCategory. category: ', category);
   await storageHandler.saveCategoryInRepo(category);
   const categories = await storageHandler.getAllCategoriesFromRepo();
   dispatch({

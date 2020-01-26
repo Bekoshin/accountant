@@ -40,13 +40,15 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     let categoriesComponent = [];
     if (categories) {
       for (let category of categories) {
+        category.parentCategory = this.props.category; //todo maybe need change
+        const isSelected = this.isSelected(category);
         categoriesComponent.push(
           <ChildCategoryComponent
             category={category}
             key={category.id}
-            onPress={this.handleOnPress(category)}
-            onLongPress={this.handleOnLongPress()}
-            isSelected={this.isSelected(category)}
+            onPress={this.onPressHandle(isSelected)}
+            onLongPress={this.onLongPressHandle()}
+            isSelected={isSelected}
             selectMode={this.isSelectMode()}
           />,
         );
@@ -56,9 +58,9 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     return categoriesComponent;
   }
 
-  handleOnPress = (category: Category) => {
+  onPressHandle = (isSelected: boolean) => {
     if (this.isSelectMode()) {
-      if (this.isSelected(category)) {
+      if (isSelected) {
         return this.props.unselectCategory;
       } else {
         return this.props.selectCategory;
@@ -68,7 +70,8 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     }
   };
 
-  handleOnLongPress = () => {
+  onLongPressHandle = () => {
+    console.log('onLongPressHandle parent');
     if (!this.isSelectMode()) {
       return this.props.selectCategory;
     } else {

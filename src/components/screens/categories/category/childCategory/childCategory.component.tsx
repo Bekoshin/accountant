@@ -24,6 +24,7 @@ export default class ChildCategoryComponent extends PureComponent<
     }
   };
   onLongPressHandle = () => {
+    console.log('onLongPressHandle child')
     const {category, onLongPress} = this.props;
     if (category && onLongPress) {
       onLongPress(category);
