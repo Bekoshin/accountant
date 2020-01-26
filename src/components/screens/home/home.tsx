@@ -185,6 +185,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           <Menu.Item
             title={I18n.t('action_set_filters')}
             onPress={() => {
+              this.setState({isMoreMenuVisible: false});
               navigation.navigate('Filters');
             }}
           />

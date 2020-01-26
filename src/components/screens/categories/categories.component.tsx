@@ -91,7 +91,7 @@ class CategoriesScreen extends React.PureComponent<
 
   renderAppBar() {
     const {selectedCategories} = this.state;
-    if (selectedCategories.length > 0) {
+    if (selectedCategories.length > 0 || this.canSetSeveralCategory) {
       return this.renderSelectAppBar();
     } else {
       return this.renderMainAppBar();
@@ -119,7 +119,11 @@ class CategoriesScreen extends React.PureComponent<
     const selectedCategories: Category[] = this.state.selectedCategories;
     return (
       <Appbar.Header>
-        <Appbar.Action icon="close" onPress={this.dropSelectedCategories} />
+        {selectedCategories.length > 0 ? (
+          <Appbar.Action icon="close" onPress={this.dropSelectedCategories} />
+        ) : (
+          <Appbar.BackAction onPress={() => navigation.goBack()} />
+        )}
         <Appbar.Content
           title={selectedCategories.length + ' ' + I18n.t('label_selected')}
         />
@@ -129,7 +133,9 @@ class CategoriesScreen extends React.PureComponent<
             onPress={() => this.navigateToCategory(selectedCategories[0])}
           />
         ) : null}
-        <Appbar.Action icon="delete" onPress={() => {}} />
+        {selectedCategories.length > 0 ? (
+          <Appbar.Action icon="delete" onPress={() => {}} />
+        ) : null}
         {this.canSetSeveralCategory ? (
           <Appbar.Action
             icon="check"
@@ -154,6 +160,7 @@ class CategoriesScreen extends React.PureComponent<
               selectCategory={this.selectCategory}
               unselectCategory={this.unselectCategory}
               selectedCategories={selectedCategories}
+              onlySelectMode={this.canSetSeveralCategory}
             />
             <Divider />
           </View>,

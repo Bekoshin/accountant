@@ -12,6 +12,7 @@ interface CategoryProps {
   selectCategory: (category: Category) => void;
   unselectCategory: (category: Category) => void;
   selectedCategories: Category[];
+  onlySelectMode: boolean;
 }
 
 export default class CategoryComponent extends PureComponent<CategoryProps> {
@@ -88,6 +89,8 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   };
 
   isSelectMode = (): boolean => {
-    return this.props.selectedCategories.length > 0;
+    return (
+      this.props.selectedCategories.length > 0 || this.props.onlySelectMode
+    );
   };
 }

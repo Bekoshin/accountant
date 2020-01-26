@@ -1,18 +1,10 @@
 import React, {SyntheticEvent} from 'react';
 import {View, ScrollView, Platform} from 'react-native';
-import {connect} from 'react-redux';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {AppState} from '../../../store/store';
-import Operation from '../../../entities/Operation';
+
 import {Button} from 'react-native-paper';
 import Input from '../../input/input';
 import I18n from '../../../i18n/i18n';
 import Category from '../../../entities/Category';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../../storage/StorageHandler';
-import {actionTypes} from '../../../store/actionTypes';
-import DateHandler from '../../../utils/DateHandler';
 import styles from './filters.styles';
 
 interface FiltersProps {
@@ -126,7 +118,7 @@ export default class FiltersScreen extends React.PureComponent<
     const {categories} = this.state;
     let string = '';
     for (let i = 0; i < categories.length; i++) {
-      string += categories[i].name;
+      string += I18n.t(categories[i].name, {defaultValue: categories[i].name});
       if (i !== categories.length - 1) {
         string += ', ';
       }
