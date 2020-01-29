@@ -20,13 +20,22 @@ class CategoriesScreen extends React.PureComponent<
   CategoriesProps,
   CategoriesState
 > {
-  private setCategory: (
-    category: Category,
-  ) => void = this.props.navigation.getParam('setCategory');
-  private setCategories: (
-    category: Category[],
-  ) => void = this.props.navigation.getParam('setCategories');
-  private readonly canSetSeveralCategory: boolean = !!this.setCategories;
+  private setCategory: (category: Category) => void;
+  private setCategories: (category: Category[]) => void;
+  private readonly canSetSeveralCategory: boolean;
+
+  constructor(props: CategoriesProps) {
+    super(props);
+    this.setCategory = this.props.navigation.getParam('setCategory');
+    this.setCategories = this.props.navigation.getParam('setCategories');
+    this.canSetSeveralCategory = !!this.setCategories;
+    const selectedCategories = this.props.navigation.getParam(
+      'selectedCategories',
+    );
+    this.state = {
+      selectedCategories: selectedCategories ? selectedCategories : [],
+    };
+  }
 
   private handleCategoryPress = (category: Category) => {
     this.setCategory(category);
@@ -42,10 +51,6 @@ class CategoriesScreen extends React.PureComponent<
     return {
       header: null,
     };
-  };
-
-  state = {
-    selectedCategories: [],
   };
 
   dropSelectedCategories = () => {

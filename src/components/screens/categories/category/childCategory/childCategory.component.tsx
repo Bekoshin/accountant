@@ -5,6 +5,7 @@ import I18n from '../../../../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../../../../entities/Category';
 import IMAGES from '../../../../../images';
+import CheckIcon from '../../../../checkIcon/checkIcon.Component';
 
 interface ChildCategoryProps {
   category?: Category;
@@ -89,12 +90,6 @@ export default class ChildCategoryComponent extends PureComponent<
 
   renderCheckIcon() {
     const {isSelected} = this.props;
-    if (isSelected) {
-      return (
-        <View style={{position: 'absolute', right: 4, top: 4}}>
-          <Image resizeMode="contain" source={IMAGES.CHECK} />
-        </View>
-      );
-    }
+    return CheckIcon(isSelected);
   }
 }

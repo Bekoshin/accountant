@@ -75,7 +75,7 @@ export default class FiltersScreen extends React.PureComponent<
   }
 
   render() {
-    const {amountFrom, amountTo} = this.state;
+    const {amountFrom, amountTo, categories} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.mainContainer}>
@@ -88,6 +88,7 @@ export default class FiltersScreen extends React.PureComponent<
             onInputPress={() =>
               navigation.navigate('Categories', {
                 setCategories: this.changeCategories,
+                selectedCategories: categories,
               })
             }
           />

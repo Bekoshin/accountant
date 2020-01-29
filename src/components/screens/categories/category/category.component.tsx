@@ -5,6 +5,7 @@ import Category from '../../../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
 import ChildCategoryComponent from './childCategory/childCategory.component';
 import I18n from '../../../../i18n/i18n';
+import CheckIcon from '../../../checkIcon/checkIcon.Component';
 
 interface CategoryProps {
   category: Category;
@@ -17,21 +18,33 @@ interface CategoryProps {
 
 export default class CategoryComponent extends PureComponent<CategoryProps> {
   render() {
-    const {category, setCategory} = this.props;
+    const {category} = this.props;
+    const isSelected = this.isSelected(category);
+    const touchableStyle = {
+      backgroundColor: isSelected ? '#00000033' : 'transparent',
+    };
     return (
-      <TouchableRipple onPress={() => setCategory(category)}>
+      <TouchableRipple
+        style={touchableStyle}
+        onPress={() => this.onPressHandle(isSelected)(category)}
+        onLongPress={() => this.onLongPressHandle()(category)}>
         <View style={styles.mainContainer}>
-          <View style={styles.header}>
-            <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>
+          <View style={styles.contentContainer}>
+            <View style={styles.header}>
+              <Text>
+                {I18n.t(category.name, {defaultValue: category.name})}
+              </Text>
+            </View>
+            <ScrollView
+              style={styles.scrollView}
+              horizontal={true}
+              bounces={false}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.scrollViewContent}>
+              {this.renderChildCategories(category.childCategories)}
+            </ScrollView>
           </View>
-          <ScrollView
-            style={styles.scrollView}
-            horizontal={true}
-            bounces={false}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollViewContent}>
-            {this.renderChildCategories(category.childCategories)}
-          </ScrollView>
+          {this.renderCheckIcon()}
         </View>
       </TouchableRipple>
     );
@@ -57,6 +70,12 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     }
     categoriesComponent.push(<ChildCategoryComponent key={-1} />);
     return categoriesComponent;
+  }
+
+  renderCheckIcon() {
+    const {category} = this.props;
+    const isSelected = this.isSelected(category);
+    return CheckIcon(isSelected);
   }
 
   onPressHandle = (isSelected: boolean) => {

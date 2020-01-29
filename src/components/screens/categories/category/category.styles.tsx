@@ -2,8 +2,11 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   mainContainer: {
+    marginVertical: 8,
+  },
+  contentContainer: {
     flex: 1,
-    marginVertical: 16,
+    marginVertical: 8,
   },
   header: {
     flex: 1,
