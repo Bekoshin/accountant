@@ -1,6 +1,10 @@
 export default {
     locale: 'en',
 
+    message_delete_category: 'Are you sure you want to delete the category',
+    message_delete_categories: 'Are you sure you want to delete the selected categories',
+    message_child_categories_delete: 'Child categories will also be deleted',
+
     label_required: 'Required',
     label_amount: 'Amount',
     label_amount_from: 'Amount, from',
@@ -11,6 +15,7 @@ export default {
     label_total: 'Total',
     label_selected: 'selected',
     label_ignore: 'Ignore',
+    label_deleting: 'Deleting',
 
     operation_screen: 'Operation',
     new_operation_screen: 'New operation',
@@ -24,6 +29,7 @@ export default {
     action_group_by_date: 'Group by date',
     action_group_by_category: 'Group by category',
     action_set_filters: 'Set filters',
+    action_cancel: 'Cancel',
 
     placeholder_search: 'Search',
 

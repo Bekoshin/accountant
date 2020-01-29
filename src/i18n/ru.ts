@@ -1,6 +1,10 @@
 export default {
     locale: 'ru',
 
+    message_delete_category: 'Вы действительно хотите удалить категорию',
+    message_delete_categories: 'Вы действительно хотите удалить выбранные категории',
+    message_child_categories_delete: 'Дочерние категории будут также удалены',
+
     label_required: 'Обязательно',
     label_amount: 'Сумма',
     label_amount_from: 'Сумма, от',
@@ -11,6 +15,7 @@ export default {
     label_total: 'Итог',
     label_selected: 'выбрано',
     label_ignore: 'Не учитывать',
+    label_deleting: 'Удаление',
 
     operation_screen: 'Операция',
     new_operation_screen: 'Новая операция',
@@ -24,6 +29,7 @@ export default {
     action_group_by_date: 'Группировать по датам',
     action_group_by_category: 'Группировать по категориям',
     action_set_filters: 'Установить фильтры',
+    action_cancel: 'Отмена',
 
     placeholder_search: 'Поиск',
 

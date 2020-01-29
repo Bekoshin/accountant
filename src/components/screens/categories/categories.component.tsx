@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import {Divider, Appbar} from 'react-native-paper';
@@ -55,6 +55,21 @@ class CategoriesScreen extends React.PureComponent<
 
   dropSelectedCategories = () => {
     this.setState({selectedCategories: []});
+  };
+
+  handleDeleteButton = () => {
+    const message = this.createMessageForDeleteCategory();
+    Alert.alert(I18n.t('label_deleting'), message, [
+      {
+        text: I18n.t('action_cancel'),
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {},
+      },
+    ]);
   };
 
   selectCategory = (category: Category) => {
@@ -139,7 +154,7 @@ class CategoriesScreen extends React.PureComponent<
           />
         ) : null}
         {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="delete" onPress={() => {}} />
+          <Appbar.Action icon="delete" onPress={this.handleDeleteButton} />
         ) : null}
         {this.canSetSeveralCategory ? (
           <Appbar.Action
@@ -177,6 +192,34 @@ class CategoriesScreen extends React.PureComponent<
 
   navigateToCategory = (category: Category) => {
     this.props.navigation.navigate('Category', {category: category});
+  };
+
+  createMessageForDeleteCategory = (): string => {
+    let message: string;
+    const {selectedCategories} = this.state;
+    if (selectedCategories.length === 1) {
+      const selectedCategory = selectedCategories[0];
+      message =
+        I18n.t('message_delete_category') +
+        ' "' +
+        I18n.t(selectedCategory.name, {
+          defaultValue: selectedCategory.name,
+        }) +
+        '" ?';
+      if (
+        selectedCategory.childCategories &&
+        selectedCategory.childCategories.length > 0
+      ) {
+        message += ' ' + I18n.t('message_child_categories_delete') + '.';
+      }
+    } else {
+      message =
+        I18n.t('message_delete_categories') +
+        '? ' +
+        I18n.t('message_child_categories_delete') +
+        '.';
+    }
+    return message;
   };
 }
 
