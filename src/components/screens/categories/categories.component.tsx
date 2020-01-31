@@ -6,10 +6,16 @@ import {Divider, Appbar} from 'react-native-paper';
 import Category from '../../../entities/Category';
 import CategoryComponent from './category/category.component';
 import I18n from '../../../i18n/i18n';
+import {ThunkAction} from 'redux-thunk';
+import {Action} from 'redux';
+import StorageHandler from '../../../storage/StorageHandler';
+import {actionTypes} from '../../../store/actionTypes';
 
 interface CategoriesProps {
   navigation: any;
   categories: Category[];
+
+  deleteCategories: (category: Category[]) => void;
 }
 
 interface CategoriesState {
@@ -67,15 +73,38 @@ class CategoriesScreen extends React.PureComponent<
       },
       {
         text: 'OK',
-        onPress: async () => {},
+        onPress: () => {
+          console.log('CATEGORIES FOR DELETE: ', this.state.selectedCategories);
+          this.props.deleteCategories(this.state.selectedCategories);
+          this.dropSelectedCategories();
+        },
       },
     ]);
   };
 
   selectCategory = (category: Category) => {
-    this.setState({
-      selectedCategories: [...this.state.selectedCategories, category],
-    });
+    console.log('SELECTED CATEGORY: ', category);
+    if (category.childCategories && category.childCategories.length > 0) {
+      let selectedCategories = this.state.selectedCategories;
+      for (let childCategory of category.childCategories) {
+        if (
+          !this.state.selectedCategories.find(
+            item => item.id === childCategory.id,
+          )
+        ) {
+          selectedCategories = [...selectedCategories, childCategory];
+        }
+      }
+      selectedCategories = [...selectedCategories, category];
+      this.setState({
+        selectedCategories: selectedCategories,
+      });
+    } else {
+      this.setState({
+        selectedCategories: [...this.state.selectedCategories, category],
+      });
+    }
+    console.log('SELECTED CATEGORIES: ', this.state.selectedCategories);
   };
 
   unselectCategory = (category: Category) => {
@@ -223,11 +252,29 @@ class CategoriesScreen extends React.PureComponent<
   };
 }
 
+const deleteCategories = (
+  categories: Category[],
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.init();
+  console.log('deleteCategories. categories: ', categories);
+  await storageHandler.deleteCategoriesFromRepo(categories);
+  const updatedCategories = await storageHandler.getAllCategoriesFromRepo();
+  dispatch({
+    type: actionTypes.CATEGORIES_LOADED,
+    categories: updatedCategories,
+  });
+};
+
 const mapStateToProps = (state: AppState) => ({
   categories: state.categoryReducer.categories,
 });
 
+const mapDispatchToProps = {
+  deleteCategories: (categories: Category[]) => deleteCategories(categories),
+};
+
 export default connect(
   mapStateToProps,
-  {},
+  mapDispatchToProps,
 )(CategoriesScreen);

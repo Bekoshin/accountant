@@ -85,6 +85,23 @@ export default class StorageHandler {
     }
   };
 
+  public deleteCategoriesFromRepo = async (categories: Category[]) => {
+    if (this._categoryRepo) {
+      let childCategories: Category[] = [];
+      for (let category of categories) {
+        if (category.childCategories && category.childCategories.length > 0) {
+          await this._categoryRepo.remove(category.childCategories);
+          await this._categoryRepo.remove(category);
+        } else {
+          childCategories.push(category);
+        }
+        await this._categoryRepo.remove(childCategories);
+      }
+
+      console.log('CATGORIES SUCCESSFUL DELETED');
+    }
+  };
+
   static createDefaultCategories = () => {
     let categories: Category[] = [];
 
