@@ -22,8 +22,10 @@ interface CategoriesState {
   selectedCategories: Category[];
 }
 
-class CategoriesScreen extends React.PureComponent<CategoriesProps,
-  CategoriesState> {
+class CategoriesScreen extends React.PureComponent<
+  CategoriesProps,
+  CategoriesState
+> {
   private setCategory: (category: Category) => void;
   private setCategories: (category: Category[]) => void;
   private readonly canSetSeveralCategory: boolean;
@@ -116,9 +118,18 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps,
 
   unselectCategory = (category: Category) => {
     let selectedCategories: Category[] = [...this.state.selectedCategories];
-    const index = selectedCategories.findIndex(item => item.id === category.id);
+    let index = selectedCategories.findIndex(item => item.id === category.id);
     if (index !== -1) {
       selectedCategories.splice(index, 1);
+      if (category.parentCategory) {
+        index = selectedCategories.findIndex(
+          item =>
+            category.parentCategory && item.id === category.parentCategory.id,
+        );
+        if (index !== -1) {
+          selectedCategories.splice(index, 1);
+        }
+      }
       this.setState({selectedCategories: selectedCategories});
     }
   };
@@ -158,8 +169,8 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps,
     const {navigation} = this.props;
     return (
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()}/>
-        <Appbar.Content title={I18n.t('categories_screen')}/>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={I18n.t('categories_screen')} />
         <Appbar.Action
           icon="plus"
           onPress={() => {
@@ -176,9 +187,9 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps,
     return (
       <Appbar.Header>
         {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="close" onPress={this.dropSelectedCategories}/>
+          <Appbar.Action icon="close" onPress={this.dropSelectedCategories} />
         ) : (
-          <Appbar.BackAction onPress={() => navigation.goBack()}/>
+          <Appbar.BackAction onPress={() => navigation.goBack()} />
         )}
         <Appbar.Content
           title={selectedCategories.length + ' ' + I18n.t('label_selected')}
@@ -190,7 +201,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps,
           />
         ) : null}
         {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="delete" onPress={this.handleDeleteButton}/>
+          <Appbar.Action icon="delete" onPress={this.handleDeleteButton} />
         ) : null}
         {this.canSetSeveralCategory ? (
           <Appbar.Action
@@ -218,7 +229,7 @@ class CategoriesScreen extends React.PureComponent<CategoriesProps,
               selectedCategories={selectedCategories}
               onlySelectMode={this.canSetSeveralCategory}
             />
-            <Divider/>
+            <Divider />
           </View>,
         );
       }
