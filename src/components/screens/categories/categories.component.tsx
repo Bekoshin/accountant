@@ -22,10 +22,8 @@ interface CategoriesState {
   selectedCategories: Category[];
 }
 
-class CategoriesScreen extends React.PureComponent<
-  CategoriesProps,
-  CategoriesState
-> {
+class CategoriesScreen extends React.PureComponent<CategoriesProps,
+  CategoriesState> {
   private setCategory: (category: Category) => void;
   private setCategories: (category: Category[]) => void;
   private readonly canSetSeveralCategory: boolean;
@@ -84,8 +82,25 @@ class CategoriesScreen extends React.PureComponent<
 
   selectCategory = (category: Category) => {
     console.log('SELECTED CATEGORY: ', category);
-    if (category.childCategories && category.childCategories.length > 0) {
-      let selectedCategories = this.state.selectedCategories;
+    let selectedCategories: Category[];
+    if (category.isParentCategory()) {
+      selectedCategories = this.selectAllUnselectedChildCategoriesOfCategory(
+        category,
+      );
+    } else {
+      selectedCategories = this.state.selectedCategories;
+    }
+    this.setState({
+      selectedCategories: [...selectedCategories, category],
+    });
+    console.log('SELECTED CATEGORIES: ', this.state.selectedCategories);
+  };
+
+  selectAllUnselectedChildCategoriesOfCategory = (
+    category: Category,
+  ): Category[] => {
+    let selectedCategories = this.state.selectedCategories;
+    if (category.childCategories) {
       for (let childCategory of category.childCategories) {
         if (
           !this.state.selectedCategories.find(
@@ -95,16 +110,8 @@ class CategoriesScreen extends React.PureComponent<
           selectedCategories = [...selectedCategories, childCategory];
         }
       }
-      selectedCategories = [...selectedCategories, category];
-      this.setState({
-        selectedCategories: selectedCategories,
-      });
-    } else {
-      this.setState({
-        selectedCategories: [...this.state.selectedCategories, category],
-      });
     }
-    console.log('SELECTED CATEGORIES: ', this.state.selectedCategories);
+    return selectedCategories;
   };
 
   unselectCategory = (category: Category) => {
@@ -151,8 +158,8 @@ class CategoriesScreen extends React.PureComponent<
     const {navigation} = this.props;
     return (
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={I18n.t('categories_screen')} />
+        <Appbar.BackAction onPress={() => navigation.goBack()}/>
+        <Appbar.Content title={I18n.t('categories_screen')}/>
         <Appbar.Action
           icon="plus"
           onPress={() => {
@@ -169,9 +176,9 @@ class CategoriesScreen extends React.PureComponent<
     return (
       <Appbar.Header>
         {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="close" onPress={this.dropSelectedCategories} />
+          <Appbar.Action icon="close" onPress={this.dropSelectedCategories}/>
         ) : (
-          <Appbar.BackAction onPress={() => navigation.goBack()} />
+          <Appbar.BackAction onPress={() => navigation.goBack()}/>
         )}
         <Appbar.Content
           title={selectedCategories.length + ' ' + I18n.t('label_selected')}
@@ -183,7 +190,7 @@ class CategoriesScreen extends React.PureComponent<
           />
         ) : null}
         {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="delete" onPress={this.handleDeleteButton} />
+          <Appbar.Action icon="delete" onPress={this.handleDeleteButton}/>
         ) : null}
         {this.canSetSeveralCategory ? (
           <Appbar.Action
@@ -200,7 +207,7 @@ class CategoriesScreen extends React.PureComponent<
     const {selectedCategories} = this.state;
     let categoryComponents = [];
     for (let category of categories) {
-      if (!category.parentCategory) {
+      if (category.isParentCategory()) {
         categoryComponents.push(
           <View key={category.id}>
             <CategoryComponent
@@ -211,7 +218,7 @@ class CategoriesScreen extends React.PureComponent<
               selectedCategories={selectedCategories}
               onlySelectMode={this.canSetSeveralCategory}
             />
-            <Divider />
+            <Divider/>
           </View>,
         );
       }

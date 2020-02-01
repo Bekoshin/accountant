@@ -104,4 +104,8 @@ export default class Category {
   set isDefault(value: boolean) {
     this._isDefault = value;
   }
+
+  isParentCategory(): boolean {
+    return !this.parentCategory;
+  }
 }
