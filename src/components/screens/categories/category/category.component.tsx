@@ -54,18 +54,20 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     let categoriesComponent = [];
     if (categories) {
       for (let category of categories) {
-        category.parentCategory = this.props.category; //todo maybe need change
-        const isSelected = this.isSelected(category);
-        categoriesComponent.push(
-          <ChildCategoryComponent
-            category={category}
-            key={category.id}
-            onPress={this.onPressHandle(isSelected)}
-            onLongPress={this.onLongPressHandle()}
-            isSelected={isSelected}
-            selectMode={this.isSelectMode()}
-          />,
-        );
+        if (category.isValid) {
+          category.parentCategory = this.props.category; //todo maybe need change
+          const isSelected = this.isSelected(category);
+          categoriesComponent.push(
+            <ChildCategoryComponent
+              category={category}
+              key={category.id}
+              onPress={this.onPressHandle(isSelected)}
+              onLongPress={this.onLongPressHandle()}
+              isSelected={isSelected}
+              selectMode={this.isSelectMode()}
+            />,
+          );
+        }
       }
     }
     categoriesComponent.push(<ChildCategoryComponent key={-1} />);

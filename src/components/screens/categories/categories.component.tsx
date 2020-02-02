@@ -276,7 +276,7 @@ const deleteCategories = (
   let storageHandler = new StorageHandler();
   await storageHandler.init();
   console.log('deleteCategories. categories: ', categories);
-  await storageHandler.deleteCategoriesFromRepo(categories);
+  await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getAllValidCategoriesFromRepo();
   dispatch({
     type: actionTypes.CATEGORIES_LOADED,

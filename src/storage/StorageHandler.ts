@@ -86,22 +86,14 @@ export default class StorageHandler {
     }
   };
 
-  public deleteCategoriesFromRepo = async (categories: Category[]) => {
+  public markCategoriesInvalid = async (categories: Category[]) => {
     if (this._categoryRepo) {
-      let childCategories: Category[] = [];
-      for (let category of categories) {
-        if (category.isParentCategory()) {
-          if (category.childCategories) {
-            await this._categoryRepo.remove(category.childCategories);
-          }
-          await this._categoryRepo.remove(category);
-        } else {
-          childCategories.push(category);
-        }
-        await this._categoryRepo.remove(childCategories);
-      }
-
-      console.log('CATGORIES SUCCESSFUL DELETED');
+      const invalidCategories: Category[] = categories.map(category => {
+        category.isValid = false;
+        return category;
+      });
+      await this._categoryRepo.save(invalidCategories);
+      console.log('CATEGORIES SUCCESSFUL DELETED');
     }
   };
 
