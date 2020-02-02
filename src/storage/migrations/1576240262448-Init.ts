@@ -40,6 +40,11 @@ export class Init1576240262448 implements MigrationInterface {
             type: CategoryMeta.columns.isDefault.type,
             default: CategoryMeta.columns.isDefault.default,
           },
+          {
+            name: CategoryMeta.columns.isValid.name,
+            type: CategoryMeta.columns.isValid.type,
+            default: CategoryMeta.columns.isValid.default,
+          }
         ],
       }),
       true,

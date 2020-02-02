@@ -89,8 +89,10 @@ export default class StorageHandler {
     if (this._categoryRepo) {
       let childCategories: Category[] = [];
       for (let category of categories) {
-        if (category.childCategories && category.childCategories.length > 0) {
-          await this._categoryRepo.remove(category.childCategories);
+        if (category.isParentCategory()) {
+          if (category.childCategories) {
+            await this._categoryRepo.remove(category.childCategories);
+          }
           await this._categoryRepo.remove(category);
         } else {
           childCategories.push(category);
@@ -107,72 +109,109 @@ export default class StorageHandler {
 
     let transport = new Category('transport', true);
     categories.push(transport);
-    categories.push(new Category('taxi', true, transport, IMAGES.TAXI));
-    categories.push(new Category('subway', true, transport, IMAGES.SUBWAY));
+    categories.push(new Category('taxi', true, true, transport, IMAGES.TAXI));
     categories.push(
-      new Category('transport_card', true, transport, IMAGES.TRANSPORT_CARD),
+      new Category('subway', true, true, transport, IMAGES.SUBWAY),
     );
-    categories.push(new Category('petrol', true, transport, IMAGES.PETROL));
+    categories.push(
+      new Category(
+        'transport_card',
+        true,
+        true,
+        transport,
+        IMAGES.TRANSPORT_CARD,
+      ),
+    );
+    categories.push(
+      new Category('petrol', true, true, transport, IMAGES.PETROL),
+    );
 
     let entertainment = new Category('entertainment', true);
     categories.push(entertainment);
-    categories.push(new Category('concerts_and_theaters', true, entertainment));
-    categories.push(new Category('games', true, entertainment, IMAGES.GAMES));
-    categories.push(new Category('movies', true, entertainment, IMAGES.MOVIE));
+    categories.push(
+      new Category('concerts_and_theaters', true, true, entertainment),
+    );
+    categories.push(
+      new Category('games', true, true, entertainment, IMAGES.GAMES),
+    );
+    categories.push(
+      new Category('movies', true, true, entertainment, IMAGES.MOVIE),
+    );
 
     let health = new Category('health', true);
     categories.push(health);
-    categories.push(new Category('fitness', true, health, IMAGES.FITNESS));
-    categories.push(new Category('pharmacy', true, health, IMAGES.PHARMACY));
-    categories.push(new Category('doctor', true, health, IMAGES.DOCTOR));
+    categories.push(
+      new Category('fitness', true, true, health, IMAGES.FITNESS),
+    );
+    categories.push(
+      new Category('pharmacy', true, true, health, IMAGES.PHARMACY),
+    );
+    categories.push(new Category('doctor', true, true, health, IMAGES.DOCTOR));
 
     let cafesAndRestaurants = new Category('cafes_and_restaurants', true);
     categories.push(cafesAndRestaurants);
     categories.push(
-      new Category('bars', true, cafesAndRestaurants, IMAGES.BARS),
+      new Category('bars', true, true, cafesAndRestaurants, IMAGES.BARS),
     );
     categories.push(
-      new Category('cafes', true, cafesAndRestaurants, IMAGES.CAFES),
+      new Category('cafes', true, true, cafesAndRestaurants, IMAGES.CAFES),
     );
     categories.push(
       new Category(
         'restaurants',
+        true,
         true,
         cafesAndRestaurants,
         IMAGES.RESTAURANTS,
       ),
     );
     categories.push(
-      new Category('fast_food', true, cafesAndRestaurants, IMAGES.FAST_FOOD),
+      new Category(
+        'fast_food',
+        true,
+        true,
+        cafesAndRestaurants,
+        IMAGES.FAST_FOOD,
+      ),
     );
 
     let billsAndUtilities = new Category('bills_and_utilities', true);
     categories.push(billsAndUtilities);
-    categories.push(new Category('rent', true, billsAndUtilities, IMAGES.RENT));
     categories.push(
-      new Category('internet', true, billsAndUtilities, IMAGES.INTERNET),
+      new Category('rent', true, true, billsAndUtilities, IMAGES.RENT),
     );
     categories.push(
-      new Category('phone', true, billsAndUtilities, IMAGES.PHONE),
+      new Category('internet', true, true, billsAndUtilities, IMAGES.INTERNET),
     );
     categories.push(
-      new Category('water', true, billsAndUtilities, IMAGES.WATER),
-    );
-    categories.push(new Category('gas', true, billsAndUtilities, IMAGES.GAS));
-    categories.push(
-      new Category('electricity', true, billsAndUtilities, IMAGES.ELECTRICITY),
+      new Category('phone', true, true, billsAndUtilities, IMAGES.PHONE),
     );
     categories.push(
-      new Category('television', true, billsAndUtilities, IMAGES.TV),
+      new Category('water', true, true, billsAndUtilities, IMAGES.WATER),
+    );
+    categories.push(
+      new Category('gas', true, true, billsAndUtilities, IMAGES.GAS),
+    );
+    categories.push(
+      new Category(
+        'electricity',
+        true,
+        true,
+        billsAndUtilities,
+        IMAGES.ELECTRICITY,
+      ),
+    );
+    categories.push(
+      new Category('television', true, true, billsAndUtilities, IMAGES.TV),
     );
 
     let shopping = new Category('shopping', true);
     categories.push(shopping);
-    categories.push(new Category('household', true, shopping));
-    categories.push(new Category('clothing', true, shopping));
-    categories.push(new Category('electronics', true, shopping));
-    categories.push(new Category('care', true, shopping));
-    categories.push(new Category('products', true, shopping));
+    categories.push(new Category('household', true, true, shopping));
+    categories.push(new Category('clothing', true, true, shopping));
+    categories.push(new Category('electronics', true, true, shopping));
+    categories.push(new Category('care', true, true, shopping));
+    categories.push(new Category('products', true, true, shopping));
 
     let others = new Category('others', true);
     categories.push(others);

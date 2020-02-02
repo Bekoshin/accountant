@@ -33,9 +33,13 @@ export default class Category {
   @Column(CategoryMeta.columns.isDefault as ColumnOptions)
   private _isDefault: boolean;
 
+  @Column(CategoryMeta.columns.isValid as ColumnOptions)
+  private _isValid: boolean;
+
   constructor(
     name: string,
     isDefault: boolean = false,
+    isValid: boolean = true,
     parentCategory?: Category,
     image?: number,
     childCategories?: Category[],
@@ -55,6 +59,7 @@ export default class Category {
       this._parentCategory = null;
     }
     this._isDefault = isDefault;
+    this._isValid = isValid;
   }
 
   get parentCategory(): Category | null {
@@ -103,6 +108,14 @@ export default class Category {
 
   set isDefault(value: boolean) {
     this._isDefault = value;
+  }
+
+  get isValid(): boolean {
+    return this._isValid;
+  }
+
+  set isValid(value: boolean) {
+    this._isValid = value;
   }
 
   isParentCategory(): boolean {

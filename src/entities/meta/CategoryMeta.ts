@@ -28,5 +28,10 @@ export class CategoryMeta {
       type: 'boolean',
       default: 0,
     },
+    isValid: {
+      name: 'is_valid',
+      type: 'boolean',
+      default: 1,
+    },
   };
 }
