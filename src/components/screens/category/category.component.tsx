@@ -141,7 +141,7 @@ const saveCategory = (
   await storageHandler.init();
   console.log('saveCategory. category: ', category);
   await storageHandler.saveCategoryInRepo(category);
-  const categories = await storageHandler.getAllCategoriesFromRepo();
+  const categories = await storageHandler.getAllValidCategoriesFromRepo();
   dispatch({
     type: actionTypes.CATEGORIES_LOADED,
     categories: categories,

@@ -61,11 +61,12 @@ export default class StorageHandler {
     return operations;
   };
 
-  public getAllCategoriesFromRepo = async (): Promise<Category[]> => {
+  public getAllValidCategoriesFromRepo = async (): Promise<Category[]> => {
     let categories: Category[] = [];
     if (this._categoryRepo) {
       categories = await this._categoryRepo
         .createQueryBuilder('category')
+        .where('category.is_valid = :is_valid', {is_valid: 1})
         .leftJoinAndSelect('category._parentCategory', 'pc')
         .leftJoinAndSelect('category._childCategories', 'cc')
         .getMany();
