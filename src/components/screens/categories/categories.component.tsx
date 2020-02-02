@@ -105,6 +105,7 @@ class CategoriesScreen extends React.PureComponent<
     if (category.childCategories) {
       for (let childCategory of category.childCategories) {
         if (
+          childCategory.isValid &&
           !this.state.selectedCategories.find(
             item => item.id === childCategory.id,
           )
