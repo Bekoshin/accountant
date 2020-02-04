@@ -36,8 +36,10 @@ interface OperationState {
   datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<OperationProps,
-  OperationState> {
+class OperationScreen extends React.PureComponent<
+  OperationProps,
+  OperationState
+> {
   constructor(props: OperationProps) {
     super(props);
     const operation: Operation | undefined = props.navigation.getParam(
@@ -146,7 +148,7 @@ class OperationScreen extends React.PureComponent<OperationProps,
   };
 
   changeDate = (
-    event: SyntheticEvent<Readonly<{ timestamp: number }>, Event>,
+    event: SyntheticEvent<Readonly<{timestamp: number}>, Event>,
     date?: Date | undefined,
   ) => {
     console.log('date: ', date);
@@ -205,8 +207,8 @@ class OperationScreen extends React.PureComponent<OperationProps,
             value={
               category
                 ? I18n.t(category.name, {
-                  defaultValue: category.name,
-                })
+                    defaultValue: category.name,
+                  })
                 : ''
             }
             required={true}

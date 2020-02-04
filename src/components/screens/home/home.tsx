@@ -87,8 +87,9 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   }
 
   handleIndexChanged = (index: number) => {
-    this.setState({selectedIndex: index, selectedDate: moment()});
-    this.updateVisibleOperations(this.state.selectedDate, index);
+    const currentDate = moment();
+    this.setState({selectedIndex: index, selectedDate: currentDate});
+    this.updateVisibleOperations(currentDate, index);
   };
 
   handleDateChanged = (date: moment.Moment) => {

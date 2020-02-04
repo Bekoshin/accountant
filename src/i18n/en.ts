@@ -11,6 +11,8 @@ export default {
     label_amount_to: 'Amount, to',
     label_category: 'Category',
     label_date: 'Date',
+    label_date_from: 'Date, from',
+    label_date_to: 'Date, to',
     label_note: 'Note',
     label_total: 'Total',
     label_selected: 'selected',

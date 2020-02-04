@@ -11,6 +11,8 @@ export default {
     label_amount_to: 'Сумма, до',
     label_category: 'Категория',
     label_date: 'Дата',
+    label_date_from: 'Дата, от',
+    label_date_to: 'Дата, до',
     label_note: 'Заметка',
     label_total: 'Итог',
     label_selected: 'выбрано',

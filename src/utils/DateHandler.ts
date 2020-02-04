@@ -2,19 +2,22 @@ import I18n from '../i18n/i18n';
 import moment from 'moment';
 
 export default class DateHandler {
-  public static convertDate = (date: Date) => {
-    const today = new Date();
-    if (DateHandler.compareDates(today, date)) {
-      return I18n.t('today');
+  public static convertDate = (date: Date | null) => {
+    if (date) {
+      const today = new Date();
+      if (DateHandler.compareDates(today, date)) {
+        return I18n.t('today');
+      }
+      let yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
+      if (DateHandler.compareDates(yesterday, date)) {
+        return I18n.t('yesterday');
+      }
+      return moment(date)
+        .local()
+        .format('LL');
     }
-    let yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-    if (DateHandler.compareDates(yesterday, date)) {
-      return I18n.t('yesterday');
-    }
-    return moment(date)
-      .local()
-      .format('LL');
+    return '';
   };
 
   public static getMonthName = (date: Date) => {
@@ -37,8 +40,10 @@ export default class DateHandler {
     selectedInterval: 'isoWeek' | 'month' | 'year',
   ) => {
     const dateBetweenInterval = moment(selectedDate);
-    const startOfInterval = dateBetweenInterval.startOf(selectedInterval);
-    const endOfInterval = dateBetweenInterval.endOf(selectedInterval);
+    const startOfInterval = moment(dateBetweenInterval).startOf(
+      selectedInterval,
+    );
+    const endOfInterval = moment(dateBetweenInterval).endOf(selectedInterval);
     return moment(date).isBetween(
       startOfInterval,
       endOfInterval,

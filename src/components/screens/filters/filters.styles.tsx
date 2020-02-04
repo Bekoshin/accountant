@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 8,
   },
-  amountContainer: {
+  rowContainer: {
     flexDirection: 'row',
   },
   leftInput: {

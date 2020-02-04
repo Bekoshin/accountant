@@ -6,6 +6,7 @@ import Input from '../../input/input';
 import I18n from '../../../i18n/i18n';
 import Category from '../../../entities/Category';
 import styles from './filters.styles';
+import DateHandler from '../../../utils/DateHandler';
 
 interface FiltersProps {
   navigation: any;
@@ -14,6 +15,8 @@ interface FiltersProps {
 interface FiltersState {
   amountFrom: string;
   amountTo: string;
+  dateFrom: Date | null;
+  dateTo: Date | null;
   categories: Category[];
 }
 
@@ -26,6 +29,8 @@ export default class FiltersScreen extends React.PureComponent<
     this.state = {
       amountFrom: '',
       amountTo: '',
+      dateFrom: null,
+      dateTo: null,
       categories: [],
     };
   }
@@ -75,7 +80,7 @@ export default class FiltersScreen extends React.PureComponent<
   }
 
   render() {
-    const {amountFrom, amountTo, categories} = this.state;
+    const {amountFrom, amountTo, categories, dateFrom, dateTo} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.mainContainer}>
@@ -92,7 +97,7 @@ export default class FiltersScreen extends React.PureComponent<
               })
             }
           />
-          <View style={styles.amountContainer}>
+          <View style={styles.rowContainer}>
             <Input
               style={styles.leftInput}
               label={I18n.t('label_amount_from')}
@@ -105,6 +110,24 @@ export default class FiltersScreen extends React.PureComponent<
               style={styles.rightInput}
               label={I18n.t('label_amount_to')}
               value={amountTo}
+              keyboardType="numeric"
+              selectTextOnFocus={true}
+              onChangeText={this.changeAmountTo}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            <Input
+              style={styles.leftInput}
+              label={I18n.t('label_date_from')}
+              value={DateHandler.convertDate(dateFrom)}
+              keyboardType="numeric"
+              selectTextOnFocus={true}
+              onChangeText={this.changeAmountFrom}
+            />
+            <Input
+              style={styles.rightInput}
+              label={I18n.t('label_date_to')}
+              value={DateHandler.convertDate(dateFrom)}
               keyboardType="numeric"
               selectTextOnFocus={true}
               onChangeText={this.changeAmountTo}
