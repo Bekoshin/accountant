@@ -17,8 +17,6 @@ import DateHandler from '../../../utils/DateHandler';
 interface OperationProps {
   navigation: any;
 
-  operation?: Operation;
-
   saveOperation: (operation: Operation) => void;
 }
 
@@ -36,21 +34,19 @@ interface OperationState {
   datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<
-  OperationProps,
-  OperationState
-> {
+class OperationScreen extends React.PureComponent<OperationProps,
+  OperationState> {
+  private readonly operation: Operation | undefined = undefined;
+
   constructor(props: OperationProps) {
     super(props);
-    const operation: Operation | undefined = props.navigation.getParam(
-      'operation',
-    );
+    this.operation = props.navigation.getParam('operation');
     this.state = {
-      amount: operation ? operation.amount.toString() : '0',
-      category: operation ? operation.category : null,
-      date: operation ? operation.date : new Date(),
-      note: operation ? operation.note : '',
-      isIgnored: operation ? operation.isIgnored : false,
+      amount: this.operation ? this.operation.amount.toString() : '0',
+      category: this.operation ? this.operation.category : null,
+      date: this.operation ? this.operation.date : new Date(),
+      note: this.operation ? this.operation.note : '',
+      isIgnored: this.operation ? this.operation.isIgnored : false,
       amountError: '',
       categoryError: '',
       dateError: '',
@@ -77,14 +73,17 @@ class OperationScreen extends React.PureComponent<
 
   private handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {amount, category, date, note} = this.state;
+    const {amount, category, date, note, isIgnored} = this.state;
     if (this.checkFields()) {
       try {
-        let operation = new Operation(
+        let operation: Operation;
+        operation = new Operation(
           parseFloat(amount),
           category as Category,
           date,
           note,
+          isIgnored,
+          this.operation ? this.operation.id : undefined,
         );
         await this.props.saveOperation(operation);
         await this.props.navigation.goBack();
@@ -148,7 +147,7 @@ class OperationScreen extends React.PureComponent<
   };
 
   changeDate = (
-    event: SyntheticEvent<Readonly<{timestamp: number}>, Event>,
+    event: SyntheticEvent<Readonly<{ timestamp: number }>, Event>,
     date?: Date | undefined,
   ) => {
     console.log('date: ', date);
@@ -207,8 +206,8 @@ class OperationScreen extends React.PureComponent<
             value={
               category
                 ? I18n.t(category.name, {
-                    defaultValue: category.name,
-                  })
+                  defaultValue: category.name,
+                })
                 : ''
             }
             required={true}
@@ -244,7 +243,7 @@ class OperationScreen extends React.PureComponent<
           />
           <TouchableRipple onPress={this.changeIsIgnored}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
+              <Checkbox status={isIgnored ? 'checked' : 'unchecked'}/>
               <Text>{I18n.t('label_ignore')}</Text>
             </View>
           </TouchableRipple>

@@ -44,7 +44,7 @@ export class Init1576240262448 implements MigrationInterface {
             name: CategoryMeta.columns.isValid.name,
             type: CategoryMeta.columns.isValid.type,
             default: CategoryMeta.columns.isValid.default,
-          }
+          },
         ],
       }),
       true,
@@ -110,43 +110,43 @@ export class Init1576240262448 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createTable(
-      new Table({
-        name: ProductMeta.table.name,
-        columns: [
-          {
-            name: ProductMeta.columns.id.name,
-            type: ProductMeta.columns.id.type,
-            isPrimary: ProductMeta.columns.id.isPrimary,
-            isGenerated: ProductMeta.columns.id.isGenerated,
-            generationStrategy: 'increment',
-          },
-          {
-            name: ProductMeta.columns.name.name,
-            type: ProductMeta.columns.name.type,
-          },
-          {
-            name: ProductMeta.columns.value.name,
-            type: ProductMeta.columns.value.type,
-            isNullable: ProductMeta.columns.value.isNullable,
-          },
-          {
-            name: ProductMeta.columns.operationId.name,
-            type: ProductMeta.columns.operationId.type,
-            isNullable: ProductMeta.columns.operationId.isNullable,
-          },
-        ],
-      }),
-    );
+    // await queryRunner.createTable(
+    //   new Table({
+    //     name: ProductMeta.table.name,
+    //     columns: [
+    //       {
+    //         name: ProductMeta.columns.id.name,
+    //         type: ProductMeta.columns.id.type,
+    //         isPrimary: ProductMeta.columns.id.isPrimary,
+    //         isGenerated: ProductMeta.columns.id.isGenerated,
+    //         generationStrategy: 'increment',
+    //       },
+    //       {
+    //         name: ProductMeta.columns.name.name,
+    //         type: ProductMeta.columns.name.type,
+    //       },
+    //       {
+    //         name: ProductMeta.columns.value.name,
+    //         type: ProductMeta.columns.value.type,
+    //         isNullable: ProductMeta.columns.value.isNullable,
+    //       },
+    //       {
+    //         name: ProductMeta.columns.operationId.name,
+    //         type: ProductMeta.columns.operationId.type,
+    //         isNullable: ProductMeta.columns.operationId.isNullable,
+    //       },
+    //     ],
+    //   }),
+    // );
 
-    await queryRunner.createForeignKey(
-      ProductMeta.table.name,
-      new TableForeignKey({
-        columnNames: [ProductMeta.columns.operationId.name],
-        referencedColumnNames: [OperationMeta.columns.id.name],
-        referencedTableName: OperationMeta.table.name,
-      }),
-    );
+    // await queryRunner.createForeignKey(
+    //   ProductMeta.table.name,
+    //   new TableForeignKey({
+    //     columnNames: [ProductMeta.columns.operationId.name],
+    //     referencedColumnNames: [OperationMeta.columns.id.name],
+    //     referencedTableName: OperationMeta.table.name,
+    //   }),
+    // );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {}

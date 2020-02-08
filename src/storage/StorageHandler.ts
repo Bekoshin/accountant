@@ -37,7 +37,7 @@ export default class StorageHandler {
       logging: ['error', 'query', 'schema'],
       migrations: [Init1576240262448, InsertDefaultValues1576410388275],
       migrationsRun: true,
-      entities: [Category, Operation, Product],
+      entities: [Category, Operation],
     });
   };
 
@@ -55,6 +55,8 @@ export default class StorageHandler {
       operations = await this._operationRepo
         .createQueryBuilder('o')
         .leftJoinAndSelect('o._category', 'c')
+        .leftJoinAndSelect('c._parentCategory', 'pc')
+        .leftJoinAndSelect('c._childCategories', 'cc')
         .addOrderBy('o._date', 'DESC')
         .getMany();
     }

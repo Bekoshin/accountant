@@ -35,8 +35,8 @@ export default class Operation {
   @Column(OperationMeta.columns.isIgnored as ColumnOptions)
   private _isIgnored: boolean;
 
-  @OneToMany(type => Product, product => product.operation)
-  private _products: Product[] | null;
+  // @OneToMany(type => Product, product => product.operation)
+  // private _products: Product[] | null;
 
   constructor(
     amount: number,
@@ -44,7 +44,7 @@ export default class Operation {
     date: Date,
     note: string,
     isIgnored: boolean = false,
-    products: Product[] | null = null,
+    // products: Product[] | null = null,
     id?: number,
   ) {
     this._id = id;
@@ -53,7 +53,7 @@ export default class Operation {
     this._date = date;
     this._note = note;
     this._isIgnored = isIgnored;
-    this._products = products;
+    // this._products = products;
   }
 
   get id(): number | undefined {
@@ -91,14 +91,14 @@ export default class Operation {
   set note(value: string) {
     this._note = value;
   }
-
-  get products(): Product[] | null {
-    return this._products;
-  }
-
-  set products(value: Product[] | null) {
-    this._products = value;
-  }
+  //
+  // get products(): Product[] | null {
+  //   return this._products;
+  // }
+  //
+  // set products(value: Product[] | null) {
+  //   this._products = value;
+  // }
 
   get isIgnored(): boolean {
     return this._isIgnored;

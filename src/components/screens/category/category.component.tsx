@@ -60,7 +60,7 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
     const {name, parentCategory} = this.state;
     if (name) {
       try {
-        let category;
+        let category: Category;
         if (this.category) {
           category = this.category;
         } else {
