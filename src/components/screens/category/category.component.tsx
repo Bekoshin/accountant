@@ -28,9 +28,14 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
   constructor(props: CategoryProps) {
     super(props);
     this.category = props.navigation.getParam('category');
+    const parentCategory = props.navigation.getParam('parentCategory');
     this.state = {
       name: this.category ? this.category.name : '',
-      parentCategory: this.category ? this.category.parentCategory : null,
+      parentCategory: this.category
+        ? this.category.parentCategory
+        : parentCategory
+        ? parentCategory
+        : null,
       nameError: '',
     };
   }

@@ -1,13 +1,14 @@
 import styles from './category.styles';
 import React, {PureComponent} from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import Category from '../../../../entities/Category';
+import Category from '../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
-import ChildCategoryComponent from './childCategory/childCategory.component';
-import I18n from '../../../../i18n/i18n';
-import CheckIcon from '../../../checkIcon/checkIcon.Component';
+import ChildCategoryComponent from '../childCategory/childCategory.component';
+import I18n from '../../i18n/i18n';
+import CheckIcon from '../checkIcon/checkIcon.Component';
 
 interface CategoryProps {
+  navigation: any;
   category: Category;
   setCategory: (category: Category) => void;
   selectCategory: (category: Category) => void;
@@ -51,6 +52,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   }
 
   renderChildCategories(categories: Category[] | null) {
+    const {navigation, category} = this.props;
     let categoriesComponent = [];
     if (categories) {
       for (let category of categories) {
@@ -70,7 +72,14 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
         }
       }
     }
-    categoriesComponent.push(<ChildCategoryComponent key={-1} />);
+    categoriesComponent.push(
+      <ChildCategoryComponent
+        onAddPress={() => {
+          navigation.navigate('Category', {parentCategory: category});
+        }}
+        key={-1}
+      />,
+    );
     return categoriesComponent;
   }
 

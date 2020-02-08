@@ -1,16 +1,17 @@
 import styles from './childCategory.styles';
 import React, {PureComponent} from 'react';
 import {Text, View, Image} from 'react-native';
-import I18n from '../../../../../i18n/i18n';
+import I18n from '../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
-import Category from '../../../../../entities/Category';
-import IMAGES from '../../../../../images';
-import CheckIcon from '../../../../checkIcon/checkIcon.Component';
+import Category from '../../entities/Category';
+import IMAGES from '../../images';
+import CheckIcon from '../checkIcon/checkIcon.Component';
 
 interface ChildCategoryProps {
   category?: Category;
   onPress?: (category: Category) => void;
   onLongPress?: (category: Category) => void;
+  onAddPress?: () => void;
   selectMode?: boolean;
   isSelected?: boolean;
 }
@@ -19,9 +20,11 @@ export default class ChildCategoryComponent extends PureComponent<
   ChildCategoryProps
 > {
   onPressHandle = () => {
-    const {category, onPress} = this.props;
+    const {category, onPress, onAddPress} = this.props;
     if (category && onPress) {
       onPress(category);
+    } else if (onAddPress) {
+      onAddPress();
     }
   };
   onLongPressHandle = () => {
