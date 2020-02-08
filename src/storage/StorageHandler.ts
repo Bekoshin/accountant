@@ -37,7 +37,7 @@ export default class StorageHandler {
       logging: ['error', 'query', 'schema'],
       migrations: [Init1576240262448, InsertDefaultValues1576410388275],
       migrationsRun: true,
-      entities: [Category, Operation],
+      entities: [Category, Operation, Product],
     });
   };
 

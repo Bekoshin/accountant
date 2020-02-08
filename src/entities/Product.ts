@@ -23,7 +23,7 @@ export default class Product {
   @Column(ProductMeta.columns.value as ColumnOptions)
   private _value: number | undefined;
 
-  @ManyToOne(type => Operation, operation => operation.products)
+  @ManyToOne(type => Operation, operation => operation._products)
   @JoinColumn({name: ProductMeta.columns.operationId.name})
   private _operation: Operation | null;
 
