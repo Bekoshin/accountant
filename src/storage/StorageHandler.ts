@@ -99,6 +99,12 @@ export default class StorageHandler {
     }
   };
 
+  public deleteOperation = async (operation: Operation) => {
+    if (this._operationRepo) {
+      await this._operationRepo.remove(operation);
+    }
+  };
+
   static createDefaultCategories = () => {
     let categories: Category[] = [];
 

@@ -1,4 +1,4 @@
-import {actionTypes} from '../actionTypes';
+import {ACTION_TYPES} from '../ACTION_TYPES';
 import Operation from '../../entities/Operation';
 
 export interface OperationState {
@@ -11,7 +11,7 @@ const initialState: OperationState = {
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
-    case actionTypes.OPERATIONS_LOADED: {
+    case ACTION_TYPES.OPERATIONS_LOADED: {
       return {
         ...state,
         operations: action.operations,

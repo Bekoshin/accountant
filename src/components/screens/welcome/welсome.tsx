@@ -6,7 +6,7 @@ import StorageHandler from '../../../storage/StorageHandler';
 import Operation from '../../../entities/Operation';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
-import {actionTypes} from '../../../store/actionTypes';
+import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
 import Category from '../../../entities/Category';
 
 export interface WelcomeProps {
@@ -52,7 +52,7 @@ const loadAllOperations = (
     Operation[]
   > = await storageHandler.getAllOperationsFromRepo();
   dispatch({
-    type: actionTypes.OPERATIONS_LOADED,
+    type: ACTION_TYPES.OPERATIONS_LOADED,
     operations: operations,
   });
 };
@@ -62,7 +62,7 @@ const loadAllCategories = (
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let categories: Category[] = await storageHandler.getAllValidCategoriesFromRepo();
   dispatch({
-    type: actionTypes.CATEGORIES_LOADED,
+    type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,
   });
 };

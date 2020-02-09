@@ -1,6 +1,13 @@
 import React from 'react';
 import moment from 'moment';
-import {Image, ScrollView, Text, View} from 'react-native';
+import {
+  Alert,
+  GestureResponderEvent,
+  Image,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
@@ -12,6 +19,10 @@ import I18n from '../../../i18n/i18n';
 import DateHandler from '../../../utils/DateHandler';
 import OperationHandler from '../../../utils/OperationHandler';
 import styles from './home.styles';
+import {ThunkAction} from 'redux-thunk';
+import {Action} from 'redux';
+import StorageHandler from '../../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -20,6 +31,8 @@ interface HomeProps {
   navigation: any;
 
   operations: Operation[];
+
+  deleteOperation: (operation: Operation) => void;
 }
 
 interface HomeState {
@@ -28,8 +41,12 @@ interface HomeState {
   operationsMap: Map<string, Operation[]>;
   total: number;
   isMoreMenuVisible: boolean;
+  isOperationMenuVisible: boolean;
   groupedBy: 'date' | 'category';
   searchMode: boolean;
+  menuAnchorX: number;
+  menuAnchorY: number;
+  selectedOperation: Operation | null;
 }
 
 class Home extends React.PureComponent<HomeProps, HomeState> {
@@ -49,8 +66,12 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       operationsMap: operationsMap,
       total: OperationHandler.calculateTotalAmount(filteredOperations),
       isMoreMenuVisible: false,
+      isOperationMenuVisible: false,
       groupedBy: 'date',
       searchMode: false,
+      menuAnchorX: 0,
+      menuAnchorY: 0,
+      selectedOperation: null,
     };
   }
 
@@ -147,6 +168,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
         />
         {this.renderOperationSections()}
         {this.renderFAB()}
+        {this.renderOperationMenu()}
       </View>
     );
   }
@@ -264,6 +286,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
 
   renderOperations(operations: Operation[]) {
     const {groupedBy} = this.state;
+    const {navigation} = this.props;
     let operationComponents = [];
     for (let operation of operations) {
       let title;
@@ -279,10 +302,20 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           key={operation.id}
           title={title}
           onPress={() =>
-            this.props.navigation.navigate('Operation', {
+            navigation.navigate('Operation', {
               operation: operation,
             })
           }
+          onLongPress={(evt: GestureResponderEvent) => {
+            const x = evt.nativeEvent.pageX;
+            const y = evt.nativeEvent.pageY;
+            this.setState({
+              menuAnchorX: x,
+              menuAnchorY: y,
+              isOperationMenuVisible: true,
+              selectedOperation: operation,
+            });
+          }}
           left={
             operation.category.image
               ? () => (
@@ -309,13 +342,86 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
       />
     );
   }
+
+  renderOperationMenu() {
+    const {
+      menuAnchorX,
+      menuAnchorY,
+      isOperationMenuVisible,
+      selectedOperation,
+    } = this.state;
+    const {navigation} = this.props;
+    return (
+      <Menu
+        onDismiss={() => {
+          this.setState({isOperationMenuVisible: false});
+        }}
+        visible={isOperationMenuVisible}
+        anchor={{x: menuAnchorX, y: menuAnchorY}}>
+        <Menu.Item
+          icon="pencil"
+          title={I18n.t('action_edit')}
+          onPress={() => {
+            navigation.navigate('Operation', {
+              operation: selectedOperation,
+            });
+            this.setState({isOperationMenuVisible: false});
+          }}
+        />
+        <Menu.Item
+          icon="delete"
+          title={I18n.t('action_delete')}
+          onPress={this.handleDeleteButton}
+        />
+      </Menu>
+    );
+  }
+
+  handleDeleteButton = () => {
+    const {selectedOperation} = this.state;
+    this.setState({isOperationMenuVisible: false});
+    const message = I18n.t('message_delete_operation');
+    Alert.alert(I18n.t('label_deleting'), message, [
+      {
+        text: I18n.t('action_cancel'),
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          console.log('OPERATION FOR DELETE: ', selectedOperation);
+          if (selectedOperation) {
+            this.props.deleteOperation(selectedOperation);
+          }
+        },
+      },
+    ]);
+  };
 }
+
+const deleteOperation = (
+  operation: Operation,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.init();
+  await storageHandler.deleteOperation(operation);
+  const operations = await storageHandler.getAllOperationsFromRepo();
+  dispatch({
+    type: ACTION_TYPES.OPERATIONS_LOADED,
+    operations: operations,
+  });
+};
 
 const mapStateToProps = (state: AppState) => ({
   operations: state.operationReducer.operations,
 });
 
+const mapDispatchToProps = {
+  deleteOperation: (operation: Operation) => deleteOperation(operation),
+};
+
 export default connect(
   mapStateToProps,
-  {},
+  mapDispatchToProps,
 )(Home);

@@ -1,4 +1,4 @@
-import {actionTypes} from '../actionTypes';
+import {ACTION_TYPES} from '../ACTION_TYPES';
 import Category from '../../entities/Category';
 
 export interface CategoryState {
@@ -11,7 +11,7 @@ const initialState: CategoryState = {
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
-    case actionTypes.CATEGORIES_LOADED: {
+    case ACTION_TYPES.CATEGORIES_LOADED: {
       return {
         ...state,
         categories: action.categories,

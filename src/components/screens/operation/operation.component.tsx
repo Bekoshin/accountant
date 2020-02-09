@@ -11,7 +11,7 @@ import Category from '../../../entities/Category';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../../storage/StorageHandler';
-import {actionTypes} from '../../../store/actionTypes';
+import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
 import DateHandler from '../../../utils/DateHandler';
 
 interface OperationProps {
@@ -272,7 +272,7 @@ const saveOperation = (
   await storageHandler.saveOperationInRepo(operation);
   const operations = await storageHandler.getAllOperationsFromRepo();
   dispatch({
-    type: actionTypes.OPERATIONS_LOADED,
+    type: ACTION_TYPES.OPERATIONS_LOADED,
     operations: operations,
   });
 };

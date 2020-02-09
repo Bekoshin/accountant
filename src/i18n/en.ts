@@ -1,9 +1,10 @@
 export default {
     locale: 'en',
 
-    message_delete_category: 'Are you sure you want to delete the category',
+    message_delete_category: 'Are you sure you want to delete the selected category',
     message_delete_categories: 'Are you sure you want to delete the selected categories',
     message_child_categories_delete: 'Child categories will also be deleted',
+    message_delete_operation: 'Are you sure you want to delete the selected operation',
 
     label_required: 'Required',
     label_amount: 'Amount',
@@ -32,6 +33,8 @@ export default {
     action_group_by_category: 'Group by category',
     action_set_filters: 'Set filters',
     action_cancel: 'Cancel',
+    action_edit: 'Edit',
+    action_delete: 'Delete',
 
     placeholder_search: 'Search',
 

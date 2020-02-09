@@ -9,7 +9,7 @@ import I18n from '../../../i18n/i18n';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../../storage/StorageHandler';
-import {actionTypes} from '../../../store/actionTypes';
+import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
 
 interface CategoriesProps {
   navigation: any;
@@ -276,11 +276,10 @@ const deleteCategories = (
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
   await storageHandler.init();
-  console.log('deleteCategories. categories: ', categories);
   await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getAllValidCategoriesFromRepo();
   dispatch({
-    type: actionTypes.CATEGORIES_LOADED,
+    type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: updatedCategories,
   });
 };
