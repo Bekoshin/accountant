@@ -1,7 +1,8 @@
 import React, {SyntheticEvent} from 'react';
 import {View, ScrollView, Platform, Text} from 'react-native';
 import {connect} from 'react-redux';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../../store/store';
 import Operation from '../../../entities/Operation';
 import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
@@ -34,8 +35,10 @@ interface OperationState {
   datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<OperationProps,
-  OperationState> {
+class OperationScreen extends React.PureComponent<
+  OperationProps,
+  OperationState
+> {
   private readonly operation: Operation | undefined = undefined;
 
   constructor(props: OperationProps) {
@@ -148,15 +151,9 @@ class OperationScreen extends React.PureComponent<OperationProps,
     this.setState({category: category});
   };
 
-  changeDate = (
-    event: SyntheticEvent<Readonly<{ timestamp: number }>, Event>,
-    date?: Date | undefined,
-  ) => {
-    console.log('date: ', date);
-    date = date || this.state.date;
-
+  changeDate = (date: Date) => {
     this.setState({
-      datePickerVisible: Platform.OS === 'ios',
+      datePickerVisible: false,
       date,
     });
   };
@@ -167,6 +164,15 @@ class OperationScreen extends React.PureComponent<OperationProps,
 
   changeIsIgnored = () => {
     this.setState({isIgnored: !this.state.isIgnored});
+  };
+
+  handleDateInputPress = () => {
+    this.hideDateError();
+    this.setState({datePickerVisible: true});
+  };
+
+  hideDatePicker = () => {
+    this.setState({datePickerVisible: false});
   };
 
   componentDidMount() {
@@ -208,8 +214,8 @@ class OperationScreen extends React.PureComponent<OperationProps,
             value={
               category
                 ? I18n.t(category.name, {
-                  defaultValue: category.name,
-                })
+                    defaultValue: category.name,
+                  })
                 : ''
             }
             required={true}
@@ -232,10 +238,7 @@ class OperationScreen extends React.PureComponent<OperationProps,
             errorMessage={dateError}
             onFocus={this.hideDateError}
             hideClearButton={true}
-            onInputPress={() => {
-              this.hideDateError();
-              this.setState({datePickerVisible: true});
-            }}
+            onInputPress={this.handleDateInputPress}
           />
           <Input
             label={I18n.t('label_note')}
@@ -245,21 +248,23 @@ class OperationScreen extends React.PureComponent<OperationProps,
           />
           <TouchableRipple onPress={this.changeIsIgnored}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Checkbox status={isIgnored ? 'checked' : 'unchecked'}/>
+              <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
               <Text>{I18n.t('label_ignore')}</Text>
             </View>
           </TouchableRipple>
         </ScrollView>
-        {datePickerVisible && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={this.changeDate}
-            maximumDate={new Date()}
-          />
-        )}
+        <DateTimePickerModal
+          date={date}
+          isVisible={datePickerVisible}
+          mode="date"
+          maximumDate={new Date()}
+          onConfirm={this.changeDate}
+          onCancel={this.hideDatePicker}
+          headerTextIOS="Выберите дату"
+          cancelTextIOS={I18n.t('action_cancel')}
+          confirmTextIOS={I18n.t('action_confirm')}
+          locale={I18n.t('locale')}
+        />
       </View>
     );
   }

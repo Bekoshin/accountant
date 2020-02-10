@@ -35,6 +35,7 @@ export default {
     action_cancel: 'Отмена',
     action_edit: 'Изменить',
     action_delete: 'Удалить',
+    action_confirm: 'Подтвердить',
 
     placeholder_search: 'Поиск',
 

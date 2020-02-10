@@ -35,6 +35,7 @@ export default {
     action_cancel: 'Cancel',
     action_edit: 'Edit',
     action_delete: 'Delete',
+    action_confirm: 'Confirm',
 
     placeholder_search: 'Search',
 
