@@ -18,6 +18,7 @@ interface FiltersState {
   dateFrom: Date | null;
   dateTo: Date | null;
   categories: Category[];
+  note: string;
 }
 
 export default class FiltersScreen extends React.PureComponent<
@@ -32,6 +33,7 @@ export default class FiltersScreen extends React.PureComponent<
       dateFrom: null,
       dateTo: null,
       categories: [],
+      note: '',
     };
   }
 
@@ -70,6 +72,10 @@ export default class FiltersScreen extends React.PureComponent<
     this.setState({categories: categories});
   };
 
+  private changeNote = (note: string) => {
+    this.setState({note: note});
+  };
+
   componentDidMount() {
     this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
     console.log('FILTERS DID MOUNT');
@@ -80,7 +86,14 @@ export default class FiltersScreen extends React.PureComponent<
   }
 
   render() {
-    const {amountFrom, amountTo, categories, dateFrom, dateTo} = this.state;
+    const {
+      amountFrom,
+      amountTo,
+      categories,
+      dateFrom,
+      dateTo,
+      note,
+    } = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.mainContainer}>
@@ -122,17 +135,23 @@ export default class FiltersScreen extends React.PureComponent<
               value={DateHandler.convertDate(dateFrom)}
               keyboardType="numeric"
               selectTextOnFocus={true}
-              onChangeText={this.changeAmountFrom}
+              onChangeText={this.changeAmountTo}
             />
             <Input
               style={styles.rightInput}
               label={I18n.t('label_date_to')}
-              value={DateHandler.convertDate(dateFrom)}
+              value={DateHandler.convertDate(dateTo)}
               keyboardType="numeric"
               selectTextOnFocus={true}
               onChangeText={this.changeAmountTo}
             />
           </View>
+          <Input
+            label={I18n.t('label_note')}
+            value={note}
+            onChangeText={this.changeNote}
+            multiline={true}
+          />
         </ScrollView>
       </View>
     );
