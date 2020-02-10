@@ -260,7 +260,7 @@ class OperationScreen extends React.PureComponent<
           maximumDate={new Date()}
           onConfirm={this.changeDate}
           onCancel={this.hideDatePicker}
-          headerTextIOS="Выберите дату"
+          headerTextIOS={I18n.t('label_choose_date')}
           cancelTextIOS={I18n.t('action_cancel')}
           confirmTextIOS={I18n.t('action_confirm')}
           locale={I18n.t('locale')}

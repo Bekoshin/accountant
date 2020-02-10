@@ -19,6 +19,7 @@ export default {
     label_selected: 'выбрано',
     label_ignore: 'Не учитывать',
     label_deleting: 'Удаление',
+    label_choose_date: 'Выберите дату',
 
     operation_screen: 'Операция',
     new_operation_screen: 'Новая операция',

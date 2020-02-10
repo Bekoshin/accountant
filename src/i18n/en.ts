@@ -19,6 +19,7 @@ export default {
     label_selected: 'selected',
     label_ignore: 'Ignore',
     label_deleting: 'Deleting',
+    label_choose_date: 'Choose a date',
 
     operation_screen: 'Operation',
     new_operation_screen: 'New operation',
@@ -42,7 +43,6 @@ export default {
     today: 'Today',
     yesterday: 'Yesterday',
     tomorrow: 'Tomorrow',
-
 
     transport: 'Transport',
     taxi: 'Taxi',
