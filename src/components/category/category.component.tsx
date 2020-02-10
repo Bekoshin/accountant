@@ -8,11 +8,11 @@ import I18n from '../../i18n/i18n';
 import CheckIcon from '../checkIcon/checkIcon.Component';
 
 interface CategoryProps {
-  navigation: any;
   category: Category;
   setCategory: (category: Category) => void;
   selectCategory: (category: Category) => void;
   unselectCategory: (category: Category) => void;
+  addCategory: (category?: Category) => void;
   selectedCategories: Category[];
   onlySelectMode: boolean;
 }
@@ -52,7 +52,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   }
 
   renderChildCategories(categories: Category[] | null) {
-    const {navigation, category} = this.props;
+    const {category, addCategory} = this.props;
     let categoriesComponent = [];
     if (categories) {
       for (let category of categories) {
@@ -75,7 +75,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
     categoriesComponent.push(
       <ChildCategoryComponent
         onAddPress={() => {
-          navigation.navigate('Category', {parentCategory: category});
+          addCategory(category);
         }}
         key={-1}
       />,

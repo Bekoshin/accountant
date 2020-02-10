@@ -135,6 +135,11 @@ class CategoriesScreen extends React.PureComponent<
     }
   };
 
+  handleAddCategoryButton = (parentCategory?: Category) => {
+    const {navigation} = this.props;
+    navigation.navigate('Category', {parentCategory: parentCategory});
+  };
+
   componentDidMount(): void {
     console.log('CATEGORIES DID MOUNT');
   }
@@ -174,9 +179,7 @@ class CategoriesScreen extends React.PureComponent<
         <Appbar.Content title={I18n.t('categories_screen')} />
         <Appbar.Action
           icon="plus"
-          onPress={() => {
-            navigation.navigate('Category');
-          }}
+          onPress={() => this.handleAddCategoryButton()}
         />
       </Appbar.Header>
     );
@@ -229,6 +232,7 @@ class CategoriesScreen extends React.PureComponent<
               unselectCategory={this.unselectCategory}
               selectedCategories={selectedCategories}
               onlySelectMode={this.canSetSeveralCategory}
+              addCategory={this.handleAddCategoryButton}
             />
             <Divider />
           </View>,
