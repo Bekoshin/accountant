@@ -84,6 +84,7 @@ class OperationScreen extends React.PureComponent<OperationProps,
           note,
           isIgnored,
           undefined,
+          undefined,
           this.operation ? this.operation.id : undefined,
         );
         await this.props.saveOperation(operation);
