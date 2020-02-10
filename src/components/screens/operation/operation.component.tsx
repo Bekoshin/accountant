@@ -269,7 +269,7 @@ const saveOperation = (
   operation: Operation,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
-  await storageHandler.init();
+  await storageHandler.initOperationRepo();
   await storageHandler.saveOperationInRepo(operation);
   const operations = await storageHandler.getAllOperationsFromRepo();
   dispatch({

@@ -23,7 +23,8 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     console.log('WELCOME DID MOUNT');
     this._storageHandler = new StorageHandler();
     await this._storageHandler.connect();
-    await this._storageHandler.init();
+    await this._storageHandler.initCategoryRepo();
+    await this._storageHandler.initOperationRepo();
     console.log('WELCOME. STORAGE HANDLER INITIALIZED');
     await this.props.loadAllOperations(this._storageHandler);
     await this.props.loadAllCategories(this._storageHandler);

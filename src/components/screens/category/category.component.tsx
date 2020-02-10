@@ -143,7 +143,7 @@ const saveCategory = (
   category: Category,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
-  await storageHandler.init();
+  await storageHandler.initCategoryRepo();
   console.log('saveCategory. category: ', category);
   await storageHandler.saveCategoryInRepo(category);
   const categories = await storageHandler.getAllValidCategoriesFromRepo();

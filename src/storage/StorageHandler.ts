@@ -24,10 +24,10 @@ export default class StorageHandler {
     this._categoryRepo = undefined;
   }
 
-  public init = async () => {
-    await this.initCategoryRepo();
-    await this.initOperationRepo();
-  };
+  // public init = async () => {
+  //   await this.initCategoryRepo();
+  //   await this.initOperationRepo();
+  // };
 
   public connect = async () => {
     this._connection = await createConnection({
@@ -41,11 +41,11 @@ export default class StorageHandler {
     });
   };
 
-  private initCategoryRepo = () => {
+  public initCategoryRepo = () => {
     this._categoryRepo = getRepository(Category);
   };
 
-  private initOperationRepo = () => {
+  public initOperationRepo = () => {
     this._operationRepo = getRepository(Operation);
   };
 
