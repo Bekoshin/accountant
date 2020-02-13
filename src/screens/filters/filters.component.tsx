@@ -8,6 +8,8 @@ import Category from '../../entities/Category';
 import styles from './filters.styles';
 import DateHandler from '../../utils/DateHandler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {AppState} from '../../store/store';
+import {connect} from 'react-redux';
 
 interface FiltersProps {
   navigation: any;
@@ -25,10 +27,7 @@ interface FiltersState {
   isDateToInputPressed: boolean;
 }
 
-export default class FiltersScreen extends React.PureComponent<
-  FiltersProps,
-  FiltersState
-> {
+class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   constructor(props: FiltersProps) {
     super(props);
     this.state = {
@@ -231,3 +230,14 @@ export default class FiltersScreen extends React.PureComponent<
     return string;
   }
 }
+
+const applyFilters = ()
+
+const mapStateToProps = (state: AppState) => ({});
+
+export default connect(
+  mapStateToProps,
+  {
+
+  },
+)(FiltersScreen);
