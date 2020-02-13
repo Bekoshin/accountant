@@ -9,20 +9,20 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {AppState} from '../../../store/store';
-import Operation from '../../../entities/Operation';
-import NoExpensesComponent from '../../noExpenses/noExpenses.Component';
+import {AppState} from '../../store/store';
+import Operation from '../../entities/Operation';
+import NoExpensesComponent from '../../components/noExpenses/noExpenses.Component';
 import {FAB, Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import DateSelector from '../../dateSelector/dateSelector.Component';
-import I18n from '../../../i18n/i18n';
-import DateHandler from '../../../utils/DateHandler';
-import OperationHandler from '../../../utils/OperationHandler';
+import DateSelector from '../../components/dateSelector/dateSelector.Component';
+import I18n from '../../i18n/i18n';
+import DateHandler from '../../utils/DateHandler';
+import OperationHandler from '../../utils/OperationHandler';
 import styles from './home.styles';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
-import StorageHandler from '../../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];

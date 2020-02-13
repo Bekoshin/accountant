@@ -1,15 +1,15 @@
 import React from 'react';
 import {View, ScrollView, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {AppState} from '../../../store/store';
+import {AppState} from '../../store/store';
 import {Divider, Appbar} from 'react-native-paper';
-import Category from '../../../entities/Category';
-import CategoryComponent from '../../category/category.component';
-import I18n from '../../../i18n/i18n';
+import Category from '../../entities/Category';
+import CategoryComponent from '../../components/category/category.component';
+import I18n from '../../i18n/i18n';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
-import StorageHandler from '../../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 
 interface CategoriesProps {
   navigation: any;

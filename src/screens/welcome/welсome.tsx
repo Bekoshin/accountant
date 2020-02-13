@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
-import {AppState} from '../../../store/store';
-import StorageHandler from '../../../storage/StorageHandler';
-import Operation from '../../../entities/Operation';
+import {AppState} from '../../store/store';
+import StorageHandler from '../../storage/StorageHandler';
+import Operation from '../../entities/Operation';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
-import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
-import Category from '../../../entities/Category';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import Category from '../../entities/Category';
 
 export interface WelcomeProps {
   navigation: any;

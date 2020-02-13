@@ -14,16 +14,16 @@ import 'reflect-metadata';
 
 import store from './store/store';
 
-import Welcome from './components/screens/welcome/welсome';
-import Home from './components/screens/home/home';
-import Shopping from './components/screens/shopping/shopping';
-import Analytics from './components/screens/analytics/analytics';
-import Settings from './components/screens/settings/settings';
-import OperationScreen from './components/screens/operation/operation.component';
-import CategoriesSreen from './components/screens/categories/categories.component';
-import CategoryScreen from './components/screens/category/category.component';
-import ParentCategoriesScreen from './components/screens/parentCategories/parentCategories.component';
-import FiltersScreen from './components/screens/filters/filters.component';
+import Welcome from './screens/welcome/welсome';
+import Home from './screens/home/home';
+import Shopping from './screens/shopping/shopping';
+import Analytics from './screens/analytics/analytics';
+import Settings from './screens/settings/settings';
+import OperationScreen from './screens/operation/operation.component';
+import CategoriesSreen from './screens/categories/categories.component';
+import CategoryScreen from './screens/category/category.component';
+import ParentCategoriesScreen from './screens/parentCategories/parentCategories.component';
+import FiltersScreen from './screens/filters/filters.component';
 
 const BottomNavigator = createMaterialBottomTabNavigator(
   {

@@ -3,17 +3,17 @@ import {View, ScrollView, Platform, Text} from 'react-native';
 import {connect} from 'react-redux';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {AppState} from '../../../store/store';
-import Operation from '../../../entities/Operation';
+import {AppState} from '../../store/store';
+import Operation from '../../entities/Operation';
 import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
-import Input from '../../input/input';
-import I18n from '../../../i18n/i18n';
-import Category from '../../../entities/Category';
+import Input from '../../components/input/input';
+import I18n from '../../i18n/i18n';
+import Category from '../../entities/Category';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
-import StorageHandler from '../../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../../store/ACTION_TYPES';
-import DateHandler from '../../../utils/DateHandler';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import DateHandler from '../../utils/DateHandler';
 
 interface OperationProps {
   navigation: any;
@@ -154,7 +154,7 @@ class OperationScreen extends React.PureComponent<
   changeDate = (date: Date) => {
     this.setState({
       datePickerVisible: false,
-      date,
+      date: date,
     });
   };
 

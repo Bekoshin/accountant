@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
-import {AppState} from '../../../store/store';
+import {AppState} from '../../store/store';
 
 export interface SettingsProps {
   navigation: any;

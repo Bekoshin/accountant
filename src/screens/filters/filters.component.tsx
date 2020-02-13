@@ -1,12 +1,13 @@
-import React, {SyntheticEvent} from 'react';
-import {View, ScrollView, Platform} from 'react-native';
+import React from 'react';
+import {View, ScrollView} from 'react-native';
 
 import {Button} from 'react-native-paper';
-import Input from '../../input/input';
-import I18n from '../../../i18n/i18n';
-import Category from '../../../entities/Category';
+import Input from '../../components/input/input';
+import I18n from '../../i18n/i18n';
+import Category from '../../entities/Category';
 import styles from './filters.styles';
-import DateHandler from '../../../utils/DateHandler';
+import DateHandler from '../../utils/DateHandler';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 interface FiltersProps {
   navigation: any;
@@ -15,10 +16,13 @@ interface FiltersProps {
 interface FiltersState {
   amountFrom: string;
   amountTo: string;
-  dateFrom: Date | null;
-  dateTo: Date | null;
+  dateFrom: Date | undefined;
+  dateTo: Date | undefined;
   categories: Category[];
   note: string;
+  datePickerVisible: boolean;
+  isDateFromInputPressed: boolean;
+  isDateToInputPressed: boolean;
 }
 
 export default class FiltersScreen extends React.PureComponent<
@@ -30,10 +34,13 @@ export default class FiltersScreen extends React.PureComponent<
     this.state = {
       amountFrom: '',
       amountTo: '',
-      dateFrom: null,
-      dateTo: null,
+      dateFrom: undefined,
+      dateTo: undefined,
       categories: [],
       note: '',
+      datePickerVisible: false,
+      isDateFromInputPressed: false,
+      isDateToInputPressed: false,
     };
   }
 
@@ -76,6 +83,47 @@ export default class FiltersScreen extends React.PureComponent<
     this.setState({note: note});
   };
 
+  private changeDate = (date: Date) => {
+    const {isDateFromInputPressed, isDateToInputPressed} = this.state;
+    if (isDateFromInputPressed) {
+      this.changeDateFrom(date);
+    } else if (isDateToInputPressed) {
+      this.changeDateTo(date);
+    }
+  };
+
+  private changeDateFrom = (date: Date | undefined) => {
+    this.setState({
+      isDateFromInputPressed: false,
+      datePickerVisible: false,
+      dateFrom: date,
+    });
+  };
+
+  private changeDateTo = (date: Date | undefined) => {
+    this.setState({
+      isDateToInputPressed: false,
+      datePickerVisible: false,
+      dateTo: date,
+    });
+  };
+
+  handleDateFromInputPress = () => {
+    this.setState({isDateFromInputPressed: true, datePickerVisible: true});
+  };
+
+  handleDateToInputPress = () => {
+    this.setState({isDateToInputPressed: true, datePickerVisible: true});
+  };
+
+  hideDatePicker = () => {
+    this.setState({
+      datePickerVisible: false,
+      isDateFromInputPressed: false,
+      isDateToInputPressed: false,
+    });
+  };
+
   componentDidMount() {
     this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
     console.log('FILTERS DID MOUNT');
@@ -93,6 +141,8 @@ export default class FiltersScreen extends React.PureComponent<
       dateFrom,
       dateTo,
       note,
+      datePickerVisible,
+      isDateFromInputPressed,
     } = this.state;
     const {navigation} = this.props;
     return (
@@ -132,18 +182,18 @@ export default class FiltersScreen extends React.PureComponent<
             <Input
               style={styles.leftInput}
               label={I18n.t('label_date_from')}
+              editable={false}
               value={DateHandler.convertDate(dateFrom)}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={this.changeAmountTo}
+              onClearPress={() => this.changeDateFrom(undefined)}
+              onInputPress={this.handleDateFromInputPress}
             />
             <Input
               style={styles.rightInput}
               label={I18n.t('label_date_to')}
+              editable={false}
               value={DateHandler.convertDate(dateTo)}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={this.changeAmountTo}
+              onClearPress={() => this.changeDateTo(undefined)}
+              onInputPress={this.handleDateToInputPress}
             />
           </View>
           <Input
@@ -153,6 +203,18 @@ export default class FiltersScreen extends React.PureComponent<
             multiline={true}
           />
         </ScrollView>
+        <DateTimePickerModal
+          date={isDateFromInputPressed ? dateFrom : dateTo}
+          isVisible={datePickerVisible}
+          mode="date"
+          maximumDate={new Date()}
+          onConfirm={this.changeDate}
+          onCancel={this.hideDatePicker}
+          headerTextIOS={I18n.t('label_choose_date')}
+          cancelTextIOS={I18n.t('action_cancel')}
+          confirmTextIOS={I18n.t('action_confirm')}
+          locale={I18n.t('locale')}
+        />
       </View>
     );
   }

@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import {AppState} from '../../../store/store';
+import {AppState} from '../../store/store';
 import {List, Divider} from 'react-native-paper';
-import Category from '../../../entities/Category';
-import I18n from '../../../i18n/i18n';
+import Category from '../../entities/Category';
+import I18n from '../../i18n/i18n';
 
 export interface ParentCategoriesProps {
   navigation: any;
