@@ -1,8 +1,8 @@
 import {
   Connection,
-  createConnection,
+  createConnection, createQueryBuilder,
   getRepository,
-  Repository,
+  Repository, SelectQueryBuilder,
 } from 'typeorm/browser';
 import Category from '../entities/Category';
 import Operation from '../entities/Operation';
@@ -10,6 +10,7 @@ import {Init1576240262448} from './migrations/1576240262448-Init';
 import {InsertDefaultValues1576410388275} from './migrations/1576410388275-InsertDefaultValues';
 import IMAGES from '../images';
 import Product from '../entities/Product';
+import {Filter} from '../entities/Filter';
 
 const DATABASE_NAME = 'main.db';
 
@@ -59,6 +60,38 @@ export default class StorageHandler {
         .leftJoinAndSelect('c._childCategories', 'cc')
         .addOrderBy('o._date', 'DESC')
         .getMany();
+    }
+    return operations;
+  };
+
+  public getFilteredOperations = async (
+    filter: Filter,
+  ): Promise<Operation[]> => {
+    console.log('FILTER : ', filter)
+    let operations: Operation[] = [];
+    if (this._operationRepo) {
+      let builder: SelectQueryBuilder<Operation> = this._operationRepo
+        .createQueryBuilder('o')
+        .leftJoinAndSelect('o._category', 'c')
+        .leftJoinAndSelect('c._parentCategory', 'pc')
+        .leftJoinAndSelect('c._childCategories', 'cc')
+        .addOrderBy('o._date', 'DESC');
+      if (filter.categories.length > 0) {
+        builder.where('o.category_id IN (:...categories)', {
+          categories: filter.categories.map(category => category.id),
+        });
+      }
+      if (filter.amountFrom !== undefined) {
+        builder.where('o.amount >= :amount_from', {
+          amount_from: filter.amountFrom,
+        });
+      }
+      if (filter.amountTo !== undefined) {
+        builder.where('o.amount <= :amount_to', {
+          amount_to: filter.amountTo,
+        });
+      }
+      operations = await builder.getMany();
     }
     return operations;
   };

@@ -10,9 +10,16 @@ import DateHandler from '../../utils/DateHandler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
+import {Filter} from '../../entities/Filter';
+import {ThunkAction} from 'redux-thunk';
+import {Action} from 'redux';
+import StorageHandler from '../../storage/StorageHandler';
+import Operation from '../../entities/Operation';
 
 interface FiltersProps {
   navigation: any;
+
+  applyFilter: (filter: Filter) => void;
 }
 
 interface FiltersState {
@@ -49,14 +56,33 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     return {
       title: I18n.t('filters_screen'),
       headerRight: () => (
-        <Button onPress={() => params.saveButtonHandler()}>
+        <Button onPress={() => params.handleApplyButton()}>
           {I18n.t('action_save')}
         </Button>
       ),
     };
   };
 
-  private handleSaveButton = async () => {};
+  private handleApplyButton = async () => {
+    const {
+      amountFrom,
+      amountTo,
+      dateFrom,
+      dateTo,
+      categories,
+      note,
+    } = this.state;
+    this.props.applyFilter(
+      new Filter(
+        amountFrom ? parseFloat(amountFrom) : undefined,
+        amountTo ? parseFloat(amountTo) : undefined,
+        categories,
+        dateFrom,
+        dateTo,
+        note,
+      ),
+    );
+  };
 
   private changeAmountFrom = (amount: string) => {
     if (amount.match(/^\d*\.?\d*$/)) {
@@ -124,7 +150,9 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
+    this.props.navigation.setParams({
+      handleApplyButton: this.handleApplyButton,
+    });
     console.log('FILTERS DID MOUNT');
   }
 
@@ -231,13 +259,22 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   }
 }
 
-const applyFilters = ()
+const applyFilter = (
+  filter: Filter,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.initOperationRepo();
+  const filteredOperations: Operation[] = await storageHandler.getFilteredOperations(
+    filter,
+  );
+  console.log('FILTERED OPERATIONS: ', filteredOperations);
+};
 
 const mapStateToProps = (state: AppState) => ({});
 
 export default connect(
   mapStateToProps,
   {
-
+    applyFilter: (filter: Filter) => applyFilter(filter),
   },
 )(FiltersScreen);

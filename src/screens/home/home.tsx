@@ -92,7 +92,6 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
 
   componentDidUpdate(prevProps: HomeProps) {
     console.log('COMPONENT DID UPDATE');
-    // Популярный пример (не забудьте сравнить пропсы):
     if (this.props.operations !== prevProps.operations) {
       console.log('THIS PROPS  OPERATIONS: ', this.props.operations);
       console.log('PREV PROPS  OPERATIONS: ', prevProps.operations);

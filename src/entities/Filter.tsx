@@ -72,3 +72,5 @@ class Filter {
     this._note = value;
   }
 }
+
+export {Filter};
