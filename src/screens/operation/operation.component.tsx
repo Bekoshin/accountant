@@ -24,7 +24,7 @@ interface OperationProps {
 interface OperationState {
   amount: string;
   category: Category | null;
-  date: Date;
+  timestamp: Date;
   note: string;
   isIgnored: boolean;
 
@@ -47,7 +47,7 @@ class OperationScreen extends React.PureComponent<
     this.state = {
       amount: this.operation ? this.operation.amount.toString() : '0',
       category: this.operation ? this.operation.category : null,
-      date: this.operation ? this.operation.date : new Date(),
+      timestamp: this.operation ? this.operation.date : new Date(),
       note: this.operation ? this.operation.note : '',
       isIgnored: this.operation ? this.operation.isIgnored : false,
       amountError: '',
@@ -76,14 +76,14 @@ class OperationScreen extends React.PureComponent<
 
   private handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {amount, category, date, note, isIgnored} = this.state;
+    const {amount, category, timestamp, note, isIgnored} = this.state;
     if (this.checkFields()) {
       try {
         let operation: Operation;
         operation = new Operation(
           parseFloat(amount),
           category as Category,
-          date,
+          +timestamp,
           note,
           isIgnored,
           undefined,
@@ -108,7 +108,7 @@ class OperationScreen extends React.PureComponent<
       allFieldsFilled = false;
       this.showCategoryError();
     }
-    if (!this.state.date) {
+    if (!this.state.timestamp) {
       allFieldsFilled = false;
       this.showDateError();
     }
@@ -154,7 +154,7 @@ class OperationScreen extends React.PureComponent<
   changeDate = (date: Date) => {
     this.setState({
       datePickerVisible: false,
-      date: date,
+      timestamp: date,
     });
   };
 
@@ -188,7 +188,7 @@ class OperationScreen extends React.PureComponent<
     const {
       amount,
       category,
-      date,
+      timestamp,
       note,
       isIgnored,
       amountError,
@@ -232,7 +232,7 @@ class OperationScreen extends React.PureComponent<
           />
           <Input
             label={I18n.t('label_date')}
-            value={DateHandler.convertDate(this.state.date)}
+            value={DateHandler.convertDate(this.state.timestamp)}
             required={true}
             editable={false}
             errorMessage={dateError}
@@ -254,7 +254,7 @@ class OperationScreen extends React.PureComponent<
           </TouchableRipple>
         </ScrollView>
         <DateTimePickerModal
-          date={date}
+          date={timestamp}
           isVisible={datePickerVisible}
           mode="date"
           maximumDate={new Date()}

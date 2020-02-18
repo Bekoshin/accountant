@@ -58,7 +58,7 @@ export default class StorageHandler {
         .leftJoinAndSelect('o._category', 'c')
         .leftJoinAndSelect('c._parentCategory', 'pc')
         .leftJoinAndSelect('c._childCategories', 'cc')
-        .addOrderBy('o._date', 'DESC')
+        .addOrderBy('o._timestamp', 'DESC')
         .getMany();
     }
     return operations;
@@ -75,7 +75,7 @@ export default class StorageHandler {
         .leftJoinAndSelect('o._category', 'c')
         .leftJoinAndSelect('c._parentCategory', 'pc')
         .leftJoinAndSelect('c._childCategories', 'cc')
-        .addOrderBy('o._date', 'DESC');
+        .addOrderBy('o._timestamp', 'DESC');
       if (filter.categories.length > 0) {
         builder.where('o.category_id IN (:...categories)', {
           categories: filter.categories.map(category => category.id),
@@ -90,6 +90,9 @@ export default class StorageHandler {
         builder.where('o.amount <= :amount_to', {
           amount_to: filter.amountTo,
         });
+      }
+      if (filter.dateFrom !== undefined) {//todo need change date to timestamp
+        builder.where("CAST(strftime('%f', o.date) AS integer) >= :date_from", {date_from: +filter.dateFrom});
       }
       operations = await builder.getMany();
     }

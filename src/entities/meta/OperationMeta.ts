@@ -18,9 +18,9 @@ export class OperationMeta {
       type: 'integer',
       isNullable: true,
     },
-    date: {
-      name: 'date',
-      type: 'datetime',
+    timestamp: {
+      name: 'timestamp',
+      type: 'integer',
     },
     note: {
       name: 'note',

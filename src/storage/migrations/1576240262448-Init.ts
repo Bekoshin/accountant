@@ -82,8 +82,8 @@ export class Init1576240262448 implements MigrationInterface {
             isNullable: OperationMeta.columns.categoryId.isNullable,
           },
           {
-            name: OperationMeta.columns.date.name,
-            type: OperationMeta.columns.date.type,
+            name: OperationMeta.columns.timestamp.name,
+            type: OperationMeta.columns.timestamp.type,
           },
           {
             name: OperationMeta.columns.note.name,

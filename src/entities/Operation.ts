@@ -26,8 +26,8 @@ export default class Operation {
   @JoinColumn({name: OperationMeta.columns.categoryId.name})
   private _category: Category;
 
-  @Column(OperationMeta.columns.date as ColumnOptions)
-  private _date: Date;
+  @Column(OperationMeta.columns.timestamp as ColumnOptions)
+  private _timestamp: number;
 
   @Column(OperationMeta.columns.note as ColumnOptions)
   private _note: string;
@@ -44,7 +44,7 @@ export default class Operation {
   constructor(
     amount: number,
     category: Category,
-    date: Date,
+    timestamp: number,
     note: string,
     isIgnored: boolean = false,
     isMonthly: boolean = false,
@@ -54,7 +54,7 @@ export default class Operation {
     this._id = id;
     this._amount = amount;
     this._category = category;
-    this._date = date;
+    this._timestamp = timestamp;
     this._note = note;
     this._isIgnored = isIgnored;
     this._isMonthly = isMonthly;
@@ -86,11 +86,15 @@ export default class Operation {
   }
 
   get date(): Date {
-    return this._date;
+    return new Date(this._timestamp);
   }
 
-  set date(value: Date) {
-    this._date = value;
+  get timestamp(): number {
+    return this._timestamp;
+  }
+
+  set timestamp(value: number) {
+    this._timestamp = value;
   }
 
   get note(): string {
