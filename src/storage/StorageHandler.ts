@@ -91,8 +91,17 @@ export default class StorageHandler {
           amount_to: filter.amountTo,
         });
       }
-      if (filter.dateFrom !== undefined) {//todo need change date to timestamp
-        builder.where("CAST(strftime('%f', o.date) AS integer) >= :date_from", {date_from: +filter.dateFrom});
+      if (filter.dateFrom !== undefined) {
+        const timestampFrom = filter.dateFrom.setHours(0, 0, 0, 0);
+        builder.where('o.timestamp >= :timestamp_from', {
+          timestamp_from: timestampFrom,
+        });
+      }
+      if (filter.dateTo !== undefined) {
+        const timestampTo = filter.dateTo.setHours(23, 59, 59, 999);
+        builder.where('o.timestamp <= :timestamp_to', {
+          timestamp_to: timestampTo,
+        });
       }
       operations = await builder.getMany();
     }
