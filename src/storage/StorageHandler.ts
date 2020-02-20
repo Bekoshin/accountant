@@ -103,6 +103,9 @@ export default class StorageHandler {
           timestamp_to: timestampTo,
         });
       }
+      if (filter.note !== '') {
+        builder.where('INSTR(o.note, :note)', {note: filter.note});
+      }
       operations = await builder.getMany();
     }
     return operations;
