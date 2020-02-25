@@ -20,7 +20,7 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 interface FiltersProps {
   navigation: any;
 
-  applyFilter: (filter: Filter) => void;
+  applyFilter: (filter: Filter | null) => void;
 }
 
 interface FiltersState {
@@ -73,16 +73,25 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
       categories,
       note,
     } = this.state;
-    await this.props.applyFilter(
-      new Filter(
+    let filter: Filter | null = null;
+    if (
+      amountFrom ||
+      amountTo ||
+      dateFrom ||
+      dateTo ||
+      categories.length > 0 ||
+      note
+    ) {
+      filter = new Filter(
         amountFrom ? parseFloat(amountFrom) : undefined,
         amountTo ? parseFloat(amountTo) : undefined,
         categories,
         dateFrom,
         dateTo,
         note,
-      ),
-    );
+      );
+    }
+    await this.props.applyFilter(filter);
     await this.props.navigation.goBack();
   };
 
@@ -248,6 +257,10 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     );
   }
 
+  renderAppBar() {
+    const {navigation} = this.props;
+  }
+
   createCategoriesString() {
     const {categories} = this.state;
     let string = '';
@@ -262,16 +275,25 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
 }
 
 const applyFilter = (
-  filter: Filter,
+  filter: Filter | null,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
   await storageHandler.initOperationRepo();
-  const filteredOperations: Operation[] = await storageHandler.getFilteredOperations(
-    filter,
-  );
+  let operations: Operation[];
+
+  if (filter) {
+    operations = await storageHandler.getFilteredOperations(filter);
+  } else {
+    operations = await storageHandler.getAllOperationsFromRepo();
+  }
+
   dispatch({
     type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: filteredOperations,
+    operations: operations,
+  });
+  dispatch({
+    type: ACTION_TYPES.FILTER_CHANGED,
+    filter: filter,
   });
 };
 
@@ -280,6 +302,6 @@ const mapStateToProps = (state: AppState) => ({});
 export default connect(
   mapStateToProps,
   {
-    applyFilter: (filter: Filter) => applyFilter(filter),
+    applyFilter: (filter: Filter | null) => applyFilter(filter),
   },
 )(FiltersScreen);
