@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 
-import {Button} from 'react-native-paper';
+import {Button, Appbar} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
@@ -51,16 +51,9 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     };
   }
 
-  static navigationOptions = ({navigation}: any) => {
-    let params = navigation.state.params;
-    console.log('params: ', params);
+  static navigationOptions = () => {
     return {
-      title: I18n.t('filters_screen'),
-      headerRight: () => (
-        <Button onPress={() => params.handleApplyButton()}>
-          {I18n.t('action_save')}
-        </Button>
-      ),
+      header: null,
     };
   };
 
@@ -161,9 +154,6 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({
-      handleApplyButton: this.handleApplyButton,
-    });
     console.log('FILTERS DID MOUNT');
   }
 
@@ -184,81 +174,94 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     } = this.state;
     const {navigation} = this.props;
     return (
-      <View style={styles.mainContainer}>
-        <ScrollView>
-          <Input
-            label={I18n.t('label_category')}
-            value={this.createCategoriesString()}
-            editable={false}
-            onClearPress={() => this.changeCategories([])}
-            onInputPress={() =>
-              navigation.navigate('Categories', {
-                setCategories: this.changeCategories,
-                selectedCategories: categories,
-              })
-            }
-          />
-          <View style={styles.rowContainer}>
+      <View style={{flex: 1}}>
+        {this.renderAppBar()}
+        <View style={styles.mainContainer}>
+          <ScrollView>
             <Input
-              style={styles.leftInput}
-              label={I18n.t('label_amount_from')}
-              value={amountFrom}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={this.changeAmountFrom}
-            />
-            <Input
-              style={styles.rightInput}
-              label={I18n.t('label_amount_to')}
-              value={amountTo}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={this.changeAmountTo}
-            />
-          </View>
-          <View style={styles.rowContainer}>
-            <Input
-              style={styles.leftInput}
-              label={I18n.t('label_date_from')}
+              label={I18n.t('label_category')}
+              value={this.createCategoriesString()}
               editable={false}
-              value={DateHandler.convertDate(dateFrom)}
-              onClearPress={() => this.changeDateFrom(undefined)}
-              onInputPress={this.handleDateFromInputPress}
+              onClearPress={() => this.changeCategories([])}
+              onInputPress={() =>
+                navigation.navigate('Categories', {
+                  setCategories: this.changeCategories,
+                  selectedCategories: categories,
+                })
+              }
             />
+            <View style={styles.rowContainer}>
+              <Input
+                style={styles.leftInput}
+                label={I18n.t('label_amount_from')}
+                value={amountFrom}
+                keyboardType="numeric"
+                selectTextOnFocus={true}
+                onChangeText={this.changeAmountFrom}
+              />
+              <Input
+                style={styles.rightInput}
+                label={I18n.t('label_amount_to')}
+                value={amountTo}
+                keyboardType="numeric"
+                selectTextOnFocus={true}
+                onChangeText={this.changeAmountTo}
+              />
+            </View>
+            <View style={styles.rowContainer}>
+              <Input
+                style={styles.leftInput}
+                label={I18n.t('label_date_from')}
+                editable={false}
+                value={DateHandler.convertDate(dateFrom)}
+                onClearPress={() => this.changeDateFrom(undefined)}
+                onInputPress={this.handleDateFromInputPress}
+              />
+              <Input
+                style={styles.rightInput}
+                label={I18n.t('label_date_to')}
+                editable={false}
+                value={DateHandler.convertDate(dateTo)}
+                onClearPress={() => this.changeDateTo(undefined)}
+                onInputPress={this.handleDateToInputPress}
+              />
+            </View>
             <Input
-              style={styles.rightInput}
-              label={I18n.t('label_date_to')}
-              editable={false}
-              value={DateHandler.convertDate(dateTo)}
-              onClearPress={() => this.changeDateTo(undefined)}
-              onInputPress={this.handleDateToInputPress}
+              label={I18n.t('label_note')}
+              value={note}
+              onChangeText={this.changeNote}
+              multiline={true}
             />
-          </View>
-          <Input
-            label={I18n.t('label_note')}
-            value={note}
-            onChangeText={this.changeNote}
-            multiline={true}
+          </ScrollView>
+          <DateTimePickerModal
+            date={isDateFromInputPressed ? dateFrom : dateTo}
+            isVisible={datePickerVisible}
+            mode="date"
+            maximumDate={new Date()}
+            onConfirm={this.changeDate}
+            onCancel={this.hideDatePicker}
+            headerTextIOS={I18n.t('label_choose_date')}
+            cancelTextIOS={I18n.t('action_cancel')}
+            confirmTextIOS={I18n.t('action_confirm')}
+            locale={I18n.t('locale')}
           />
-        </ScrollView>
-        <DateTimePickerModal
-          date={isDateFromInputPressed ? dateFrom : dateTo}
-          isVisible={datePickerVisible}
-          mode="date"
-          maximumDate={new Date()}
-          onConfirm={this.changeDate}
-          onCancel={this.hideDatePicker}
-          headerTextIOS={I18n.t('label_choose_date')}
-          cancelTextIOS={I18n.t('action_cancel')}
-          confirmTextIOS={I18n.t('action_confirm')}
-          locale={I18n.t('locale')}
-        />
+        </View>
       </View>
     );
   }
 
   renderAppBar() {
     const {navigation} = this.props;
+    return (
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => navigation.goBack()}/>
+        <Appbar.Content title={I18n.t('filters_screen')}/>
+        <Appbar.Action
+          icon="content-save"
+          onPress={() => this.handleApplyButton()}
+        />
+      </Appbar.Header>
+    )
   }
 
   createCategoriesString() {
