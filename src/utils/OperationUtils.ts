@@ -79,3 +79,7 @@ export const calculateTotalAmount = (operations: Operation[]): number => {
   }
   return total;
 };
+
+export const formatNumberToDecimal = (num: number): string => {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};

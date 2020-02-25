@@ -17,7 +17,13 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../components/dateSelector/dateSelector.Component';
 import I18n from '../../i18n/i18n';
 import DateHandler from '../../utils/DateHandler';
-import {groupByDate, calculateTotalAmount, filterOperationsByDate, groupByCategory, groupByMonth} from '../../utils/OperationUtils';
+import {
+  groupByDate,
+  calculateTotalAmount,
+  filterOperationsByDate,
+  groupByCategory,
+  groupByMonth, formatNumberToDecimal,
+} from '../../utils/OperationUtils';
 import styles from './home.styles';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
@@ -177,7 +183,11 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     const {navigation} = this.props;
     return (
       <Appbar.Header>
-        <Appbar.Content title={I18n.t('label_total') + ': ' + total + ' ₽'} />
+        <Appbar.Content
+          title={
+            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
+          }
+        />
         <Appbar.Action
           icon="magnify"
           onPress={() => this.setState({searchMode: true})}
@@ -325,7 +335,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
                 )
               : undefined
           }
-          right={() => <Text>{operation.amount} ₽</Text>}
+          right={() => <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>}
         />,
       );
     }

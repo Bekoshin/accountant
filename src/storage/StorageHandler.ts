@@ -1,8 +1,10 @@
 import {
   Connection,
-  createConnection, createQueryBuilder,
+  createConnection,
+  createQueryBuilder,
   getRepository,
-  Repository, SelectQueryBuilder,
+  Repository,
+  SelectQueryBuilder,
 } from 'typeorm/browser';
 import Category from '../entities/Category';
 import Operation from '../entities/Operation';
@@ -67,46 +69,62 @@ export default class StorageHandler {
   public getFilteredOperations = async (
     filter: Filter,
   ): Promise<Operation[]> => {
-    console.log('FILTER : ', filter)
     let operations: Operation[] = [];
     if (this._operationRepo) {
-      let builder: SelectQueryBuilder<Operation> = this._operationRepo
-        .createQueryBuilder('o')
-        .leftJoinAndSelect('o._category', 'c')
-        .leftJoinAndSelect('c._parentCategory', 'pc')
-        .leftJoinAndSelect('c._childCategories', 'cc')
-        .addOrderBy('o._timestamp', 'DESC');
+      let builder: SelectQueryBuilder<
+        Operation
+      > = this._operationRepo.createQueryBuilder('o');
+
       if (filter.categories.length > 0) {
         builder.where('o.category_id IN (:...categories)', {
           categories: filter.categories.map(category => category.id),
         });
       }
-      if (filter.amountFrom !== undefined) {
+
+      if (filter.amountFrom !== undefined && filter.amountTo !== undefined) {
+        builder.where('o.amount BETWEEN :amount_from AND :amount_to', {
+          amount_from: filter.amountFrom,
+          amount_to: filter.amountTo,
+        });
+      } else if (filter.amountFrom !== undefined) {
         builder.where('o.amount >= :amount_from', {
           amount_from: filter.amountFrom,
         });
-      }
-      if (filter.amountTo !== undefined) {
+      } else if (filter.amountTo !== undefined) {
         builder.where('o.amount <= :amount_to', {
           amount_to: filter.amountTo,
         });
       }
-      if (filter.dateFrom !== undefined) {
+
+      if (filter.dateFrom !== undefined && filter.dateTo !== undefined) {
+        const timestampFrom = filter.dateFrom.setHours(0, 0, 0, 0);
+        const timestampTo = filter.dateTo.setHours(23, 59, 59, 999);
+        builder.where('o.timestamp BETWEEN :timestamp_from AND :timestamp_to', {
+          timestamp_from: timestampFrom,
+          timestamp_to: timestampTo,
+        });
+      } else if (filter.dateFrom !== undefined) {
         const timestampFrom = filter.dateFrom.setHours(0, 0, 0, 0);
         builder.where('o.timestamp >= :timestamp_from', {
           timestamp_from: timestampFrom,
         });
-      }
-      if (filter.dateTo !== undefined) {
+      } else if (filter.dateTo !== undefined) {
         const timestampTo = filter.dateTo.setHours(23, 59, 59, 999);
         builder.where('o.timestamp <= :timestamp_to', {
           timestamp_to: timestampTo,
         });
       }
+
       if (filter.note !== '') {
         builder.where('INSTR(o.note, :note)', {note: filter.note});
       }
-      operations = await builder.getMany();
+
+      operations = await builder
+        .leftJoinAndSelect('o._category', 'c')
+        .leftJoinAndSelect('c._parentCategory', 'pc')
+        .leftJoinAndSelect('c._childCategories', 'cc')
+        .addOrderBy('o._timestamp', 'DESC')
+        .getMany();
     }
     return operations;
   };
