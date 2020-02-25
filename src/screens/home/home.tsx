@@ -17,7 +17,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../components/dateSelector/dateSelector.Component';
 import I18n from '../../i18n/i18n';
 import DateHandler from '../../utils/DateHandler';
-import OperationHandler from '../../utils/OperationHandler';
+import {groupByDate, calculateTotalAmount, filterOperationsByDate, groupByCategory, groupByMonth} from '../../utils/OperationUtils';
 import styles from './home.styles';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
@@ -54,17 +54,17 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     super(props);
     const selectedDate = moment();
     const selectedIndex = 1;
-    const filteredOperations = OperationHandler.filterOperationsByDate(
+    const filteredOperations = filterOperationsByDate(
       this.props.operations,
       selectedDate,
       UNITS_OF_DATE[selectedIndex],
     );
-    const operationsMap = OperationHandler.groupByDate(filteredOperations);
+    const operationsMap = groupByDate(filteredOperations);
     this.state = {
       selectedIndex: 1,
       selectedDate: selectedDate,
       operationsMap: operationsMap,
-      total: OperationHandler.calculateTotalAmount(filteredOperations),
+      total: calculateTotalAmount(filteredOperations),
       isMoreMenuVisible: false,
       isOperationMenuVisible: false,
       groupedBy: 'date',
@@ -123,7 +123,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     attribute?: 'date' | 'category',
   ) => {
     const unitOfDate = UNITS_OF_DATE[selectedIndex];
-    const filteredOperations = OperationHandler.filterOperationsByDate(
+    const filteredOperations = filterOperationsByDate(
       this.props.operations,
       selectedDate,
       unitOfDate,
@@ -134,16 +134,16 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     let operationsMap;
     if (attribute === 'date') {
       if (unitOfDate === 'year') {
-        operationsMap = OperationHandler.groupByMonth(filteredOperations);
+        operationsMap = groupByMonth(filteredOperations);
       } else {
-        operationsMap = OperationHandler.groupByDate(filteredOperations);
+        operationsMap = groupByDate(filteredOperations);
       }
     } else {
-      operationsMap = OperationHandler.groupByCategory(filteredOperations);
+      operationsMap = groupByCategory(filteredOperations);
     }
     this.setState({
       operationsMap: operationsMap,
-      total: OperationHandler.calculateTotalAmount(filteredOperations),
+      total: calculateTotalAmount(filteredOperations),
       isMoreMenuVisible: false,
       groupedBy: attribute,
     });
