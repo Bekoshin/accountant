@@ -15,6 +15,7 @@ import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import Operation from '../../entities/Operation';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 
 interface FiltersProps {
   navigation: any;
@@ -72,7 +73,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
       categories,
       note,
     } = this.state;
-    this.props.applyFilter(
+    await this.props.applyFilter(
       new Filter(
         amountFrom ? parseFloat(amountFrom) : undefined,
         amountTo ? parseFloat(amountTo) : undefined,
@@ -82,6 +83,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
         note,
       ),
     );
+    await this.props.navigation.goBack();
   };
 
   private changeAmountFrom = (amount: string) => {
@@ -267,7 +269,10 @@ const applyFilter = (
   const filteredOperations: Operation[] = await storageHandler.getFilteredOperations(
     filter,
   );
-  console.log('FILTERED OPERATIONS: ', filteredOperations);
+  dispatch({
+    type: ACTION_TYPES.OPERATIONS_LOADED,
+    operations: filteredOperations,
+  });
 };
 
 const mapStateToProps = (state: AppState) => ({});
