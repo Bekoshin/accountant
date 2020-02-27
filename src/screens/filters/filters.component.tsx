@@ -277,7 +277,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   }
 }
 
-const applyFilter = (
+export const applyFilter = (
   filter: Filter | null,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();

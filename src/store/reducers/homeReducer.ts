@@ -1,10 +1,7 @@
-import Category from '../../entities/Category';
 import {Filter} from '../../entities/Filter';
 import {ACTION_TYPES} from '../ACTION_TYPES';
 
-export interface HomeState {}
-
-export interface CategoryState {
+export interface HomeState {
   filter: Filter | null;
 }
 

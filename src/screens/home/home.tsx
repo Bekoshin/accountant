@@ -29,6 +29,8 @@ import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {Filter} from '../../entities/Filter';
+import {applyFilter} from '../filters/filters.component';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -37,8 +39,10 @@ interface HomeProps {
   navigation: any;
 
   operations: Operation[];
+  filter: Filter | null;
 
   deleteOperation: (operation: Operation) => void;
+  applyFilter: (filter: Filter | null) => void;
 }
 
 interface HomeState {
@@ -221,9 +225,25 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
               navigation.navigate('Filters');
             }}
           />
+          {this.renderDropFiltersButton()}
         </Menu>
       </Appbar.Header>
     );
+  }
+
+  renderDropFiltersButton() {
+    const {filter} = this.props;
+    if (filter) {
+      return (
+        <Menu.Item
+          title={I18n.t('action_drop_filters')}
+          onPress={async () => {
+            this.setState({isMoreMenuVisible: false});
+            await this.props.applyFilter(null);
+          }}
+        />
+      )
+    }
   }
 
   renderSearchAppBar() {
@@ -424,10 +444,12 @@ const deleteOperation = (
 
 const mapStateToProps = (state: AppState) => ({
   operations: state.operationReducer.operations,
+  filter: state.homeReducer.filter,
 });
 
 const mapDispatchToProps = {
   deleteOperation: (operation: Operation) => deleteOperation(operation),
+  applyFilter: (filter: Filter | null) => applyFilter(filter),
 };
 
 export default connect(
