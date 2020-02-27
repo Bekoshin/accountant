@@ -389,7 +389,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
   handleDeleteButton = () => {
     const {selectedOperation} = this.state;
     this.setState({isOperationMenuVisible: false});
-    const message = I18n.t('message_delete_operation');
+    const message = I18n.t('message_delete_operation') + '?';
     Alert.alert(I18n.t('label_deleting'), message, [
       {
         text: I18n.t('action_cancel'),
