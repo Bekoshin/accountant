@@ -261,7 +261,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
           onPress={() => this.handleApplyButton()}
         />
       </Appbar.Header>
-    )
+    );
   }
 
   createCategoriesString() {

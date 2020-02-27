@@ -304,7 +304,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
           defaultValue: operation.category.name,
         });
       } else {
-        title = DateHandler.convertDate(operations[0].date);
+        title = DateHandler.convertDate(operation.date);
       }
       operationComponents.push(
         <List.Item
