@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 
-import {Button, Appbar} from 'react-native-paper';
+import {Appbar} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
@@ -15,6 +15,8 @@ import {applyFilter} from '../../utils/FilterUtils';
 
 interface FiltersProps {
   navigation: any;
+
+  filter: Filter | null;
 
   applyFilter: (filter: Filter | null) => void;
 }
@@ -34,17 +36,32 @@ interface FiltersState {
 class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   constructor(props: FiltersProps) {
     super(props);
-    this.state = {
-      amountFrom: '',
-      amountTo: '',
-      dateFrom: undefined,
-      dateTo: undefined,
-      categories: [],
-      note: '',
-      datePickerVisible: false,
-      isDateFromInputPressed: false,
-      isDateToInputPressed: false,
-    };
+    const {filter} = props;
+    if (filter) {
+      this.state = {
+        amountFrom: filter.amountFrom ? filter.amountFrom.toString() : '',
+        amountTo: filter.amountTo ? filter.amountTo.toString() : '',
+        dateFrom: filter.dateFrom,
+        dateTo: filter.dateTo,
+        categories: filter.categories,
+        note: filter.note,
+        datePickerVisible: false,
+        isDateFromInputPressed: false,
+        isDateToInputPressed: false,
+      };
+    } else {
+      this.state = {
+        amountFrom: '',
+        amountTo: '',
+        dateFrom: undefined,
+        dateTo: undefined,
+        categories: [],
+        note: '',
+        datePickerVisible: false,
+        isDateFromInputPressed: false,
+        isDateToInputPressed: false,
+      };
+    }
   }
 
   static navigationOptions = () => {
@@ -273,7 +290,9 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = (state: AppState) => ({
+  filter: state.homeReducer.filter,
+});
 
 export default connect(
   mapStateToProps,
