@@ -11,11 +11,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
 import {Filter} from '../../entities/Filter';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../storage/StorageHandler';
-import Operation from '../../entities/Operation';
-import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {applyFilter} from '../../utils/FilterUtils';
 
 interface FiltersProps {
   navigation: any;
@@ -254,8 +250,8 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     const {navigation} = this.props;
     return (
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()}/>
-        <Appbar.Content title={I18n.t('filters_screen')}/>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={I18n.t('filters_screen')} />
         <Appbar.Action
           icon="content-save"
           onPress={() => this.handleApplyButton()}
@@ -276,29 +272,6 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     return string;
   }
 }
-
-export const applyFilter = (
-  filter: Filter | null,
-): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initOperationRepo();
-  let operations: Operation[];
-
-  if (filter) {
-    operations = await storageHandler.getFilteredOperations(filter);
-  } else {
-    operations = await storageHandler.getAllOperationsFromRepo();
-  }
-
-  dispatch({
-    type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: operations,
-  });
-  dispatch({
-    type: ACTION_TYPES.FILTER_CHANGED,
-    filter: filter,
-  });
-};
 
 const mapStateToProps = (state: AppState) => ({});
 

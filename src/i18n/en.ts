@@ -33,6 +33,7 @@ export default {
     action_group_by_date: 'Group by date',
     action_group_by_category: 'Group by category',
     action_set_filters: 'Set filters',
+    action_change_filters: 'Change filters',
     action_drop_filters: 'Drop filters',
     action_cancel: 'Cancel',
     action_edit: 'Edit',

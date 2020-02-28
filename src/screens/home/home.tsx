@@ -22,7 +22,8 @@ import {
   calculateTotalAmount,
   filterOperationsByDate,
   groupByCategory,
-  groupByMonth, formatNumberToDecimal,
+  groupByMonth,
+  formatNumberToDecimal,
 } from '../../utils/OperationUtils';
 import styles from './home.styles';
 import {ThunkAction} from 'redux-thunk';
@@ -30,7 +31,7 @@ import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {Filter} from '../../entities/Filter';
-import {applyFilter} from '../filters/filters.component';
+import {applyFilter} from '../../utils/FilterUtils';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -184,7 +185,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
 
   renderMainAppBar() {
     const {total, isMoreMenuVisible, groupedBy} = this.state;
-    const {navigation} = this.props;
+    const {navigation, filter} = this.props;
     return (
       <Appbar.Header>
         <Appbar.Content
@@ -219,7 +220,9 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
             }
           />
           <Menu.Item
-            title={I18n.t('action_set_filters')}
+            title={I18n.t(
+              filter ? 'action_change_filters' : 'action_set_filters',
+            )}
             onPress={() => {
               this.setState({isMoreMenuVisible: false});
               navigation.navigate('Filters');
@@ -242,7 +245,7 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
             await this.props.applyFilter(null);
           }}
         />
-      )
+      );
     }
   }
 

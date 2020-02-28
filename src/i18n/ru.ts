@@ -33,6 +33,7 @@ export default {
     action_group_by_date: 'Группировать по датам',
     action_group_by_category: 'Группировать по категориям',
     action_set_filters: 'Установить фильтры',
+    action_change_filters: 'Изменить фильтры',
     action_drop_filters: 'Сбросить фильтры',
     action_cancel: 'Отмена',
     action_edit: 'Изменить',
