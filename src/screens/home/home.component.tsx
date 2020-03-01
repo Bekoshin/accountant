@@ -57,7 +57,7 @@ interface HomeState {
   selectedOperation: Operation | null;
 }
 
-class Home extends React.PureComponent<HomeProps, HomeState> {
+class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
   constructor(props: HomeProps) {
     super(props);
     const selectedDate = moment();
@@ -442,4 +442,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Home);
+)(HomeScreen);

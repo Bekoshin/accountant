@@ -15,7 +15,7 @@ import 'reflect-metadata';
 import store from './store/store';
 
 import Welcome from './screens/welcome/welсome';
-import Home from './screens/home/home';
+import HomeScreen from './screens/home/home.component';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
 import Settings from './screens/settings/settings';
@@ -29,7 +29,7 @@ const BottomNavigator = createMaterialBottomTabNavigator(
   {
     HomeStackNavigator: {
       screen: createStackNavigator({
-        Home: Home,
+        Home: HomeScreen,
       }),
       navigationOptions: {
         tabBarLabel: 'Home',
