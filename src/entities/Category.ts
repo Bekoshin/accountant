@@ -8,12 +8,13 @@ import {
   ColumnOptions,
 } from 'typeorm/browser';
 import {CategoryMeta} from './meta/CategoryMeta';
+import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
 
 @Entity(CategoryMeta.table.name)
 export default class Category {
   @PrimaryGeneratedColumn({
     name: CategoryMeta.columns.id.name,
-    type: CategoryMeta.columns.id.type,
+    type: CategoryMeta.columns.id.type as PrimaryGeneratedColumnType,
   })
   private readonly _id: number | undefined;
 

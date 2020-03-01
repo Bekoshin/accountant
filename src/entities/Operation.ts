@@ -10,12 +10,13 @@ import {
 import Category from './Category';
 import {OperationMeta} from './meta/OperationMeta';
 import Product from './Product';
+import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
 
 @Entity(OperationMeta.table.name)
 export default class Operation {
   @PrimaryGeneratedColumn({
     name: OperationMeta.columns.id.name,
-    type: OperationMeta.columns.id.type,
+    type: OperationMeta.columns.id.type as PrimaryGeneratedColumnType,
   })
   private _id: number | undefined;
 

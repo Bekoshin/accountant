@@ -8,12 +8,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Operation from './Operation';
+import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
 
 @Entity(ProductMeta.table.name)
 export default class Product {
   @PrimaryGeneratedColumn({
     name: ProductMeta.columns.id.name,
-    type: ProductMeta.columns.id.type,
+    type: ProductMeta.columns.id.type as PrimaryGeneratedColumnType,
   })
   private _id: number | undefined;
 
