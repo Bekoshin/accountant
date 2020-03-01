@@ -13,6 +13,7 @@ import {InsertDefaultValues1576410388275} from './migrations/1576410388275-Inser
 import IMAGES from '../images';
 import Product from '../entities/Product';
 import {Filter} from '../entities/Filter';
+import Subscription from '../entities/Subscription';
 
 const DATABASE_NAME = 'main.db';
 
@@ -40,7 +41,7 @@ export default class StorageHandler {
       logging: ['error', 'query', 'schema'],
       migrations: [Init1576240262448, InsertDefaultValues1576410388275],
       migrationsRun: true,
-      entities: [Category, Operation, Product],
+      entities: [Category, Operation, Product, Subscription],
     });
   };
 

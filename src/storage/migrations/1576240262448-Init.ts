@@ -7,6 +7,7 @@ import {
 import {CategoryMeta} from '../../entities/meta/CategoryMeta';
 import {OperationMeta} from '../../entities/meta/OperationMeta';
 import {ProductMeta} from '../../entities/meta/ProductMeta';
+import {SubscriptionMeta} from '../../entities/meta/SubscriptionMeta';
 
 export class Init1576240262448 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
@@ -150,6 +151,47 @@ export class Init1576240262448 implements MigrationInterface {
         columnNames: [ProductMeta.columns.operationId.name],
         referencedColumnNames: [OperationMeta.columns.id.name],
         referencedTableName: OperationMeta.table.name,
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: SubscriptionMeta.table.name,
+        columns: [
+          {
+            name: SubscriptionMeta.columns.id.name,
+            type: SubscriptionMeta.columns.id.type,
+            isPrimary: SubscriptionMeta.columns.id.isPrimary,
+            isGenerated: SubscriptionMeta.columns.id.isGenerated,
+            generationStrategy: 'increment',
+          },
+          {
+            name: SubscriptionMeta.columns.name.name,
+            type: SubscriptionMeta.columns.name.type,
+          },
+          {
+            name: SubscriptionMeta.columns.categoryId.name,
+            type: SubscriptionMeta.columns.categoryId.type,
+            isNullable: SubscriptionMeta.columns.categoryId.isNullable,
+          },
+          {
+            name: SubscriptionMeta.columns.value.name,
+            type: SubscriptionMeta.columns.value.type,
+          },
+          {
+            name: SubscriptionMeta.columns.day.name,
+            type: SubscriptionMeta.columns.day.type,
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      SubscriptionMeta.table.name,
+      new TableForeignKey({
+        columnNames: [SubscriptionMeta.columns.categoryId.name],
+        referencedColumnNames: [CategoryMeta.columns.id.name],
+        referencedTableName: CategoryMeta.table.name,
       }),
     );
   }

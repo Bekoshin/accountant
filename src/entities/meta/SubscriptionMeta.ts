@@ -1,6 +1,6 @@
 export class SubscriptionMeta {
   static table = {
-    name: 'subscription',
+    name: 'subscriptions',
   };
   static columns = {
     id: {
@@ -25,7 +25,6 @@ export class SubscriptionMeta {
     value: {
       name: 'value',
       type: 'double precision',
-      isNullable: true,
     },
   };
 }
