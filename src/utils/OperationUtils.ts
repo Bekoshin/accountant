@@ -1,6 +1,24 @@
 import Operation from '../entities/Operation';
 import moment from 'moment';
 import DateHandler from './DateHandler';
+import {ThunkAction} from 'redux-thunk';
+import {AppState} from '../store/store';
+import {Action} from 'redux';
+import StorageHandler from '../storage/StorageHandler';
+import {ACTION_TYPES} from '../store/ACTION_TYPES';
+
+export const deleteOperation = (
+  operation: Operation,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.initOperationRepo();
+  await storageHandler.deleteOperation(operation);
+  const operations = await storageHandler.getAllOperationsFromRepo();
+  dispatch({
+    type: ACTION_TYPES.OPERATIONS_LOADED,
+    operations: operations,
+  });
+};
 
 export const groupByDate = (
   operations: Operation[],

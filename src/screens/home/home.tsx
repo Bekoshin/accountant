@@ -24,12 +24,9 @@ import {
   groupByCategory,
   groupByMonth,
   formatNumberToDecimal,
+  deleteOperation,
 } from '../../utils/OperationUtils';
 import styles from './home.styles';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 
@@ -431,19 +428,6 @@ class Home extends React.PureComponent<HomeProps, HomeState> {
     ]);
   };
 }
-
-const deleteOperation = (
-  operation: Operation,
-): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initOperationRepo();
-  await storageHandler.deleteOperation(operation);
-  const operations = await storageHandler.getAllOperationsFromRepo();
-  dispatch({
-    type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: operations,
-  });
-};
 
 const mapStateToProps = (state: AppState) => ({
   operations: state.operationReducer.operations,
