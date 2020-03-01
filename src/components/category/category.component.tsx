@@ -102,7 +102,6 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
   };
 
   onLongPressHandle = () => {
-    console.log('onLongPressHandle parent');
     if (!this.isSelectMode()) {
       return this.props.selectCategory;
     } else {

@@ -80,14 +80,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
       note,
     } = this.state;
     let filter: Filter | null = null;
-    if (
-      amountFrom ||
-      amountTo ||
-      dateFrom ||
-      dateTo ||
-      categories.length > 0 ||
-      note
-    ) {
+    if (this.isFilterNotEmpty()) {
       filter = new Filter(
         amountFrom ? parseFloat(amountFrom) : undefined,
         amountTo ? parseFloat(amountTo) : undefined,
@@ -97,8 +90,29 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
         note,
       );
     }
-    await this.props.applyFilter(filter);
+    if (this.props.filter !== filter) {
+      this.props.applyFilter(filter);
+    }
     await this.props.navigation.goBack();
+  };
+
+  isFilterNotEmpty = () => {
+    const {
+      amountFrom,
+      amountTo,
+      dateFrom,
+      dateTo,
+      categories,
+      note,
+    } = this.state;
+    return (
+      amountFrom ||
+      amountTo ||
+      dateFrom ||
+      dateTo ||
+      categories.length > 0 ||
+      note
+    );
   };
 
   private changeAmountFrom = (amount: string) => {

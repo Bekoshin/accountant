@@ -130,6 +130,7 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
     selectedIndex: number,
     attribute?: 'date' | 'category',
   ) => {
+    console.log('UPDATE VISIBLE OPERATIONS');
     const unitOfDate = UNITS_OF_DATE[selectedIndex];
     const filteredOperations = filterOperationsByDate(
       this.props.operations,
