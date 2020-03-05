@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
 import NoExpensesComponent from '../../components/noExpenses/noExpenses.Component';
-import {FAB, Menu, List, Appbar, Searchbar} from 'react-native-paper';
+import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../components/dateSelector/dateSelector.Component';
 import I18n from '../../i18n/i18n';
@@ -26,9 +26,9 @@ import {
   formatNumberToDecimal,
   deleteOperation,
 } from '../../utils/OperationUtils';
-import styles from './home.styles';
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
+import {Fab} from './fab/fab.component';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -175,7 +175,10 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
           changeDate={this.handleDateChanged}
         />
         {this.renderOperationSections()}
-        {this.renderFAB()}
+        <Fab
+          addOperation={() => this.props.navigation.navigate('Operation')}
+          addSubscription={() => {}}
+        />
         {this.renderOperationMenu()}
       </View>
     );
@@ -361,16 +364,6 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
       );
     }
     return operationComponents;
-  }
-
-  renderFAB() {
-    return (
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        onPress={() => this.props.navigation.navigate('Operation')}
-      />
-    );
   }
 
   renderOperationMenu() {

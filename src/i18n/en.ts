@@ -39,6 +39,8 @@ export default {
     action_edit: 'Edit',
     action_delete: 'Delete',
     action_confirm: 'Confirm',
+    action_add_subscription: 'Add subscription',
+    action_add_operation: 'Add operation',
 
     placeholder_search: 'Search',
 

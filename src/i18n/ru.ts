@@ -39,6 +39,8 @@ export default {
     action_edit: 'Изменить',
     action_delete: 'Удалить',
     action_confirm: 'Подтвердить',
+    action_add_subscription: 'Добавить подписку',
+    action_add_operation: 'Добавить операцию',
 
     placeholder_search: 'Поиск',
 
