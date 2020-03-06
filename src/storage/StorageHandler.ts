@@ -22,10 +22,10 @@ export default class StorageHandler {
 
   private _categoryRepo: Repository<Category> | undefined;
   private _operationRepo: Repository<Operation> | undefined;
+  private _subscriptionRepo: Repository<Subscription> | undefined;
 
   constructor() {
     this._connection = undefined;
-    this._categoryRepo = undefined;
   }
 
   // public init = async () => {
@@ -51,6 +51,10 @@ export default class StorageHandler {
 
   public initOperationRepo = () => {
     this._operationRepo = getRepository(Operation);
+  };
+
+  public initSubscriptionRepo = () => {
+    this._subscriptionRepo = getRepository(Subscription);
   };
 
   public getAllOperationsFromRepo = async (): Promise<Operation[]> => {
@@ -170,6 +174,20 @@ export default class StorageHandler {
     if (this._operationRepo) {
       await this._operationRepo.remove(operation);
     }
+  };
+
+  public getAllSubscriptions = async (): Promise<Subscription[]> => {
+    let subscriptions: Subscription[] = [];
+    if (this._subscriptionRepo) {
+      subscriptions = await this._subscriptionRepo
+        .createQueryBuilder('s')
+        .leftJoinAndSelect('s._category', 'c')
+        .leftJoinAndSelect('c._parentCategory', 'pc')
+        .leftJoinAndSelect('c._childCategories', 'cc')
+        .addOrderBy('o._day', 'ASC')
+        .getMany();
+    }
+    return subscriptions;
   };
 
   static createDefaultCategories = () => {
