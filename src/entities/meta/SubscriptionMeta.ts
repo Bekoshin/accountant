@@ -26,5 +26,9 @@ export class SubscriptionMeta {
       name: 'value',
       type: 'double precision',
     },
+    note: {
+      name: 'note',
+      type: 'varchar',
+    },
   };
 }

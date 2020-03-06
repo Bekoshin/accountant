@@ -31,18 +31,23 @@ export default class Subscription {
   @Column(SubscriptionMeta.columns.day as ColumnOptions)
   private _day: number;
 
+  @Column(SubscriptionMeta.columns.note as ColumnOptions)
+  private _note: string;
+
   constructor(
     id: number | undefined,
     name: string,
     category: Category,
     value: number,
     day: number,
+    note: string,
   ) {
     this._id = id;
     this._name = name;
     this._category = category;
     this._value = value;
     this._day = day;
+    this._note = note;
   }
 
   get id(): number | undefined {
@@ -79,5 +84,13 @@ export default class Subscription {
 
   set day(value: number) {
     this._day = value;
+  }
+
+  get note(): string {
+    return this._note;
+  }
+
+  set note(value: string) {
+    this._note = value;
   }
 }
