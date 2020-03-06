@@ -5,7 +5,7 @@ import Category from '../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
 import ChildCategoryComponent from '../childCategory/childCategory.component';
 import I18n from '../../i18n/i18n';
-import CheckIcon from '../checkIcon/checkIcon.Component';
+import {CheckIcon} from '../checkIcon/checkIcon.component';
 
 interface CategoryProps {
   category: Category;
@@ -45,7 +45,7 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
               {this.renderChildCategories(category.childCategories)}
             </ScrollView>
           </View>
-          {this.renderCheckIcon()}
+          <CheckIcon isSelected={true} />
         </View>
       </TouchableRipple>
     );
@@ -81,12 +81,6 @@ export default class CategoryComponent extends PureComponent<CategoryProps> {
       />,
     );
     return categoriesComponent;
-  }
-
-  renderCheckIcon() {
-    const {category} = this.props;
-    const isSelected = this.isSelected(category);
-    return CheckIcon(isSelected);
   }
 
   onPressHandle = (isSelected: boolean) => {

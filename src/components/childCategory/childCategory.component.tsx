@@ -5,7 +5,7 @@ import I18n from '../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../entities/Category';
 import IMAGES from '../../images';
-import CheckIcon from '../checkIcon/checkIcon.Component';
+import {CheckIcon} from '../checkIcon/checkIcon.component';
 
 interface ChildCategoryProps {
   category?: Category;
@@ -28,7 +28,7 @@ export default class ChildCategoryComponent extends PureComponent<
     }
   };
   onLongPressHandle = () => {
-    console.log('onLongPressHandle child')
+    console.log('onLongPressHandle child');
     const {category, onLongPress} = this.props;
     if (category && onLongPress) {
       onLongPress(category);
@@ -48,7 +48,7 @@ export default class ChildCategoryComponent extends PureComponent<
         onLongPress={this.onLongPressHandle}>
         <View style={contentStyle}>
           {this.renderContent()}
-          {this.renderCheckIcon()}
+          <CheckIcon isSelected={isSelected} />
         </View>
       </TouchableRipple>
     );
@@ -89,10 +89,5 @@ export default class ChildCategoryComponent extends PureComponent<
     if (source) {
       return <Image source={source} style={{width: 40, height: 40}} />;
     }
-  }
-
-  renderCheckIcon() {
-    const {isSelected} = this.props;
-    return CheckIcon(isSelected);
   }
 }

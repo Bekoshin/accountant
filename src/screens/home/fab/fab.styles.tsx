@@ -2,6 +2,6 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   fab: {
-    backgroundColor: 'red',
+    backgroundColor: '#4444ff',
   },
 });

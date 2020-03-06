@@ -8,7 +8,7 @@ interface FabProps {
   addSubscription: () => void;
 }
 
-export function Fab(props: FabProps) {
+export const Fab = (props: FabProps) => {
   const [isOpen, changeIsOpen] = useState(false);
   const {addOperation, addSubscription} = props;
 

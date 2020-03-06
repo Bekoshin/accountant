@@ -1,9 +1,15 @@
+import React from 'react';
 import {Image, View} from 'react-native';
 import IMAGES from '../../images';
-import React from 'react';
 import styles from './checkIcon.styles';
 
-const CheckIcon = (isSelected: boolean | undefined) => {
+interface CheckIconProps {
+  isSelected: boolean | undefined;
+}
+
+export const CheckIcon = (props: CheckIconProps) => {
+  const {isSelected} = props;
+
   if (isSelected) {
     return (
       <View style={styles.mainContainer}>
@@ -11,6 +17,5 @@ const CheckIcon = (isSelected: boolean | undefined) => {
       </View>
     );
   }
+  return null;
 };
-
-export default CheckIcon;
