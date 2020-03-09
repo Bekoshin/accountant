@@ -20,6 +20,7 @@ import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
 import Settings from './screens/settings/settings';
 import OperationScreen from './screens/operation/operation.component';
+import SubscriptionScreen from './screens/subscription/subscription.component';
 import CategoriesSreen from './screens/categories/categories.component';
 import CategoryScreen from './screens/category/category.component';
 import ParentCategoriesScreen from './screens/parentCategories/parentCategories.component';
@@ -90,6 +91,9 @@ const AppStackNavigator = createStackNavigator(
     },
     Operation: {
       screen: OperationScreen,
+    },
+    Subscription: {
+      screen: SubscriptionScreen,
     },
     Categories: {
       screen: CategoriesSreen,

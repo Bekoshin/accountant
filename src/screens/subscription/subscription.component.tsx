@@ -1,11 +1,7 @@
-import React, {SyntheticEvent} from 'react';
-import {View, ScrollView, Platform, Text} from 'react-native';
+import React from 'react';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-// import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
-import Operation from '../../entities/Operation';
-import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
@@ -13,8 +9,8 @@ import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
-import DateHandler from '../../utils/DateHandler';
 import Subscription from '../../entities/Subscription';
+import {Appbar} from 'react-native-paper';
 
 interface SubscriptionProps {
   navigation: any;
@@ -139,6 +135,10 @@ class SubscriptionScreen extends React.PureComponent<
     this.setState({dayError: I18n.t('label_required')});
   };
 
+  private changeName = (name: string) => {
+    this.setState({name: name});
+  };
+
   private changeValue = (value: string) => {
     if (value.match(/^\d*\.?\d*$/)) {
       this.setState({
@@ -147,15 +147,15 @@ class SubscriptionScreen extends React.PureComponent<
     }
   };
 
-  changeCategory = (category: Category | null) => {
+  private changeCategory = (category: Category | null) => {
     this.setState({category: category});
   };
 
-  changeDay = (day: string) => {
+  private changeDay = (day: string) => {
     this.setState({day: day});
   };
 
-  changeNote = (note: string) => {
+  private changeNote = (note: string) => {
     this.setState({note: note});
   };
 
@@ -169,108 +169,122 @@ class SubscriptionScreen extends React.PureComponent<
 
   render() {
     const {
-      amount,
+      name,
+      value,
       category,
-      timestamp,
+      day,
       note,
-      isIgnored,
-      amountError,
+      nameError,
+      valueError,
       categoryError,
-      dateError,
-      datePickerVisible,
+      dayError,
     } = this.state;
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-        <ScrollView>
-          <Input
-            label={I18n.t('label_amount')}
-            value={amount}
-            keyboardType="numeric"
-            required={true}
-            selectTextOnFocus={true}
-            errorMessage={amountError}
-            onFocus={this.hideAmountError}
-            onChangeText={this.changeAmount}
-          />
-          <Input
-            label={I18n.t('label_category')}
-            value={
-              category
-                ? I18n.t(category.name, {
-                    defaultValue: category.name,
-                  })
-                : ''
-            }
-            required={true}
-            editable={false}
-            errorMessage={categoryError}
-            onFocus={this.hideCategoryError}
-            hideClearButton={true}
-            onInputPress={() => {
-              this.hideCategoryError();
-              this.props.navigation.navigate('Categories', {
-                setCategory: this.changeCategory,
-              });
-            }}
-          />
-          <Input
-            label={I18n.t('label_date')}
-            value={DateHandler.convertDate(this.state.timestamp)}
-            required={true}
-            editable={false}
-            errorMessage={dateError}
-            onFocus={this.hideDateError}
-            hideClearButton={true}
-            onInputPress={this.handleDateInputPress}
-          />
-          <Input
-            label={I18n.t('label_note')}
-            value={note}
-            onChangeText={this.changeNote}
-            multiline={true}
-          />
-          <TouchableRipple onPress={this.changeIsIgnored}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
-              <Text>{I18n.t('label_ignore')}</Text>
-            </View>
-          </TouchableRipple>
-        </ScrollView>
-        <DateTimePickerModal
-          date={timestamp}
-          isVisible={datePickerVisible}
-          mode="date"
-          maximumDate={new Date()}
-          onConfirm={this.changeDate}
-          onCancel={this.hideDatePicker}
-          headerTextIOS={I18n.t('label_choose_date')}
-          cancelTextIOS={I18n.t('action_cancel')}
-          confirmTextIOS={I18n.t('action_confirm')}
-          locale={I18n.t('locale')}
-        />
+      <View style={{flex: 1}}>
+        {this.renderAppBar()}
+        <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+          <ScrollView>
+            <Input
+              label={I18n.t('label_name')}
+              value={name}
+              required={true}
+              errorMessage={nameError}
+              onFocus={this.hideNameError}
+              onChangeText={this.changeName}
+            />
+            <Input
+              label={I18n.t('label_value')}
+              value={value}
+              keyboardType="numeric"
+              required={true}
+              selectTextOnFocus={true}
+              errorMessage={valueError}
+              onFocus={this.hideValueError}
+              onChangeText={this.changeValue}
+            />
+            <Input
+              label={I18n.t('label_category')}
+              value={
+                category
+                  ? I18n.t(category.name, {
+                      defaultValue: category.name,
+                    })
+                  : ''
+              }
+              required={true}
+              editable={false}
+              errorMessage={categoryError}
+              onFocus={this.hideCategoryError}
+              hideClearButton={true}
+              onInputPress={() => {
+                this.hideCategoryError();
+                this.props.navigation.navigate('Categories', {
+                  setCategory: this.changeCategory,
+                });
+              }}
+            />
+            <Input
+              label={I18n.t('label_day')}
+              value={day}
+              keyboardType="numeric"
+              required={true}
+              selectTextOnFocus={true}
+              errorMessage={dayError}
+              onFocus={this.hideDayError}
+              onChangeText={this.changeDay}
+            />
+            <Input
+              label={I18n.t('label_note')}
+              value={note}
+              onChangeText={this.changeNote}
+              multiline={true}
+            />
+          </ScrollView>
+        </View>
       </View>
+    );
+  }
+
+  renderAppBar() {
+    const {navigation} = this.props;
+    return (
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content
+          title={I18n.t(
+            this.subscription
+              ? 'subscription_screen'
+              : 'new_subscription_screen',
+          )}
+        />
+        <Appbar.Action
+          icon="content-save"
+          onPress={(() => this.handleSaveButton()) as () => void}
+        />
+      </Appbar.Header>
     );
   }
 }
 
-const saveOperation = (
-  operation: Operation,
+const saveSubscription = (
+  subscription: Subscription,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = new StorageHandler();
-  await storageHandler.initOperationRepo();
-  await storageHandler.saveOperationInRepo(operation);
-  const operations = await storageHandler.getAllOperationsFromRepo();
+  await storageHandler.initSubscriptionRepo();
+  await storageHandler.saveSubscription(subscription);
+  const subscriptions = await storageHandler.getAllSubscriptions();
   dispatch({
-    type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: operations,
+    type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
+    subscriptions: subscriptions,
   });
 };
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = () => ({});
 
 export default connect(
   mapStateToProps,
   {
-    saveOperation: (operation: Operation) => saveOperation(operation),
+    saveSubscription: (subscription: Subscription) =>
+      saveSubscription(subscription),
   },
-)(OperationScreen);
+)(SubscriptionScreen);

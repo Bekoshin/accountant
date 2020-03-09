@@ -48,7 +48,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
 const loadAllOperations = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let operations: Operation[] = await storageHandler.getAllOperationsFromRepo();
+  let operations: Operation[] = await storageHandler.getAllOperations();
   dispatch({
     type: ACTION_TYPES.OPERATIONS_LOADED,
     operations: operations,
@@ -58,7 +58,7 @@ const loadAllOperations = (
 const loadAllCategories = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let categories: Category[] = await storageHandler.getAllValidCategoriesFromRepo();
+  let categories: Category[] = await storageHandler.getAllValidCategories();
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,

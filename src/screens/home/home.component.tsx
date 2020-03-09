@@ -177,7 +177,7 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
         {this.renderOperationSections()}
         <Fab
           addOperation={() => this.props.navigation.navigate('Operation')}
-          addSubscription={() => {}}
+          addSubscription={() => this.props.navigation.navigate('Subscription')}
         />
         {this.renderOperationMenu()}
       </View>

@@ -145,8 +145,8 @@ const saveCategory = (
   let storageHandler = new StorageHandler();
   await storageHandler.initCategoryRepo();
   console.log('saveCategory. category: ', category);
-  await storageHandler.saveCategoryInRepo(category);
-  const categories = await storageHandler.getAllValidCategoriesFromRepo();
+  await storageHandler.saveCategory(category);
+  const categories = await storageHandler.getAllValidCategories();
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,

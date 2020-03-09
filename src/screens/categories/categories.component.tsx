@@ -281,7 +281,7 @@ const deleteCategories = (
   let storageHandler = new StorageHandler();
   await storageHandler.initCategoryRepo();
   await storageHandler.markCategoriesInvalid(categories);
-  const updatedCategories = await storageHandler.getAllValidCategoriesFromRepo();
+  const updatedCategories = await storageHandler.getAllValidCategories();
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: updatedCategories,

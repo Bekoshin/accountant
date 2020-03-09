@@ -1,7 +1,6 @@
 import {
   Connection,
   createConnection,
-  createQueryBuilder,
   getRepository,
   Repository,
   SelectQueryBuilder,
@@ -57,7 +56,7 @@ export default class StorageHandler {
     this._subscriptionRepo = getRepository(Subscription);
   };
 
-  public getAllOperationsFromRepo = async (): Promise<Operation[]> => {
+  public getAllOperations = async (): Promise<Operation[]> => {
     let operations: Operation[] = [];
     if (this._operationRepo) {
       operations = await this._operationRepo
@@ -134,7 +133,7 @@ export default class StorageHandler {
     return operations;
   };
 
-  public getAllValidCategoriesFromRepo = async (): Promise<Category[]> => {
+  public getAllValidCategories = async (): Promise<Category[]> => {
     let categories: Category[] = [];
     if (this._categoryRepo) {
       categories = await this._categoryRepo
@@ -147,15 +146,21 @@ export default class StorageHandler {
     return categories;
   };
 
-  public saveCategoryInRepo = async (category: Category) => {
+  public saveCategory = async (category: Category) => {
     if (this._categoryRepo) {
       await this._categoryRepo.save(category);
     }
   };
 
-  public saveOperationInRepo = async (operation: Operation) => {
+  public saveOperation = async (operation: Operation) => {
     if (this._operationRepo) {
       await this._operationRepo.save(operation);
+    }
+  };
+
+  public saveSubscription = async (subscription: Subscription) => {
+    if (this._subscriptionRepo) {
+      await this._subscriptionRepo.save(subscription);
     }
   };
 

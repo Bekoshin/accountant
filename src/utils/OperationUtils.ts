@@ -13,7 +13,7 @@ export const deleteOperation = (
   let storageHandler = new StorageHandler();
   await storageHandler.initOperationRepo();
   await storageHandler.deleteOperation(operation);
-  const operations = await storageHandler.getAllOperationsFromRepo();
+  const operations = await storageHandler.getAllOperations();
   dispatch({
     type: ACTION_TYPES.OPERATIONS_LOADED,
     operations: operations,

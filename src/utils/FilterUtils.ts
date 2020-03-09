@@ -16,7 +16,7 @@ export const applyFilter = (
   if (filter) {
     operations = await storageHandler.getFilteredOperations(filter);
   } else {
-    operations = await storageHandler.getAllOperationsFromRepo();
+    operations = await storageHandler.getAllOperations();
   }
 
   dispatch({
