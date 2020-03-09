@@ -22,6 +22,7 @@ export default {
     label_choose_date: 'Choose a date',
 
     operation_screen: 'Operation',
+    subscription_screen: 'Subscription',
     new_operation_screen: 'New operation',
     category_screen: 'Category',
     categories_screen: 'Categories',

@@ -23,74 +23,61 @@ interface SubscriptionProps {
 }
 
 interface SubscriptionState {
+  name: string;
   value: string;
   category: Category | null;
-  day: number | null;
+  day: string;
   note: string;
 
+  nameError: string;
   valueError: string;
   categoryError: string;
   dayError: string;
-
-  datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<
-  OperationProps,
-  OperationState
-  > {
-  private readonly operation: Operation | undefined = undefined;
+class SubscriptionScreen extends React.PureComponent<
+  SubscriptionProps,
+  SubscriptionState
+> {
+  private readonly subscription: Subscription | undefined = undefined;
 
-  constructor(props: OperationProps) {
+  constructor(props: SubscriptionProps) {
     super(props);
-    this.operation = props.navigation.getParam('operation');
+    this.subscription = props.navigation.getParam('subscription');
     this.state = {
-      amount: this.operation ? this.operation.amount.toString() : '0',
-      category: this.operation ? this.operation.category : null,
-      timestamp: this.operation ? this.operation.date : new Date(),
-      note: this.operation ? this.operation.note : '',
-      isIgnored: this.operation ? this.operation.isIgnored : false,
-      amountError: '',
+      name: this.subscription ? this.subscription.name : '',
+      value: this.subscription ? this.subscription.value.toString() : '',
+      category: this.subscription ? this.subscription.category : null,
+      day: this.subscription ? this.subscription.day.toString() : '',
+      note: this.subscription ? this.subscription.note : '',
+      nameError: '',
+      valueError: '',
       categoryError: '',
-      dateError: '',
-      datePickerVisible: false,
+      dayError: '',
     };
   }
 
-  static navigationOptions = ({navigation}: any) => {
-    let params = navigation.state.params;
-    console.log('params: ', params);
+  static navigationOptions = () => {
     return {
-      title: I18n.t(
-        params && params.operation
-          ? 'operation_screen'
-          : 'new_operation_screen',
-      ),
-      headerRight: () => (
-        <Button onPress={() => params.saveButtonHandler()}>
-          {I18n.t('action_save')}
-        </Button>
-      ),
+      header: null,
     };
   };
 
   private handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {amount, category, timestamp, note, isIgnored} = this.state;
+    const {name, value, category, day, note} = this.state;
     if (this.checkFields()) {
       try {
-        let operation: Operation;
-        operation = new Operation(
-          parseFloat(amount),
+        let subscription: Subscription;
+        subscription = new Subscription(
+          name,
           category as Category,
-          +timestamp,
+          parseFloat(value),
+          parseInt(day, 10),
           note,
-          isIgnored,
-          undefined,
-          undefined,
-          this.operation ? this.operation.id : undefined,
+          this.subscription ? this.subscription.id : undefined,
         );
-        await this.props.saveOperation(operation);
+        await this.props.saveSubscription(subscription);
         await this.props.navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
@@ -99,28 +86,41 @@ class OperationScreen extends React.PureComponent<
   };
 
   private checkFields = () => {
+    const {name, value, category, day} = this.state;
     let allFieldsFilled = true;
-    if (!this.state.amount || this.state.amount === '0') {
+    if (!name) {
       allFieldsFilled = false;
-      this.showAmountError();
+      this.showNameError();
     }
-    if (!this.state.category) {
+    if (!value || value === '0') {
+      allFieldsFilled = false;
+      this.showValueError();
+    }
+    if (!category) {
       allFieldsFilled = false;
       this.showCategoryError();
     }
-    if (!this.state.timestamp) {
+    if (!day) {
       allFieldsFilled = false;
-      this.showDateError();
+      this.showDayError();
     }
     return allFieldsFilled;
   };
 
-  private hideAmountError = () => {
-    this.setState({amountError: ''});
+  private hideNameError = () => {
+    this.setState({nameError: ''});
   };
 
-  private showAmountError = () => {
-    this.setState({amountError: I18n.t('label_required')});
+  private showNameError = () => {
+    this.setState({nameError: 'label_required'});
+  };
+
+  private hideValueError = () => {
+    this.setState({valueError: ''});
+  };
+
+  private showValueError = () => {
+    this.setState({valueError: I18n.t('label_required')});
   };
 
   private hideCategoryError = () => {
@@ -131,18 +131,18 @@ class OperationScreen extends React.PureComponent<
     this.setState({categoryError: I18n.t('label_required')});
   };
 
-  private hideDateError = () => {
-    this.setState({dateError: ''});
+  private hideDayError = () => {
+    this.setState({dayError: ''});
   };
 
-  private showDateError = () => {
-    this.setState({dateError: I18n.t('label_required')});
+  private showDayError = () => {
+    this.setState({dayError: I18n.t('label_required')});
   };
 
-  private changeAmount = (amount: string) => {
-    if (amount.match(/^\d*\.?\d*$/)) {
+  private changeValue = (value: string) => {
+    if (value.match(/^\d*\.?\d*$/)) {
       this.setState({
-        amount: amount,
+        value: value,
       });
     }
   };
@@ -151,32 +151,15 @@ class OperationScreen extends React.PureComponent<
     this.setState({category: category});
   };
 
-  changeDate = (date: Date) => {
-    this.setState({
-      datePickerVisible: false,
-      timestamp: date,
-    });
+  changeDay = (day: string) => {
+    this.setState({day: day});
   };
 
   changeNote = (note: string) => {
     this.setState({note: note});
   };
 
-  changeIsIgnored = () => {
-    this.setState({isIgnored: !this.state.isIgnored});
-  };
-
-  handleDateInputPress = () => {
-    this.hideDateError();
-    this.setState({datePickerVisible: true});
-  };
-
-  hideDatePicker = () => {
-    this.setState({datePickerVisible: false});
-  };
-
   componentDidMount() {
-    this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
     console.log('OPERATION DID MOUNT');
   }
 
@@ -214,8 +197,8 @@ class OperationScreen extends React.PureComponent<
             value={
               category
                 ? I18n.t(category.name, {
-                  defaultValue: category.name,
-                })
+                    defaultValue: category.name,
+                  })
                 : ''
             }
             required={true}

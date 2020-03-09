@@ -22,6 +22,7 @@ export default {
     label_choose_date: 'Выберите дату',
 
     operation_screen: 'Операция',
+    subscription_screen: 'Подписка',
     new_operation_screen: 'Новая операция',
     category_screen: 'Категория',
     categories_screen: 'Категории',

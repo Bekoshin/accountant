@@ -35,12 +35,12 @@ export default class Subscription {
   private _note: string;
 
   constructor(
-    id: number | undefined,
     name: string,
     category: Category,
     value: number,
     day: number,
     note: string,
+    id?: number,
   ) {
     this._id = id;
     this._name = name;
