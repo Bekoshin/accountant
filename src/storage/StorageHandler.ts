@@ -27,11 +27,6 @@ export default class StorageHandler {
     this._connection = undefined;
   }
 
-  // public init = async () => {
-  //   await this.initCategoryRepo();
-  //   await this.initOperationRepo();
-  // };
-
   public connect = async () => {
     this._connection = await createConnection({
       type: 'react-native',
@@ -189,7 +184,7 @@ export default class StorageHandler {
         .leftJoinAndSelect('s._category', 'c')
         .leftJoinAndSelect('c._parentCategory', 'pc')
         .leftJoinAndSelect('c._childCategories', 'cc')
-        .addOrderBy('o._day', 'ASC')
+        .addOrderBy('s._day', 'ASC')
         .getMany();
     }
     return subscriptions;
