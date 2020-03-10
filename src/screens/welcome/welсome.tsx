@@ -8,12 +8,14 @@ import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Category from '../../entities/Category';
+import Subscription from '../../entities/Subscription';
 
 export interface WelcomeProps {
   navigation: any;
 
   loadAllOperations: (storageHandler: StorageHandler) => void;
   loadAllCategories: (storageHandler: StorageHandler) => void;
+  loadAllSubscriptions: (storageHandler: StorageHandler) => void;
 }
 
 class Welcome extends React.PureComponent<WelcomeProps> {
@@ -25,9 +27,11 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     await this._storageHandler.connect();
     await this._storageHandler.initCategoryRepo();
     await this._storageHandler.initOperationRepo();
+    await this._storageHandler.initSubscriptionRepo();
     console.log('WELCOME. STORAGE HANDLER INITIALIZED');
     await this.props.loadAllOperations(this._storageHandler);
     await this.props.loadAllCategories(this._storageHandler);
+    await this.props.loadAllSubscriptions(this._storageHandler);
 
     this.props.navigation.navigate('App');
   }
@@ -65,6 +69,14 @@ const loadAllCategories = (
   });
 };
 
+const loadAllSubscriptions = (storageHandler: StorageHandler): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let subscriptions: Subscription[] = await storageHandler.getAllSubscriptions();
+  dispatch({
+    type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
+    subscriptions: subscriptions,
+  });
+};
+
 const mapStateToProps = (state: AppState) => ({
 });
 
@@ -75,5 +87,7 @@ export default connect(
       loadAllOperations(storageHandler),
     loadAllCategories: (storageHandler: StorageHandler) =>
       loadAllCategories(storageHandler),
+    loadAllSubscriptions: (storageHandler: StorageHandler) =>
+      loadAllSubscriptions(storageHandler),
   },
 )(Welcome);
