@@ -108,7 +108,7 @@ class SubscriptionScreen extends React.PureComponent<
   };
 
   private showNameError = () => {
-    this.setState({nameError: 'label_required'});
+    this.setState({nameError: I18n.t('label_required')});
   };
 
   private hideValueError = () => {
@@ -152,7 +152,14 @@ class SubscriptionScreen extends React.PureComponent<
   };
 
   private changeDay = (day: string) => {
-    this.setState({day: day});
+    if (day.match(/^\d+$/)) {
+      const num = parseInt(day, 10);
+      if (num > 0 && num <= 31) {
+        this.setState({day: day});
+      }
+    } else if (day === '') {
+      this.setState({day: day});
+    }
   };
 
   private changeNote = (note: string) => {
