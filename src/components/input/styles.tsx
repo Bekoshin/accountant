@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     left: 12,
     top: 8,
     fontSize: 12,
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     paddingTop: 0,
     paddingBottom: 0,
     color: 'black',
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     color: 'black',
   },
   input: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     minHeight: 56,
     fontSize: 16,
     justifyContent: 'flex-end',
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     paddingHorizontal: 12,
     paddingTop: Platform.OS === 'android' ? 18 : 24,
     paddingBottom: 12,
@@ -48,13 +48,13 @@ const styles = StyleSheet.create({
   helperText: {
     lineHeight: 12,
     fontSize: 12,
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     color: 'grey',
   },
   errorText: {
     lineHeight: 12,
     fontSize: 12,
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     color: '#b00020ff',
   },
 });

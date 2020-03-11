@@ -97,7 +97,7 @@ export default class Input extends React.PureComponent<InputProps> {
       position: 'absolute',
       left: 12,
       zIndex: -100,
-      fontFamily: 'Roboto',
+      // fontFamily: 'Roboto',
       paddingTop: 0,
       paddingBottom: 0,
       lineHeight: this._animatedIsFocused.interpolate({

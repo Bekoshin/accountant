@@ -219,13 +219,15 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
-  - RNGestureHandler (1.4.1):
+  - RNDateTimePicker (2.2.3):
     - React
-  - RNLocalize (1.3.1):
+  - RNGestureHandler (1.6.0):
     - React
-  - RNReanimated (1.3.0):
+  - RNLocalize (1.3.3):
     - React
-  - RNScreens (2.0.0-alpha.6):
+  - RNReanimated (1.7.0):
+    - React
+  - RNScreens (2.2.0):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -260,6 +262,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -322,6 +325,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
@@ -362,10 +367,11 @@ SPEC CHECKSUMS:
   React-RCTText: e3ef6191cdb627855ff7fe8fa0c1e14094967fb8
   React-RCTVibration: fb54c732fd20405a76598e431aa2f8c2bf527de9
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
-  RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
-  RNLocalize: 07eb7a91d10021cdf59d80061ebf3adb8a5b5688
-  RNReanimated: 6abbbae2e5e72609d85aabd92a982a94566885f1
-  RNScreens: 73691421e207a57b85af0fea931e620b05a35e89
+  RNDateTimePicker: bc947b8ee2d74cf940df1915bf1dd3359f375c9f
+  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
+  RNLocalize: a734b53c45e77acd3ffb78b92e63bb4d6cd13257
+  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
+  RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
