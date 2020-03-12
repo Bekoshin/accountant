@@ -71,6 +71,7 @@ class SubscriptionScreen extends React.PureComponent<
           parseFloat(value),
           parseInt(day, 10),
           note,
+          this.subscription ? this.subscription.recordedThisMonth : undefined,
           this.subscription ? this.subscription.id : undefined,
         );
         await this.props.saveSubscription(subscription);
