@@ -1,7 +1,6 @@
-import React, {SyntheticEvent} from 'react';
-import {View, ScrollView, Platform, Text} from 'react-native';
+import React from 'react';
+import {View, ScrollView, Text} from 'react-native';
 import {connect} from 'react-redux';
-// import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
@@ -9,10 +8,7 @@ import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {saveOperation} from '../../utils/OperationUtils';
 import DateHandler from '../../utils/DateHandler';
 
 interface OperationProps {
@@ -79,8 +75,7 @@ class OperationScreen extends React.PureComponent<
     const {amount, category, timestamp, note, isIgnored} = this.state;
     if (this.checkFields()) {
       try {
-        let operation: Operation;
-        operation = new Operation(
+        let operation: Operation = new Operation(
           parseFloat(amount),
           category as Category,
           +timestamp,
@@ -270,20 +265,7 @@ class OperationScreen extends React.PureComponent<
   }
 }
 
-const saveOperation = (
-  operation: Operation,
-): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initOperationRepo();
-  await storageHandler.saveOperation(operation);
-  const operations = await storageHandler.getAllOperations();
-  dispatch({
-    type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: operations,
-  });
-};
-
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = () => ({});
 
 export default connect(
   mapStateToProps,

@@ -9,13 +9,18 @@ import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Category from '../../entities/Category';
 import Subscription from '../../entities/Subscription';
+import {createOperationBySubscriptionIfNeeded} from '../../utils/SubscriptionUtils';
+import {saveOperation} from '../../utils/OperationUtils';
 
 export interface WelcomeProps {
   navigation: any;
 
+  subscriptions: Subscription[];
+
   loadAllOperations: (storageHandler: StorageHandler) => void;
   loadAllCategories: (storageHandler: StorageHandler) => void;
   loadAllSubscriptions: (storageHandler: StorageHandler) => void;
+  saveOperation: (operation: Operation) => void;
 }
 
 class Welcome extends React.PureComponent<WelcomeProps> {
@@ -33,6 +38,8 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     await this.props.loadAllCategories(this._storageHandler);
     await this.props.loadAllSubscriptions(this._storageHandler);
 
+    await this.checkForTodaySubscriptions();
+
     this.props.navigation.navigate('App');
   }
 
@@ -47,6 +54,18 @@ class Welcome extends React.PureComponent<WelcomeProps> {
       </View>
     );
   }
+
+  checkForTodaySubscriptions = async () => {
+    const {subscriptions} = this.props;
+    for (let subscription of subscriptions) {
+      const operation: Operation | null = createOperationBySubscriptionIfNeeded(
+        subscription,
+      );
+      if (operation) {
+        this.props.saveOperation(operation);
+      }
+    }
+  };
 }
 
 const loadAllOperations = (
@@ -69,7 +88,9 @@ const loadAllCategories = (
   });
 };
 
-const loadAllSubscriptions = (storageHandler: StorageHandler): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+const loadAllSubscriptions = (
+  storageHandler: StorageHandler,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let subscriptions: Subscription[] = await storageHandler.getAllSubscriptions();
   dispatch({
     type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
@@ -78,6 +99,7 @@ const loadAllSubscriptions = (storageHandler: StorageHandler): ThunkAction<void,
 };
 
 const mapStateToProps = (state: AppState) => ({
+  subscriptions: state.subscriptionReducer.subscriptions,
 });
 
 export default connect(
@@ -89,5 +111,6 @@ export default connect(
       loadAllCategories(storageHandler),
     loadAllSubscriptions: (storageHandler: StorageHandler) =>
       loadAllSubscriptions(storageHandler),
+    saveOperation: (operation: Operation) => saveOperation(operation),
   },
 )(Welcome);

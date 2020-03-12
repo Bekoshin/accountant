@@ -7,6 +7,18 @@ import {Action} from 'redux';
 import StorageHandler from '../storage/StorageHandler';
 import {ACTION_TYPES} from '../store/ACTION_TYPES';
 
+export const saveOperation = (
+  operation: Operation,
+): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+  let storageHandler = new StorageHandler();
+  await storageHandler.initOperationRepo();
+  await storageHandler.saveOperation(operation);
+  const operations = await storageHandler.getAllOperations();
+  dispatch({
+    type: ACTION_TYPES.OPERATIONS_LOADED,
+    operations: operations,
+  });
+};
 export const deleteOperation = (
   operation: Operation,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
