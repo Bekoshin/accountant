@@ -31,10 +31,10 @@ export class OperationMeta {
       type: 'boolean',
       default: 0,
     },
-    isMonthly: {
-      name: 'is_monthly',
-      type: 'boolean',
-      default: 0,
+    subscriptionId: {
+      name: 'subscription_id',
+      type: 'integer',
+      isNullable: true,
     },
   };
 }

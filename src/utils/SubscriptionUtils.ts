@@ -2,29 +2,10 @@ import Subscription from '../entities/Subscription';
 import moment from 'moment';
 import Operation from '../entities/Operation';
 
-export const createOperationBySubscriptionIfNeeded = (
-  subscription: Subscription,
-): Operation | null => {
-  let lastDayOfMonth = moment().daysInMonth();
-
-  let {day} = subscription;
-  if (day > lastDayOfMonth) {
-    day = lastDayOfMonth;
-  }
-  const currentDate = new Date();
-  const currentDay = currentDate.getDate();
-
-  if (currentDay === day) {
-    return createOperationBySubscription(subscription);
-  }
-
-  return null;
-};
-
 export const createOperationBySubscription = (
   subscription: Subscription,
 ): Operation => {
-  let {day, value, category, note} = subscription;
+  let {id, day, value, category, note} = subscription;
 
   let currentDate = new Date();
   currentDate.setDate(day);
@@ -36,9 +17,19 @@ export const createOperationBySubscription = (
     currentTimestamp,
     note,
     false,
-    true,
+    id as number,
     undefined,
   );
 };
 
-export const ifTodayIsRecordDay
+export const todayIsRecordDay = (subscriptionDay: number): boolean => {
+  let lastDayOfMonth = moment().daysInMonth();
+  if (subscriptionDay > lastDayOfMonth) {
+    //check if now short month, as February, etc
+    subscriptionDay = lastDayOfMonth;
+  }
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+
+  return currentDay === subscriptionDay;
+};

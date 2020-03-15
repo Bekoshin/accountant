@@ -96,9 +96,9 @@ export class Init1576240262448 implements MigrationInterface {
             default: OperationMeta.columns.isIgnored.default,
           },
           {
-            name: OperationMeta.columns.isMonthly.name,
-            type: OperationMeta.columns.isMonthly.type,
-            default: OperationMeta.columns.isMonthly.default,
+            name: OperationMeta.columns.subscriptionId.name,
+            type: OperationMeta.columns.subscriptionId.type,
+            isNullable: OperationMeta.columns.subscriptionId.isNullable,
           },
         ],
       }),

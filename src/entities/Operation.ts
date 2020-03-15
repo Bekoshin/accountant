@@ -36,8 +36,8 @@ export default class Operation {
   @Column(OperationMeta.columns.isIgnored as ColumnOptions)
   private _isIgnored: boolean;
 
-  @Column(OperationMeta.columns.isMonthly as ColumnOptions)
-  private _isMonthly: boolean;
+  @Column(OperationMeta.columns.subscriptionId as ColumnOptions)
+  private _subscriptionId: number | null;
 
   @OneToMany(type => Product, product => product._operation)
   private _products: Product[] | null;
@@ -48,7 +48,7 @@ export default class Operation {
     timestamp: number,
     note: string,
     isIgnored: boolean = false,
-    isMonthly: boolean = false,
+    subscriptionId: number | null = null,
     products?: Product[],
     id?: number,
   ) {
@@ -58,7 +58,7 @@ export default class Operation {
     this._timestamp = timestamp;
     this._note = note;
     this._isIgnored = isIgnored;
-    this._isMonthly = isMonthly;
+    this._subscriptionId = subscriptionId;
     if (products) {
       this._products = products;
     } else {
@@ -122,11 +122,11 @@ export default class Operation {
     this._isIgnored = value;
   }
 
-  get isMonthly(): boolean {
-    return this._isMonthly;
+  get subscriptionId(): number | null {
+    return this._subscriptionId;
   }
 
-  set isMonthly(value: boolean) {
-    this._isMonthly = value;
+  set subscriptionId(value: number | null) {
+    this._subscriptionId = value;
   }
 }

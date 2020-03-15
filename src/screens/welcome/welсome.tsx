@@ -9,7 +9,10 @@ import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Category from '../../entities/Category';
 import Subscription from '../../entities/Subscription';
-import {createOperationBySubscriptionIfNeeded} from '../../utils/SubscriptionUtils';
+import {
+  createOperationBySubscription,
+  todayIsRecordDay,
+} from '../../utils/SubscriptionUtils';
 import {saveOperation} from '../../utils/OperationUtils';
 
 export interface WelcomeProps {
@@ -58,10 +61,13 @@ class Welcome extends React.PureComponent<WelcomeProps> {
   createTodaysMonthlyOperations = async () => {
     const {subscriptions} = this.props;
     for (let subscription of subscriptions) {
-      const operation: Operation | null = createOperationBySubscriptionIfNeeded(
-        subscription,
-      );
-      if (operation) {
+      if (
+        !subscription.recordedThisMonth &&
+        todayIsRecordDay(subscription.day)
+      ) {
+        const operation: Operation = createOperationBySubscription(
+          subscription,
+        );
         this.props.saveOperation(operation);
       }
     }

@@ -80,7 +80,7 @@ class OperationScreen extends React.PureComponent<
           +timestamp,
           note,
           isIgnored,
-          undefined,
+          this.operation ? this.operation.subscriptionId : null,
           undefined,
           this.operation ? this.operation.id : undefined,
         );
