@@ -38,7 +38,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     await this.props.loadAllCategories(this._storageHandler);
     await this.props.loadAllSubscriptions(this._storageHandler);
 
-    await this.checkForTodaySubscriptions();
+    await this.createTodaysMonthlyOperations();
 
     this.props.navigation.navigate('App');
   }
@@ -55,7 +55,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
     );
   }
 
-  checkForTodaySubscriptions = async () => {
+  createTodaysMonthlyOperations = async () => {
     const {subscriptions} = this.props;
     for (let subscription of subscriptions) {
       const operation: Operation | null = createOperationBySubscriptionIfNeeded(

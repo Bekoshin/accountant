@@ -6,7 +6,7 @@ import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
 import styles from './filters.styles';
-import DateHandler from '../../utils/DateHandler';
+import {convertDate} from '../../utils/DateUtils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
@@ -240,7 +240,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
                 style={styles.leftInput}
                 label={I18n.t('label_date_from')}
                 editable={false}
-                value={DateHandler.convertDate(dateFrom)}
+                value={convertDate(dateFrom)}
                 onClearPress={() => this.changeDateFrom(undefined)}
                 onInputPress={this.handleDateFromInputPress}
               />
@@ -248,7 +248,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
                 style={styles.rightInput}
                 label={I18n.t('label_date_to')}
                 editable={false}
-                value={DateHandler.convertDate(dateTo)}
+                value={convertDate(dateTo)}
                 onClearPress={() => this.changeDateTo(undefined)}
                 onInputPress={this.handleDateToInputPress}
               />

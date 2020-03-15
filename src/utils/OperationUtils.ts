@@ -1,6 +1,6 @@
 import Operation from '../entities/Operation';
 import moment from 'moment';
-import DateHandler from './DateHandler';
+import {isDateInSelectedInterval} from './DateUtils';
 import {ThunkAction} from 'redux-thunk';
 import {AppState} from '../store/store';
 import {Action} from 'redux';
@@ -90,11 +90,7 @@ export const filterOperationsByDate = (
   let filteredOperations: Operation[] = [];
   for (let operation of operations) {
     if (
-      DateHandler.isDateInSelectedInterval(
-        operation.date,
-        selectedDate,
-        selectedInterval,
-      )
+      isDateInSelectedInterval(operation.date, selectedDate, selectedInterval)
     ) {
       filteredOperations.push(operation);
     }

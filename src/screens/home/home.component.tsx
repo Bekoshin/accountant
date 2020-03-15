@@ -16,7 +16,7 @@ import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import DateSelector from '../../components/dateSelector/dateSelector.Component';
 import I18n from '../../i18n/i18n';
-import DateHandler from '../../utils/DateHandler';
+import {convertDate, getMonthName} from '../../utils/DateUtils';
 import {
   groupByDate,
   calculateTotalAmount,
@@ -286,10 +286,10 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
         if (groupedBy === 'date') {
           if (UNITS_OF_DATE[selectedIndex] === 'year') {
             key = operations[0].date.toString();
-            subheader = DateHandler.getMonthName(operations[0].date);
+            subheader = getMonthName(operations[0].date);
           } else {
             key = operations[0].date.toString();
-            subheader = DateHandler.convertDate(operations[0].date);
+            subheader = convertDate(operations[0].date);
           }
         } else {
           key = operations[0].category.id;
@@ -328,7 +328,7 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
           defaultValue: operation.category.name,
         });
       } else {
-        title = DateHandler.convertDate(operation.date);
+        title = convertDate(operation.date);
       }
       operationComponents.push(
         <List.Item

@@ -2,14 +2,13 @@ import React from 'react';
 import {View, ScrollView, Text} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
 import {Button, Checkbox, TouchableRipple} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
 import {saveOperation} from '../../utils/OperationUtils';
-import DateHandler from '../../utils/DateHandler';
+import {convertDate} from '../../utils/DateUtils';
 
 interface OperationProps {
   navigation: any;
@@ -227,7 +226,7 @@ class OperationScreen extends React.PureComponent<
           />
           <Input
             label={I18n.t('label_date')}
-            value={DateHandler.convertDate(this.state.timestamp)}
+            value={convertDate(this.state.timestamp)}
             required={true}
             editable={false}
             errorMessage={dateError}
