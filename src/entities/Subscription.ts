@@ -34,16 +34,12 @@ export default class Subscription {
   @Column(SubscriptionMeta.columns.note as ColumnOptions)
   private _note: string;
 
-  @Column(SubscriptionMeta.columns.recordedThisMonth as ColumnOptions)
-  private _recordedThisMonth: boolean;
-
   constructor(
     name: string,
     category: Category,
     value: number,
     day: number,
     note: string,
-    recordedThisMonth: boolean = false,
     id?: number,
   ) {
     this._id = id;
@@ -52,7 +48,6 @@ export default class Subscription {
     this._value = value;
     this._day = day;
     this._note = note;
-    this._recordedThisMonth = recordedThisMonth;
   }
 
   get id(): number | undefined {
@@ -97,13 +92,5 @@ export default class Subscription {
 
   set note(value: string) {
     this._note = value;
-  }
-
-  get recordedThisMonth(): boolean {
-    return this._recordedThisMonth;
-  }
-
-  set recordedThisMonth(value: boolean) {
-    this._recordedThisMonth = value;
   }
 }

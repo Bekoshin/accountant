@@ -186,11 +186,6 @@ export class Init1576240262448 implements MigrationInterface {
             name: SubscriptionMeta.columns.note.name,
             type: SubscriptionMeta.columns.note.type,
           },
-          {
-            name: SubscriptionMeta.columns.recordedThisMonth.name,
-            type: SubscriptionMeta.columns.recordedThisMonth.type,
-            default: SubscriptionMeta.columns.recordedThisMonth.default,
-          },
         ],
       }),
     );

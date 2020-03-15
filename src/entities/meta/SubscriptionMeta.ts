@@ -30,10 +30,5 @@ export class SubscriptionMeta {
       name: 'note',
       type: 'varchar',
     },
-    recordedThisMonth: {
-      name: 'recorded_this_month',
-      type: 'boolean',
-      default: 0,
-    },
   };
 }
