@@ -7,6 +7,7 @@ class Filter {
   private _dateFrom: Date | undefined;
   private _dateTo: Date | undefined;
   private _note: string;
+  private _subscriptionId: number | undefined;
 
   constructor(
     amountFrom: number | undefined,
@@ -15,6 +16,7 @@ class Filter {
     dateFrom: Date | undefined,
     dateTo: Date | undefined,
     note: string,
+    subscriptionId: number | undefined,
   ) {
     this._amountFrom = amountFrom;
     this._amountTo = amountTo;
@@ -22,6 +24,7 @@ class Filter {
     this._dateFrom = dateFrom;
     this._dateTo = dateTo;
     this._note = note;
+    this._subscriptionId = subscriptionId;
   }
 
   get amountFrom(): number | undefined {
@@ -70,6 +73,14 @@ class Filter {
 
   set note(value: string) {
     this._note = value;
+  }
+
+  get subscriptionId(): number | undefined {
+    return this._subscriptionId;
+  }
+
+  set subscriptionId(value: number | undefined) {
+    this._subscriptionId = value;
   }
 }
 

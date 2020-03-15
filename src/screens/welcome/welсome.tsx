@@ -10,7 +10,7 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Category from '../../entities/Category';
 import Subscription from '../../entities/Subscription';
 import {
-  createOperationBySubscription,
+  createOperationBySubscription, needToCreateOperation,
   todayIsRecordDay,
 } from '../../utils/SubscriptionUtils';
 import {saveOperation} from '../../utils/OperationUtils';
@@ -61,10 +61,7 @@ class Welcome extends React.PureComponent<WelcomeProps> {
   createTodaysMonthlyOperations = async () => {
     const {subscriptions} = this.props;
     for (let subscription of subscriptions) {
-      if (
-        !subscription.recordedThisMonth &&
-        todayIsRecordDay(subscription.day)
-      ) {
+      if (await needToCreateOperation(subscription)) {
         const operation: Operation = createOperationBySubscription(
           subscription,
         );

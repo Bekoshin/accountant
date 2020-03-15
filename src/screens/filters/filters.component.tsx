@@ -88,6 +88,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
         dateFrom,
         dateTo,
         note,
+        undefined,
       );
     }
     if (this.props.filter !== filter) {

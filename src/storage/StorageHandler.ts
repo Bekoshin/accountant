@@ -118,6 +118,12 @@ export default class StorageHandler {
         builder.where('INSTR(o.note, :note)', {note: filter.note});
       }
 
+      if (filter.subscriptionId !== undefined) {
+        builder.where('o.subscription_id = :subscription_id', {
+          subscription_id: filter.subscriptionId,
+        });
+      }
+
       operations = await builder
         .leftJoinAndSelect('o._category', 'c')
         .leftJoinAndSelect('c._parentCategory', 'pc')
