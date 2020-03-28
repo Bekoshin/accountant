@@ -39,6 +39,7 @@ export default class Operation {
   @Column(OperationMeta.columns.subscriptionId as ColumnOptions)
   private _subscriptionId: number | null;
 
+  // @ts-ignore
   @OneToMany(type => Product, product => product._operation)
   private _products: Product[] | null;
 

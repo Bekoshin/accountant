@@ -10,8 +10,8 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Category from '../../entities/Category';
 import Subscription from '../../entities/Subscription';
 import {
-  createOperationBySubscription, needToCreateOperation,
-  todayIsRecordDay,
+  createOperationBySubscription,
+  needToCreateOperation,
 } from '../../utils/SubscriptionUtils';
 import {saveOperation} from '../../utils/OperationUtils';
 

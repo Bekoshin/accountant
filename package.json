@@ -64,7 +64,8 @@
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "png"
     ],
     "transform": {
       "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest",
@@ -81,6 +82,7 @@
     ],
     "cacheDirectory": ".jest/cache",
     "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js",
       "./testConfigs/jest-setup.js"
     ]
   }

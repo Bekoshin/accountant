@@ -339,21 +339,23 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
               operation: operation,
             })
           }
-          onLongPress={(evt: GestureResponderEvent) => {
-            const x = evt.nativeEvent.pageX;
-            const y = evt.nativeEvent.pageY;
-            this.setState({
-              menuAnchorX: x,
-              menuAnchorY: y,
-              isOperationMenuVisible: true,
-              selectedOperation: operation,
-            });
-          }}
+          onLongPress={
+            ((evt: GestureResponderEvent) => {
+              const x = evt.nativeEvent.pageX;
+              const y = evt.nativeEvent.pageY;
+              this.setState({
+                menuAnchorX: x,
+                menuAnchorY: y,
+                isOperationMenuVisible: true,
+                selectedOperation: operation,
+              });
+            }) as () => void
+          }
           left={
             operation.category.image
               ? () => (
                   <Image
-                    source={operation.category.image}
+                    source={operation.category.image as number}
                     style={{width: 40, height: 40}}
                   />
                 )

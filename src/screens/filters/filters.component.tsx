@@ -70,7 +70,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     };
   };
 
-  private handleApplyButton = async () => {
+  private handleApplyButton = () => {
     const {
       amountFrom,
       amountTo,
@@ -94,7 +94,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     if (this.props.filter !== filter) {
       this.props.applyFilter(filter);
     }
-    await this.props.navigation.goBack();
+    this.props.navigation.goBack();
   };
 
   isFilterNotEmpty = () => {
@@ -284,10 +284,7 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={I18n.t('filters_screen')} />
-        <Appbar.Action
-          icon="content-save"
-          onPress={() => this.handleApplyButton()}
-        />
+        <Appbar.Action icon="content-save" onPress={this.handleApplyButton} />
       </Appbar.Header>
     );
   }
