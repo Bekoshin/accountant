@@ -75,6 +75,13 @@
       "\\.snap$",
       "<rootDir>/node_modules/"
     ],
-    "cacheDirectory": ".jest/cache"
+    "transformIgnorePatterns": [
+      "<rootDir>node_modules/(?!(jest-)?react-native)",
+      "<rootDir>node_modules/?!(react-navigation)"
+    ],
+    "cacheDirectory": ".jest/cache",
+    "setupFiles": [
+      "./testConfigs/jest-setup.js"
+    ]
   }
 }
