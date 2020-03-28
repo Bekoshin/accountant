@@ -1,4 +1,3 @@
-import styles from './dateSelector.styles';
 import moment from 'moment';
 import React, {PureComponent} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
