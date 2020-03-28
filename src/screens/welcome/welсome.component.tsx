@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
@@ -15,61 +15,72 @@ import {
 } from '../../utils/SubscriptionUtils';
 import {saveOperation} from '../../utils/OperationUtils';
 
-export interface WelcomeProps {
-  navigation: any;
-
+type WelcomeProps = {
   subscriptions: Subscription[];
+
+  setInitialized: (initialized: boolean) => void;
 
   loadAllOperations: (storageHandler: StorageHandler) => void;
   loadAllCategories: (storageHandler: StorageHandler) => void;
   loadAllSubscriptions: (storageHandler: StorageHandler) => void;
-  saveOperation: (operation: Operation) => void;
-}
+  createOperation: (operation: Operation) => void;
+};
 
-class Welcome extends React.PureComponent<WelcomeProps> {
-  _storageHandler: StorageHandler | undefined;
+const WelcomeScreen = (props: WelcomeProps) => {
+  const {
+    subscriptions,
+    setInitialized,
+    loadAllOperations,
+    loadAllCategories,
+    loadAllSubscriptions,
+    createOperation,
+  } = props;
 
-  async componentDidMount() {
-    console.log('WELCOME DID MOUNT');
-    this._storageHandler = new StorageHandler();
-    await this._storageHandler.connect();
-    await this._storageHandler.initCategoryRepo();
-    await this._storageHandler.initOperationRepo();
-    await this._storageHandler.initSubscriptionRepo();
-    console.log('WELCOME. STORAGE HANDLER INITIALIZED');
-    await this.props.loadAllOperations(this._storageHandler);
-    await this.props.loadAllCategories(this._storageHandler);
-    await this.props.loadAllSubscriptions(this._storageHandler);
-
-    await this.createTodaysMonthlyOperations();
-
-    this.props.navigation.navigate('App');
-  }
-
-  componentWillUnmount(): void {
-    console.log('WELCOME WILL UNMOUNT');
-  }
-
-  render() {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Welcome Screen</Text>
-      </View>
-    );
-  }
-
-  createTodaysMonthlyOperations = async () => {
-    const {subscriptions} = this.props;
-    for (let subscription of subscriptions) {
-      if (await needToCreateOperation(subscription)) {
-        const operation: Operation = createOperationBySubscription(
-          subscription,
-        );
-        this.props.saveOperation(operation);
+  useEffect(() => {
+    const createTodaysMonthlyOperations = async () => {
+      for (let subscription of subscriptions) {
+        if (await needToCreateOperation(subscription)) {
+          const operation: Operation = createOperationBySubscription(
+            subscription,
+          );
+          createOperation(operation);
+        }
       }
-    }
-  };
-}
+    };
+
+    const loadData = async () => {
+      const _storageHandler: StorageHandler = new StorageHandler();
+      await _storageHandler.connect();
+      await _storageHandler.initCategoryRepo();
+      await _storageHandler.initOperationRepo();
+      await _storageHandler.initSubscriptionRepo();
+      console.log('WELCOME. STORAGE HANDLER INITIALIZED');
+
+      await loadAllOperations(_storageHandler);
+      await loadAllCategories(_storageHandler);
+      await loadAllSubscriptions(_storageHandler);
+
+      await createTodaysMonthlyOperations();
+
+      await setInitialized(true);
+    };
+
+    loadData();
+  }, [
+    createOperation,
+    loadAllCategories,
+    loadAllOperations,
+    loadAllSubscriptions,
+    setInitialized,
+    subscriptions,
+  ]);
+
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Welcome Screen</Text>
+    </View>
+  );
+};
 
 const loadAllOperations = (
   storageHandler: StorageHandler,
@@ -114,6 +125,6 @@ export default connect(
       loadAllCategories(storageHandler),
     loadAllSubscriptions: (storageHandler: StorageHandler) =>
       loadAllSubscriptions(storageHandler),
-    saveOperation: (operation: Operation) => saveOperation(operation),
+    createOperation: (operation: Operation) => saveOperation(operation),
   },
-)(Welcome);
+)(WelcomeScreen);

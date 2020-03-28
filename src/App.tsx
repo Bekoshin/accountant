@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import 'moment/min/locales';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import I18n from 'i18n-js';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider} from 'react-redux';
@@ -14,7 +14,7 @@ import 'reflect-metadata';
 
 import store from './store/store';
 
-import Welcome from './screens/welcome/welсome';
+import WelcomeScreen from './screens/welcome/welсome.component';
 import HomeScreen from './screens/home/home.component';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
@@ -26,117 +26,98 @@ import CategoryScreen from './screens/category/category.component';
 import ParentCategoriesScreen from './screens/parentCategories/parentCategories.component';
 import FiltersScreen from './screens/filters/filters.component';
 
-const BottomNavigator = createMaterialBottomTabNavigator(
-  {
-    HomeStackNavigator: {
-      screen: createStackNavigator({
-        Home: HomeScreen,
-      }),
-      navigationOptions: {
+import 'react-native-gesture-handler';
+
+export type RootStackParamList = {};
+
+const Stack = createStackNavigator();
+const RootStack = () => {
+  const [initialized, setInitialized] = useState(false);
+  if (!initialized) {
+    return <WelcomeScreen setInitialized={setInitialized} />;
+  }
+  return (
+    <Stack.Navigator
+      screenOptions={{gestureEnabled: true}}
+      headerMode="none"
+      initialRouteName="Tab">
+      <Stack.Screen name="Tab" component={TabStack} />
+      <Stack.Screen name="Operation" component={OperationScreen} />
+      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+      <Stack.Screen name="Categories" component={CategoriesSreen} />
+      <Stack.Screen name="Category" component={CategoryScreen} />
+      <Stack.Screen
+        name="ParentCategories"
+        component={ParentCategoriesScreen}
+      />
+      <Stack.Screen name="Filters" component={FiltersScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const Tab = createMaterialBottomTabNavigator();
+const TabStack = () => (
+  <Tab.Navigator initialRouteName="Home">
+    <Tab.Screen
+      name="Home"
+      component={HomeScreen}
+      options={{
         tabBarLabel: 'Home',
-        tabBarIcon: ({tintColor}) => (
+        tabBarIcon: ({color}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'home'} />
+            <Icon style={[{color: color}]} size={25} name={'home'} />
           </View>
         ),
-      },
-    },
-    Shopping: {
-      screen: Shopping,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
+      }}
+    />
+    <Tab.Screen
+      name="Shopping"
+      component={Shopping}
+      options={{
+        tabBarIcon: ({color}) => (
           <View>
-            <Icon
-              style={[{color: tintColor}]}
-              size={25}
-              name={'shopping-cart'}
-            />
+            <Icon style={[{color: color}]} size={25} name={'shopping-cart'} />
           </View>
         ),
-      },
-    },
-    Analytics: {
-      screen: Analytics,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
+      }}
+    />
+    <Tab.Screen
+      name="Analytics"
+      component={Analytics}
+      options={{
+        tabBarIcon: ({color}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'pie-chart'} />
+            <Icon style={[{color: color}]} size={25} name={'pie-chart'} />
           </View>
         ),
-      },
-    },
-    Settings: {
-      screen: Settings,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
+      }}
+    />
+    <Tab.Screen
+      name="Settings"
+      component={Settings}
+      options={{
+        tabBarIcon: ({color}) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'cog'} />
+            <Icon style={[{color: color}]} size={25} name={'cog'} />
           </View>
         ),
-      },
-    },
-  },
-  {
-    initialRouteName: 'HomeStackNavigator',
-  },
+      }}
+    />
+  </Tab.Navigator>
 );
 
-const AppStackNavigator = createStackNavigator(
-  {
-    BottomNavigator: {
-      screen: BottomNavigator,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Operation: {
-      screen: OperationScreen,
-    },
-    Subscription: {
-      screen: SubscriptionScreen,
-    },
-    Categories: {
-      screen: CategoriesSreen,
-    },
-    Category: {
-      screen: CategoryScreen,
-    },
-    ParentCategories: {
-      screen: ParentCategoriesScreen,
-    },
-    Filters: {
-      screen: FiltersScreen,
-    },
-  },
-  {
-    initialRouteName: 'BottomNavigator',
-  },
-);
+const App = () => {
+  moment.locale(I18n.t('locale'));
 
-const AppContainer = createAppContainer(
-  createSwitchNavigator(
-    {
-      Welcome: Welcome,
-      App: AppStackNavigator,
-    },
-    {
-      initialRouteName: 'Welcome',
-    },
-  ),
-);
+  return (
+    <Provider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
+  );
+};
 
-export default class App extends Component {
-  componentDidMount(): void {
-    moment.locale(I18n.t('locale'));
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        <PaperProvider>
-          <AppContainer />
-        </PaperProvider>
-      </Provider>
-    );
-  }
-}
+export default App;
