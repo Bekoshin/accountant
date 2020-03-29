@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
@@ -27,10 +27,19 @@ import ParentCategoriesScreen from './screens/parentCategories/parentCategories.
 import FiltersScreen from './screens/filters/filters.component';
 
 import 'react-native-gesture-handler';
+import Operation from "./entities/Operation";
 
-export type RootStackParamList = {};
+export type RootStackParamList = {
+  Tab: undefined;
+  Operation: {operation: Operation | undefined};
+  Subscription: undefined;
+  Categories: undefined;
+  Category: undefined;
+  ParentCategories: undefined;
+  Filters: undefined;
+};
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 const RootStack = () => {
   const [initialized, setInitialized] = useState(false);
   if (!initialized) {

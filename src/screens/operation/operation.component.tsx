@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {View, ScrollView, Text} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -9,12 +9,16 @@ import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
 import {saveOperation} from '../../utils/OperationUtils';
 import {convertDate} from '../../utils/DateUtils';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../App';
+import {RouteProp} from '@react-navigation/native';
 
-interface OperationProps {
-  navigation: any;
+type OperationProps = {
+  navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
+  route: RouteProp<RootStackParamList, 'Operation'>;
 
   saveOperation: (operation: Operation) => void;
-}
+};
 
 interface OperationState {
   amount: string;
@@ -30,239 +34,203 @@ interface OperationState {
   datePickerVisible: boolean;
 }
 
-class OperationScreen extends React.PureComponent<
-  OperationProps,
-  OperationState
-> {
-  private readonly operation: Operation | undefined = undefined;
+const OperationScreen = (props: OperationProps) => {
+  const {operation} = props.route.params;
+  const {navigation, saveOperation} = props;
+  const [amount, setAmount] = useState(
+    operation ? operation.amount.toString() : '0',
+  );
+  const [category, setCategory] = useState(
+    operation ? operation.category : null,
+  );
+  const [date, setDate] = useState(operation ? operation.date : new Date());
+  const [note, setNote] = useState(operation ? operation.note : '');
+  const [isIgnored, setIsIgnored] = useState(
+    operation ? operation.isIgnored : false,
+  );
+  const [amountError, setAmountError] = useState('');
+  const [categoryError, setCategoryError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  constructor(props: OperationProps) {
-    super(props);
-    this.operation = props.navigation.getParam('operation');
-    this.state = {
-      amount: this.operation ? this.operation.amount.toString() : '0',
-      category: this.operation ? this.operation.category : null,
-      timestamp: this.operation ? this.operation.date : new Date(),
-      note: this.operation ? this.operation.note : '',
-      isIgnored: this.operation ? this.operation.isIgnored : false,
-      amountError: '',
-      categoryError: '',
-      dateError: '',
-      datePickerVisible: false,
-    };
-  }
-
-  static navigationOptions = ({navigation}: any) => {
-    let params = navigation.state.params;
-    console.log('params: ', params);
-    return {
-      title: I18n.t(
-        params && params.operation
-          ? 'operation_screen'
-          : 'new_operation_screen',
-      ),
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: I18n.t(operation ? 'operation_screen' : 'new_operation_screen'),
       headerRight: () => (
-        <Button onPress={() => params.saveButtonHandler()}>
+        <Button onPress={() => handleSaveButton()}>
           {I18n.t('action_save')}
         </Button>
       ),
-    };
-  };
+    });
+  });
 
-  private handleSaveButton = async () => {
+  const handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {amount, category, timestamp, note, isIgnored} = this.state;
-    if (this.checkFields()) {
+    if (allFieldsIsFilled()) {
       try {
-        let operation: Operation = new Operation(
+        let newOperation: Operation = new Operation(
           parseFloat(amount),
           category as Category,
-          +timestamp,
+          +date,
           note,
           isIgnored,
-          this.operation ? this.operation.subscriptionId : null,
+          operation ? operation.subscriptionId : null,
           undefined,
-          this.operation ? this.operation.id : undefined,
+          operation ? operation.id : undefined,
         );
-        await this.props.saveOperation(operation);
-        await this.props.navigation.goBack();
+        await saveOperation(newOperation);
+        await navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
       }
     }
   };
 
-  private checkFields = () => {
+  const allFieldsIsFilled = () => {
     let allFieldsFilled = true;
-    if (!this.state.amount || this.state.amount === '0') {
+    if (!amount || amount === '0') {
       allFieldsFilled = false;
-      this.showAmountError();
+      showAmountError();
     }
-    if (!this.state.category) {
+    if (!category) {
       allFieldsFilled = false;
-      this.showCategoryError();
+      showCategoryError();
     }
-    if (!this.state.timestamp) {
+    if (!date) {
       allFieldsFilled = false;
-      this.showDateError();
+      showDateError();
     }
     return allFieldsFilled;
   };
 
-  private hideAmountError = () => {
-    this.setState({amountError: ''});
+  const hideAmountError = () => {
+    setAmountError('');
   };
 
-  private showAmountError = () => {
-    this.setState({amountError: I18n.t('label_required')});
+  const showAmountError = () => {
+    setAmountError(I18n.t('label_required'));
   };
 
-  private hideCategoryError = () => {
-    this.setState({categoryError: ''});
+  const hideCategoryError = () => {
+    setCategoryError('');
   };
 
-  private showCategoryError = () => {
-    this.setState({categoryError: I18n.t('label_required')});
+  const showCategoryError = () => {
+    setCategoryError(I18n.t('label_required'));
   };
 
-  private hideDateError = () => {
-    this.setState({dateError: ''});
+  const hideDateError = () => {
+    setDateError('');
   };
 
-  private showDateError = () => {
-    this.setState({dateError: I18n.t('label_required')});
+  const showDateError = () => {
+    setDateError(I18n.t('label_required'));
   };
 
-  private changeAmount = (amount: string) => {
+  const changeAmount = (amount: string) => {
     if (amount.match(/^\d*\.?\d*$/)) {
-      this.setState({
-        amount: amount,
-      });
+      setAmount(amount);
     }
   };
 
-  changeCategory = (category: Category | null) => {
-    this.setState({category: category});
+  const changeCategory = (category: Category | null) => {
+    setCategory(category);
   };
 
-  changeDate = (date: Date) => {
-    this.setState({
-      datePickerVisible: false,
-      timestamp: date,
-    });
+  const changeDate = (date: Date) => {
+    setDate(date);
+    setDatePickerVisible(false);
   };
 
-  changeNote = (note: string) => {
-    this.setState({note: note});
+  const changeNote = (note: string) => {
+    setNote(note);
   };
 
-  changeIsIgnored = () => {
-    this.setState({isIgnored: !this.state.isIgnored});
+  const changeIsIgnored = () => {
+    setIsIgnored(!isIgnored);
   };
 
-  handleDateInputPress = () => {
-    this.hideDateError();
-    this.setState({datePickerVisible: true});
+  const handleDateInputPress = () => {
+    hideDateError();
+    setDatePickerVisible(true);
   };
 
-  hideDatePicker = () => {
-    this.setState({datePickerVisible: false});
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
   };
 
-  componentDidMount() {
-    this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
-    console.log('OPERATION DID MOUNT');
-  }
-
-  componentWillUnmount() {
-    console.log('OPERATION WILL UNMOUNT');
-  }
-
-  render() {
-    const {
-      amount,
-      category,
-      timestamp,
-      note,
-      isIgnored,
-      amountError,
-      categoryError,
-      dateError,
-      datePickerVisible,
-    } = this.state;
-    return (
-      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-        <ScrollView>
-          <Input
-            label={I18n.t('label_amount')}
-            value={amount}
-            keyboardType="numeric"
-            required={true}
-            selectTextOnFocus={true}
-            errorMessage={amountError}
-            onFocus={this.hideAmountError}
-            onChangeText={this.changeAmount}
-          />
-          <Input
-            label={I18n.t('label_category')}
-            value={
-              category
-                ? I18n.t(category.name, {
-                    defaultValue: category.name,
-                  })
-                : ''
-            }
-            required={true}
-            editable={false}
-            errorMessage={categoryError}
-            onFocus={this.hideCategoryError}
-            hideClearButton={true}
-            onInputPress={() => {
-              this.hideCategoryError();
-              this.props.navigation.navigate('Categories', {
-                setCategory: this.changeCategory,
-              });
-            }}
-          />
-          <Input
-            label={I18n.t('label_date')}
-            value={convertDate(this.state.timestamp)}
-            required={true}
-            editable={false}
-            errorMessage={dateError}
-            onFocus={this.hideDateError}
-            hideClearButton={true}
-            onInputPress={this.handleDateInputPress}
-          />
-          <Input
-            label={I18n.t('label_note')}
-            value={note}
-            onChangeText={this.changeNote}
-            multiline={true}
-          />
-          <TouchableRipple onPress={this.changeIsIgnored}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
-              <Text>{I18n.t('label_ignore')}</Text>
-            </View>
-          </TouchableRipple>
-        </ScrollView>
-        <DateTimePickerModal
-          date={timestamp}
-          isVisible={datePickerVisible}
-          mode="date"
-          maximumDate={new Date()}
-          onConfirm={this.changeDate}
-          onCancel={this.hideDatePicker}
-          headerTextIOS={I18n.t('label_choose_date')}
-          cancelTextIOS={I18n.t('action_cancel')}
-          confirmTextIOS={I18n.t('action_confirm')}
-          locale={I18n.t('locale')}
+  return (
+    <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+      <ScrollView>
+        <Input
+          label={I18n.t('label_amount')}
+          value={amount}
+          keyboardType="numeric"
+          required={true}
+          selectTextOnFocus={true}
+          errorMessage={amountError}
+          onFocus={hideAmountError}
+          onChangeText={changeAmount}
         />
-      </View>
-    );
-  }
-}
+        <Input
+          label={I18n.t('label_category')}
+          value={
+            category
+              ? I18n.t(category.name, {
+                  defaultValue: category.name,
+                })
+              : ''
+          }
+          required={true}
+          editable={false}
+          errorMessage={categoryError}
+          onFocus={hideCategoryError}
+          hideClearButton={true}
+          onInputPress={() => {
+            hideCategoryError();
+            navigation.navigate('Categories', {
+              setCategory: changeCategory,
+            });
+          }}
+        />
+        <Input
+          label={I18n.t('label_date')}
+          value={convertDate(date)}
+          required={true}
+          editable={false}
+          errorMessage={dateError}
+          onFocus={hideDateError}
+          hideClearButton={true}
+          onInputPress={handleDateInputPress}
+        />
+        <Input
+          label={I18n.t('label_note')}
+          value={note}
+          onChangeText={changeNote}
+          multiline={true}
+        />
+        <TouchableRipple onPress={changeIsIgnored}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
+            <Text>{I18n.t('label_ignore')}</Text>
+          </View>
+        </TouchableRipple>
+      </ScrollView>
+      <DateTimePickerModal
+        date={date}
+        isVisible={datePickerVisible}
+        mode="date"
+        maximumDate={new Date()}
+        onConfirm={changeDate}
+        onCancel={hideDatePicker}
+        headerTextIOS={I18n.t('label_choose_date')}
+        cancelTextIOS={I18n.t('action_cancel')}
+        confirmTextIOS={I18n.t('action_confirm')}
+        locale={I18n.t('locale')}
+      />
+    </View>
+  );
+};
 
 const mapStateToProps = () => ({});
 
