@@ -66,14 +66,7 @@ const WelcomeScreen = (props: WelcomeProps) => {
     };
 
     loadData();
-  }, [
-    createOperation,
-    loadAllCategories,
-    loadAllOperations,
-    loadAllSubscriptions,
-    setInitialized,
-    subscriptions,
-  ]);
+  }, []);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

@@ -27,7 +27,7 @@ import ParentCategoriesScreen from './screens/parentCategories/parentCategories.
 import FiltersScreen from './screens/filters/filters.component';
 
 import 'react-native-gesture-handler';
-import Operation from "./entities/Operation";
+import Operation from './entities/Operation';
 
 export type RootStackParamList = {
   Tab: undefined;
