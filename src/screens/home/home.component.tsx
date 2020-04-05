@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import moment from 'moment';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {
   Alert,
   GestureResponderEvent,
@@ -29,164 +31,122 @@ import {
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
+import {TabStackParamList} from '../../App';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
+const DATE = 'date';
+const CATEGORY = 'category';
+type GropedBy = 'date' | 'category';
 
-interface HomeProps {
-  navigation: any;
+type HomeProps = {
+  route: RouteProp<TabStackParamList, 'Home'>;
+  navigation: StackNavigationProp<TabStackParamList, 'Home'>;
 
   operations: Operation[];
   filter: Filter | null;
 
   deleteOperation: (operation: Operation) => void;
   applyFilter: (filter: Filter | null) => void;
-}
+};
 
-interface HomeState {
-  selectedIndex: number;
-  selectedDate: moment.Moment;
-  operationsMap: Map<string, Operation[]>;
-  total: number;
-  isMoreMenuVisible: boolean;
-  isOperationMenuVisible: boolean;
-  groupedBy: 'date' | 'category';
-  searchMode: boolean;
-  menuAnchorX: number;
-  menuAnchorY: number;
-  selectedOperation: Operation | null;
-}
+const HomeScreen = (props: HomeProps) => {
+  // constructor(props: HomeProps) {
+  //   super(props);
+  //   const selectedDate = moment();
+  //   const selectedIndex = 1;
+  //   const filteredOperations = filterOperationsByDate(
+  //     this.props.operations,
+  //     selectedDate,
+  //     UNITS_OF_DATE[selectedIndex],
+  //   );
+  //   const operationsMap = groupByDate(filteredOperations);
+  //   this.state = {
+  //     // total: calculateTotalAmount(filteredOperations),
+  //     searchMode: false,
+  //     menuAnchorX: 0,
+  //     menuAnchorY: 0,
+  //     selectedOperation: null,
+  //   };
+  // }
 
-class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
-  constructor(props: HomeProps) {
-    super(props);
-    const selectedDate = moment();
-    const selectedIndex = 1;
-    const filteredOperations = filterOperationsByDate(
-      this.props.operations,
-      selectedDate,
-      UNITS_OF_DATE[selectedIndex],
-    );
-    const operationsMap = groupByDate(filteredOperations);
-    this.state = {
-      selectedIndex: 1,
-      selectedDate: selectedDate,
-      operationsMap: operationsMap,
-      total: calculateTotalAmount(filteredOperations),
-      isMoreMenuVisible: false,
-      isOperationMenuVisible: false,
-      groupedBy: 'date',
-      searchMode: false,
-      menuAnchorX: 0,
-      menuAnchorY: 0,
-      selectedOperation: null,
-    };
-  }
+  const {operations, navigation, filter, applyFilter, deleteOperation} = props;
 
-  static navigationOptions = () => {
-    return {
-      header: null,
-    };
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const [operationsMap, setOperationsMap] = useState(
+    new Map<string, Operation[]>(),
+  );
+  const [total, setTotal] = useState(0);
+  const [moreMenuVisible, setMoreMenuVisible] = useState(false);
+  const [operationMenuVisible, setOperationMenuVisible] = useState(false);
+  const [groupedBy, setGroupedBy] = useState<GropedBy>(DATE);
+  const [searchMode, setSearchMode] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState({x: 0, y: 0});
+  const [selectedOperation, setSelectedOperation] = useState<Operation | null>(
+    null,
+  );
+
+  const handleGroupBy = async (attribute: GropedBy) => {
+    await updateVisibleOperations(selectedDate, selectedIndex, attribute);
   };
 
-  handleGroupBy = async (attribute: 'date' | 'category') => {
-    const {selectedDate, selectedIndex} = this.state;
-    await this.updateVisibleOperations(selectedDate, selectedIndex, attribute);
-  };
+  // componentDidUpdate(prevProps: HomeProps) {
+  //   console.log('COMPONENT DID UPDATE');
+  //   if (this.props.operations !== prevProps.operations) {
+  //     console.log('THIS PROPS  OPERATIONS: ', this.props.operations);
+  //     console.log('PREV PROPS  OPERATIONS: ', prevProps.operations);
+  //     this.updateVisibleOperations(
+  //       this.state.selectedDate,
+  //       this.state.selectedIndex,
+  //     );
+  //   }
+  // }
 
-  componentDidMount(): void {
-    console.log('HOME DID MOUNT');
-  }
-
-  componentDidUpdate(prevProps: HomeProps) {
-    console.log('COMPONENT DID UPDATE');
-    if (this.props.operations !== prevProps.operations) {
-      console.log('THIS PROPS  OPERATIONS: ', this.props.operations);
-      console.log('PREV PROPS  OPERATIONS: ', prevProps.operations);
-      this.updateVisibleOperations(
-        this.state.selectedDate,
-        this.state.selectedIndex,
-      );
-    }
-  }
-
-  componentWillUnmount(): void {
-    console.log('HOME WILL UNMOUNT');
-  }
-
-  handleIndexChanged = (index: number) => {
+  const handleIndexChanged = (index: number) => {
     const currentDate = moment();
-    this.setState({selectedIndex: index, selectedDate: currentDate});
-    this.updateVisibleOperations(currentDate, index);
+    setSelectedIndex(index);
+    setSelectedDate(currentDate);
+    updateVisibleOperations(currentDate, index);
   };
 
-  handleDateChanged = (date: moment.Moment) => {
-    this.setState({selectedDate: date});
-    this.updateVisibleOperations(date, this.state.selectedIndex);
+  const handleDateChanged = (date: moment.Moment) => {
+    setSelectedDate(date);
+    updateVisibleOperations(date, selectedIndex);
   };
 
-  updateVisibleOperations = (
-    selectedDate: moment.Moment,
-    selectedIndex: number,
-    attribute?: 'date' | 'category',
+  const updateVisibleOperations = (
+    date: moment.Moment,
+    index: number,
+    attribute?: GropedBy,
   ) => {
     console.log('UPDATE VISIBLE OPERATIONS');
-    const unitOfDate = UNITS_OF_DATE[selectedIndex];
+    const unitOfDate = UNITS_OF_DATE[index];
     const filteredOperations = filterOperationsByDate(
-      this.props.operations,
-      selectedDate,
+      operations,
+      date,
       unitOfDate,
     );
     if (!attribute) {
-      attribute = this.state.groupedBy;
+      attribute = groupedBy;
     }
-    let operationsMap;
-    if (attribute === 'date') {
+    let newOperationsMap;
+    if (attribute === DATE) {
       if (unitOfDate === 'year') {
-        operationsMap = groupByMonth(filteredOperations);
+        newOperationsMap = groupByMonth(filteredOperations);
       } else {
-        operationsMap = groupByDate(filteredOperations);
+        newOperationsMap = groupByDate(filteredOperations);
       }
     } else {
-      operationsMap = groupByCategory(filteredOperations);
+      newOperationsMap = groupByCategory(filteredOperations);
     }
-    this.setState({
-      operationsMap: operationsMap,
-      total: calculateTotalAmount(filteredOperations),
-      isMoreMenuVisible: false,
-      groupedBy: attribute,
-    });
+    setOperationsMap(newOperationsMap);
+    setTotal(calculateTotalAmount(filteredOperations));
+    setMoreMenuVisible(false);
+    setGroupedBy(attribute);
   };
 
-  render() {
-    console.log('HOME RENDER');
-    const {selectedIndex, searchMode} = this.state;
-    return (
-      <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        {searchMode ? this.renderSearchAppBar() : this.renderMainAppBar()}
-        <SegmentedControlTab
-          values={['Неделя', 'Месяц', 'Год']}
-          selectedIndex={selectedIndex}
-          onTabPress={this.handleIndexChanged}
-        />
-        <DateSelector
-          type={UNITS_OF_DATE[selectedIndex]}
-          date={this.state.selectedDate}
-          changeDate={this.handleDateChanged}
-        />
-        {this.renderOperationSections()}
-        <Fab
-          addOperation={() => this.props.navigation.navigate('Operation')}
-          addSubscription={() => this.props.navigation.navigate('Subscription')}
-        />
-        {this.renderOperationMenu()}
-      </View>
-    );
-  }
-
-  renderMainAppBar() {
-    const {total, isMoreMenuVisible, groupedBy} = this.state;
-    const {navigation, filter} = this.props;
+  const renderMainAppBar = () => {
     return (
       <Appbar.Header>
         <Appbar.Content
@@ -194,70 +154,61 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
             I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
           }
         />
-        <Appbar.Action
-          icon="magnify"
-          onPress={() => this.setState({searchMode: true})}
-        />
+        <Appbar.Action icon="magnify" onPress={showSearchMode} />
         <Menu
-          onDismiss={() => {
-            this.setState({isMoreMenuVisible: false});
-          }}
-          visible={isMoreMenuVisible}
+          onDismiss={hideMoreMenu}
+          visible={moreMenuVisible}
           anchor={
             <Appbar.Action
               color="white"
               icon="dots-vertical"
-              onPress={() => this.setState({isMoreMenuVisible: true})}
+              onPress={showMoreMenu}
             />
           }>
           <Menu.Item
             title={
-              groupedBy === 'date'
+              groupedBy === DATE
                 ? I18n.t('action_group_by_category')
                 : I18n.t('action_group_by_date')
             }
-            onPress={() =>
-              this.handleGroupBy(groupedBy === 'date' ? 'category' : 'date')
-            }
+            onPress={() => handleGroupBy(groupedBy === DATE ? CATEGORY : DATE)}
           />
           <Menu.Item
             title={I18n.t(
               filter ? 'action_change_filters' : 'action_set_filters',
             )}
             onPress={() => {
-              this.setState({isMoreMenuVisible: false});
+              hideMoreMenu();
               navigation.navigate('Filters');
             }}
           />
-          {this.renderDropFiltersButton()}
+          {renderDropFiltersButton()}
         </Menu>
       </Appbar.Header>
     );
-  }
+  };
 
-  renderDropFiltersButton() {
-    const {filter} = this.props;
-    if (filter) {
-      return (
-        <Menu.Item
-          title={I18n.t('action_drop_filters')}
-          onPress={async () => {
-            this.setState({isMoreMenuVisible: false});
-            await this.props.applyFilter(null);
-          }}
-        />
-      );
-    }
-  }
+  const showMoreMenu = () => {
+    setMoreMenuVisible(true);
+  };
 
-  renderSearchAppBar() {
+  const hideMoreMenu = () => {
+    setMoreMenuVisible(false);
+  };
+
+  const showOperationMenu = () => {
+    setOperationMenuVisible(true);
+  };
+
+  const hideOperationMenu = () => {
+    setOperationMenuVisible(false);
+  };
+
+  const renderSearchAppBar = () => {
     return (
       <Appbar.Header>
         <View style={{flex: 0.1}}>
-          <Appbar.Action
-            icon="arrow-left"
-            onPress={() => this.setState({searchMode: false})}
-          />
+          <Appbar.Action icon="arrow-left" onPress={hideSearchMode} />
         </View>
         <View style={{flex: 0.8}}>
           <Searchbar
@@ -267,40 +218,58 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
           />
         </View>
         <View style={{flex: 0.1}}>
-          <Appbar.Action
-            icon="magnify"
-            onPress={() => this.setState({searchMode: true})}
-          />
+          <Appbar.Action icon="magnify" onPress={showSearchMode} />
         </View>
       </Appbar.Header>
     );
-  }
+  };
 
-  renderOperationSections() {
-    const {operationsMap, groupedBy, selectedIndex} = this.state;
+  const showSearchMode = () => {
+    setSearchMode(true);
+  };
+
+  const hideSearchMode = () => {
+    setSearchMode(false);
+  };
+
+  const renderDropFiltersButton = () => {
+    if (filter) {
+      return (
+        <Menu.Item
+          title={I18n.t('action_drop_filters')}
+          onPress={async () => {
+            hideMoreMenu();
+            await applyFilter(null);
+          }}
+        />
+      );
+    }
+  };
+
+  const renderOperationSections = () => {
     let operationComponents: any = [];
-    operationsMap.forEach((operations: Operation[]) => {
-      if (operations.length > 0) {
+    operationsMap.forEach((tempOperations: Operation[]) => {
+      if (tempOperations.length > 0) {
         let key;
         let subheader;
         if (groupedBy === 'date') {
           if (UNITS_OF_DATE[selectedIndex] === 'year') {
-            key = operations[0].date.toString();
-            subheader = getMonthName(operations[0].date);
+            key = tempOperations[0].date.toString();
+            subheader = getMonthName(tempOperations[0].date);
           } else {
-            key = operations[0].date.toString();
-            subheader = convertDate(operations[0].date);
+            key = tempOperations[0].date.toString();
+            subheader = convertDate(tempOperations[0].date);
           }
         } else {
-          key = operations[0].category.id;
-          subheader = I18n.t(operations[0].category.name, {
-            defaultValue: operations[0].category.name,
+          key = tempOperations[0].category.id;
+          subheader = I18n.t(tempOperations[0].category.name, {
+            defaultValue: tempOperations[0].category.name,
           });
         }
         operationComponents.push(
           <List.Section key={key}>
             <List.Subheader>{subheader}</List.Subheader>
-            {this.renderOperations(operations)}
+            {renderOperations(operations)}
           </List.Section>,
         );
       }
@@ -315,11 +284,9 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
     } else {
       return <NoExpensesComponent />;
     }
-  }
+  };
 
-  renderOperations(operations: Operation[]) {
-    const {groupedBy} = this.state;
-    const {navigation} = this.props;
+  const renderOperations = (operations: Operation[]) => {
     let operationComponents = [];
     for (let operation of operations) {
       let title;
@@ -343,12 +310,9 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
             ((evt: GestureResponderEvent) => {
               const x = evt.nativeEvent.pageX;
               const y = evt.nativeEvent.pageY;
-              this.setState({
-                menuAnchorX: x,
-                menuAnchorY: y,
-                isOperationMenuVisible: true,
-                selectedOperation: operation,
-              });
+              setMenuAnchor({x: x, y: y});
+              setOperationMenuVisible(true);
+              setSelectedOperation(operation);
             }) as () => void
           }
           left={
@@ -366,23 +330,14 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
       );
     }
     return operationComponents;
-  }
+  };
 
-  renderOperationMenu() {
-    const {
-      menuAnchorX,
-      menuAnchorY,
-      isOperationMenuVisible,
-      selectedOperation,
-    } = this.state;
-    const {navigation} = this.props;
+  const renderOperationMenu = () => {
     return (
       <Menu
-        onDismiss={() => {
-          this.setState({isOperationMenuVisible: false});
-        }}
-        visible={isOperationMenuVisible}
-        anchor={{x: menuAnchorX, y: menuAnchorY}}>
+        onDismiss={hideOperationMenu}
+        visible={operationMenuVisible}
+        anchor={{x: menuAnchor.x, y: menuAnchor.y}}>
         <Menu.Item
           icon="pencil"
           title={I18n.t('action_edit')}
@@ -390,21 +345,20 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
             navigation.navigate('Operation', {
               operation: selectedOperation,
             });
-            this.setState({isOperationMenuVisible: false});
+            hideOperationMenu();
           }}
         />
         <Menu.Item
           icon="delete"
           title={I18n.t('action_delete')}
-          onPress={this.handleDeleteButton}
+          onPress={handleDeleteButton}
         />
       </Menu>
     );
-  }
+  };
 
-  handleDeleteButton = () => {
-    const {selectedOperation} = this.state;
-    this.setState({isOperationMenuVisible: false});
+  const handleDeleteButton = () => {
+    hideOperationMenu();
     const message = I18n.t('message_delete_operation') + '?';
     Alert.alert(I18n.t('label_deleting'), message, [
       {
@@ -417,13 +371,35 @@ class HomeScreen extends React.PureComponent<HomeProps, HomeState> {
         onPress: () => {
           console.log('OPERATION FOR DELETE: ', selectedOperation);
           if (selectedOperation) {
-            this.props.deleteOperation(selectedOperation);
+            deleteOperation(selectedOperation);
           }
         },
       },
     ]);
   };
-}
+
+  return (
+    <View style={{flex: 1, justifyContent: 'flex-start'}}>
+      {searchMode ? renderSearchAppBar() : renderMainAppBar()}
+      <SegmentedControlTab
+        values={['Неделя', 'Месяц', 'Год']}
+        selectedIndex={selectedIndex}
+        onTabPress={handleIndexChanged}
+      />
+      <DateSelector
+        type={UNITS_OF_DATE[selectedIndex]}
+        date={selectedDate}
+        changeDate={handleDateChanged}
+      />
+      {renderOperationSections()}
+      <Fab
+        addOperation={() => navigation.navigate('Operation')}
+        addSubscription={() => navigation.navigate('Subscription')}
+      />
+      {renderOperationMenu()}
+    </View>
+  );
+};
 
 const mapStateToProps = (state: AppState) => ({
   operations: state.operationReducer.operations,

@@ -64,7 +64,14 @@ const RootStack = () => {
   );
 };
 
-const Tab = createMaterialBottomTabNavigator();
+export type TabStackParamList = {
+  Home: undefined;
+  Shopping: undefined;
+  Analytics: undefined;
+  Settings: undefined;
+};
+
+const Tab = createMaterialBottomTabNavigator<TabStackParamList>();
 const TabStack = () => (
   <Tab.Navigator initialRouteName="Home">
     <Tab.Screen
