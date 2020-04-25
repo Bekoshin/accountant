@@ -31,7 +31,7 @@ import {
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
-import {TabStackParamList} from '../../App';
+import {RootStackParamList, TabStackParamList} from '../../App';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -40,8 +40,8 @@ const CATEGORY = 'category';
 type GropedBy = 'date' | 'category';
 
 type HomeProps = {
-  route: RouteProp<TabStackParamList, 'Home'>;
-  navigation: StackNavigationProp<TabStackParamList, 'Home'>;
+  route: RouteProp<RootStackParamList, 'Tab'>;
+  navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
 
   operations: Operation[];
   filter: Filter | null;
@@ -213,7 +213,9 @@ const HomeScreen = (props: HomeProps) => {
         <View style={{flex: 0.8}}>
           <Searchbar
             placeholder="Search"
-            onChangeText={query => {}}
+            onChangeText={query => {
+              console.log(query);
+            }}
             value="qwe"
           />
         </View>
@@ -343,7 +345,7 @@ const HomeScreen = (props: HomeProps) => {
           title={I18n.t('action_edit')}
           onPress={() => {
             navigation.navigate('Operation', {
-              operation: selectedOperation,
+              operation: selectedOperation as Operation,
             });
             hideOperationMenu();
           }}
@@ -393,7 +395,9 @@ const HomeScreen = (props: HomeProps) => {
       />
       {renderOperationSections()}
       <Fab
-        addOperation={() => navigation.navigate('Operation')}
+        addOperation={() =>
+          navigation.navigate('Operation', {operation: undefined})
+        }
         addSubscription={() => navigation.navigate('Subscription')}
       />
       {renderOperationMenu()}

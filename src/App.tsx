@@ -31,7 +31,7 @@ import Operation from './entities/Operation';
 
 export type RootStackParamList = {
   Tab: undefined;
-  Operation: {operation: Operation | undefined};
+  Operation: {operation?: Operation};
   Subscription: undefined;
   Categories: undefined;
   Category: undefined;
