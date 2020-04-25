@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {Divider, Appbar} from 'react-native-paper';
 import Category from '../../entities/Category';
-import CategoryComponent from '../../components/category/category.component';
+import {CategoryComponent} from '../../components/category/category.component';
 import I18n from '../../i18n/i18n';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
@@ -43,7 +43,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
   };
 
   const handleCategoryPress = (category: Category) => {
-    navigation.navigate('Operation', {category: category});
+    navigation.navigate('Operation', {selectedCategory: category});
   };
 
   const handleDeleteButton = () => {

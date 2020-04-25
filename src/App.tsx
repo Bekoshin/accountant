@@ -28,11 +28,11 @@ import FiltersScreen from './screens/filters/filters.component';
 
 import 'react-native-gesture-handler';
 import Operation from './entities/Operation';
-import Category from "./entities/Category";
+import Category from './entities/Category';
 
 export type RootStackParamList = {
   Tab: undefined;
-  Operation: {operation?: Operation; category?: Category};
+  Operation: {operation?: Operation; selectedCategory?: Category};
   Subscription: undefined;
   Categories: {canSetSeveralCategory: boolean; selectedCategories?: Category[]};
   Category: {category?: Category; parentCategory?: Category};

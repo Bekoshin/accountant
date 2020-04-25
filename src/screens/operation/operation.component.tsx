@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {View, ScrollView, Text} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -35,8 +35,8 @@ interface OperationState {
 }
 
 const OperationScreen = (props: OperationProps) => {
-  const {operation} = props.route.params;
-  const {navigation, saveOperation} = props;
+  const {operation, selectedCategory} = props.route.params;
+  const {navigation} = props;
   const [amount, setAmount] = useState(
     operation ? operation.amount.toString() : '0',
   );
@@ -64,6 +64,12 @@ const OperationScreen = (props: OperationProps) => {
     });
   });
 
+  useEffect(() => {
+    if (selectedCategory) {
+      setCategory(selectedCategory);
+    }
+  }, [selectedCategory]);
+
   const handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
     if (allFieldsIsFilled()) {
@@ -78,7 +84,7 @@ const OperationScreen = (props: OperationProps) => {
           undefined,
           operation ? operation.id : undefined,
         );
-        await saveOperation(newOperation);
+        await props.saveOperation(newOperation);
         await navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
@@ -131,10 +137,6 @@ const OperationScreen = (props: OperationProps) => {
     if (amount.match(/^\d*\.?\d*$/)) {
       setAmount(amount);
     }
-  };
-
-  const changeCategory = (category: Category | null) => {
-    setCategory(category);
   };
 
   const changeDate = (date: Date) => {
