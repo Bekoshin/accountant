@@ -189,7 +189,7 @@ const OperationScreen = (props: OperationProps) => {
           onInputPress={() => {
             hideCategoryError();
             navigation.navigate('Categories', {
-              setCategory: changeCategory,
+              canSetSeveralCategory: false,
             });
           }}
         />
