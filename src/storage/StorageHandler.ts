@@ -73,55 +73,112 @@ export default class StorageHandler {
       let builder: SelectQueryBuilder<
         Operation
       > = this._operationRepo.createQueryBuilder('o');
+      let filtered = false;
 
       if (filter.categories.length > 0) {
         builder.where('o.category_id IN (:...categories)', {
           categories: filter.categories.map(category => category.id),
         });
+        filtered = true;
       }
 
       if (filter.amountFrom !== undefined && filter.amountTo !== undefined) {
-        builder.where('o.amount BETWEEN :amount_from AND :amount_to', {
+        const where = 'o.amount BETWEEN :amount_from AND :amount_to';
+        const params = {
           amount_from: filter.amountFrom,
           amount_to: filter.amountTo,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       } else if (filter.amountFrom !== undefined) {
-        builder.where('o.amount >= :amount_from', {
+        const where = 'o.amount >= :amount_from';
+        const params = {
           amount_from: filter.amountFrom,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       } else if (filter.amountTo !== undefined) {
-        builder.where('o.amount <= :amount_to', {
+        const where = 'o.amount <= :amount_to';
+        const params = {
           amount_to: filter.amountTo,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       }
 
       if (filter.dateFrom !== undefined && filter.dateTo !== undefined) {
         const timestampFrom = filter.dateFrom.setHours(0, 0, 0, 0);
         const timestampTo = filter.dateTo.setHours(23, 59, 59, 999);
-        builder.where('o.timestamp BETWEEN :timestamp_from AND :timestamp_to', {
+        const where = 'o.timestamp BETWEEN :timestamp_from AND :timestamp_to';
+        const params = {
           timestamp_from: timestampFrom,
           timestamp_to: timestampTo,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       } else if (filter.dateFrom !== undefined) {
         const timestampFrom = filter.dateFrom.setHours(0, 0, 0, 0);
-        builder.where('o.timestamp >= :timestamp_from', {
+        const where = 'o.timestamp >= :timestamp_from';
+        const params = {
           timestamp_from: timestampFrom,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       } else if (filter.dateTo !== undefined) {
         const timestampTo = filter.dateTo.setHours(23, 59, 59, 999);
-        builder.where('o.timestamp <= :timestamp_to', {
+        const where = 'o.timestamp <= :timestamp_to';
+        const params = {
           timestamp_to: timestampTo,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       }
 
       if (filter.note !== '') {
-        builder.where('INSTR(o.note, :note)', {note: filter.note});
+        const where = 'INSTR(o.note, :note)';
+        const params = {note: filter.note};
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
+        filtered = true;
       }
 
       if (filter.subscriptionId !== undefined) {
-        builder.where('o.subscription_id = :subscription_id', {
+        const where = 'o.subscription_id = :subscription_id';
+        const params = {
           subscription_id: filter.subscriptionId,
-        });
+        };
+        if (filtered) {
+          builder.andWhere(where, params);
+        } else {
+          builder.where(where, params);
+        }
       }
 
       operations = await builder

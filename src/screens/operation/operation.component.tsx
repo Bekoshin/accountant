@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Text, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Operation from '../../entities/Operation';
-import {Appbar, Button, Checkbox, TouchableRipple} from 'react-native-paper';
+import {Checkbox, TouchableRipple} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
@@ -12,23 +12,7 @@ import {convertDate} from '../../utils/DateUtils';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-
-type AppBarProps = {
-  title: string;
-  onBackButtonPress: () => void;
-  onSaveButtonPress: () => void;
-};
-
-const AppBar = (props: AppBarProps) => {
-  const {title, onBackButtonPress, onSaveButtonPress} = props;
-  return (
-    <Appbar.Header>
-      <Appbar.BackAction onPress={onBackButtonPress} />
-      <Appbar.Content title={title} />
-      <Appbar.Action icon="content-save" onPress={onSaveButtonPress} />
-    </Appbar.Header>
-  );
-};
+import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.Component';
 
 type OperationProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
@@ -169,7 +153,7 @@ const OperationScreen = (props: OperationProps) => {
 
   return (
     <View style={{flex: 1}}>
-      <AppBar
+      <GeneralAppBar
         onBackButtonPress={navigation.goBack}
         onSaveButtonPress={handleSaveButton}
         title={I18n.t(operation ? 'operation_screen' : 'new_operation_screen')}

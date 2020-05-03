@@ -60,7 +60,11 @@ const RootStack = () => {
         name="ParentCategories"
         component={ParentCategoriesScreen}
       />
-      <Stack.Screen name="Filters" component={FiltersScreen} />
+      <Stack.Screen
+        name="Filters"
+        component={FiltersScreen}
+        initialParams={{selectedCategories: undefined}}
+      />
     </Stack.Navigator>
   );
 };

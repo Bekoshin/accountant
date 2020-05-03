@@ -1,10 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
-
-import {Appbar} from 'react-native-paper';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
-import Category from '../../entities/Category';
 import styles from './filters.styles';
 import {convertDate} from '../../utils/DateUtils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -12,76 +9,61 @@ import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../App';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.Component';
 
-interface FiltersProps {
-  navigation: any;
+type FiltersScreenProps = {
+  route: RouteProp<RootStackParamList, 'Filters'>;
+  navigation: StackNavigationProp<RootStackParamList, 'Filters'>;
 
   filter: Filter | null;
-
   applyFilter: (filter: Filter | null) => void;
-}
+};
 
-interface FiltersState {
-  amountFrom: string;
-  amountTo: string;
-  dateFrom: Date | undefined;
-  dateTo: Date | undefined;
-  categories: Category[];
-  note: string;
-  datePickerVisible: boolean;
-  isDateFromInputPressed: boolean;
-  isDateToInputPressed: boolean;
-}
+const FiltersScreen = (props: FiltersScreenProps) => {
+  const {navigation, route, filter} = props;
+  const {selectedCategories} = route.params;
 
-class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
-  constructor(props: FiltersProps) {
-    super(props);
-    const {filter} = props;
-    if (filter) {
-      this.state = {
-        amountFrom: filter.amountFrom ? filter.amountFrom.toString() : '',
-        amountTo: filter.amountTo ? filter.amountTo.toString() : '',
-        dateFrom: filter.dateFrom,
-        dateTo: filter.dateTo,
-        categories: filter.categories,
-        note: filter.note,
-        datePickerVisible: false,
-        isDateFromInputPressed: false,
-        isDateToInputPressed: false,
-      };
-    } else {
-      this.state = {
-        amountFrom: '',
-        amountTo: '',
-        dateFrom: undefined,
-        dateTo: undefined,
-        categories: [],
-        note: '',
-        datePickerVisible: false,
-        isDateFromInputPressed: false,
-        isDateToInputPressed: false,
-      };
+  const [categories, setCategories] = useState(filter ? filter.categories : []);
+  const [dateFrom, setDateFrom] = useState(
+    filter ? filter.dateFrom : undefined,
+  );
+  const [dateTo, setDateTo] = useState(filter ? filter.dateTo : undefined);
+  const [amountFrom, setAmountFrom] = useState(
+    filter ? (filter.amountFrom ? filter.amountFrom.toString() : '') : '',
+  );
+  const [amountTo, setAmountTo] = useState(
+    filter ? (filter.amountTo ? filter.amountTo.toString() : '') : '',
+  );
+  const [note, setNote] = useState(filter ? filter.note : '');
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [isDateFromInputPressed, setIsDateFromInputPressed] = useState(false);
+  const [isDateToInputPressed, setIsDateToInputPressed] = useState(false);
+
+  useEffect(() => {
+    if (selectedCategories) {
+      setCategories(selectedCategories);
     }
-  }
+  }, [selectedCategories]);
 
-  static navigationOptions = () => {
-    return {
-      header: null,
-    };
+  const clearAllCategories = () => {
+    setCategories([]);
   };
 
-  private handleApplyButton = () => {
-    const {
-      amountFrom,
-      amountTo,
-      dateFrom,
-      dateTo,
-      categories,
-      note,
-    } = this.state;
-    let filter: Filter | null = null;
-    if (this.isFilterNotEmpty()) {
-      filter = new Filter(
+  const clearDateFrom = () => {
+    setDateFrom(undefined);
+  };
+
+  const clearDateTo = () => {
+    setDateTo(undefined);
+  };
+
+  const handleSaveButton = () => {
+    let newFilter: Filter | null = null;
+    if (isFilterNotEmpty()) {
+      newFilter = new Filter(
         amountFrom ? parseFloat(amountFrom) : undefined,
         amountTo ? parseFloat(amountTo) : undefined,
         categories,
@@ -91,21 +73,13 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
         undefined,
       );
     }
-    if (this.props.filter !== filter) {
-      this.props.applyFilter(filter);
+    if (newFilter !== filter) {
+      props.applyFilter(newFilter);
     }
-    this.props.navigation.goBack();
+    navigation.goBack();
   };
 
-  isFilterNotEmpty = () => {
-    const {
-      amountFrom,
-      amountTo,
-      dateFrom,
-      dateTo,
-      categories,
-      note,
-    } = this.state;
+  const isFilterNotEmpty = () => {
     return (
       amountFrom ||
       amountTo ||
@@ -116,181 +90,46 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
     );
   };
 
-  private changeAmountFrom = (amount: string) => {
+  const handleDateFromInputPress = () => {
+    setIsDateFromInputPressed(true);
+    setDatePickerVisible(true);
+  };
+
+  const handleDateToInputPress = () => {
+    setIsDateToInputPressed(true);
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+    setIsDateFromInputPressed(false);
+    setIsDateToInputPressed(false);
+  };
+
+  const changeAmountFrom = (amount: string) => {
     if (amount.match(/^\d*\.?\d*$/)) {
-      this.setState({
-        amountFrom: amount,
-      });
+      setAmountFrom(amount);
     }
   };
 
-  private changeAmountTo = (amount: string) => {
+  const changeAmountTo = (amount: string) => {
     if (amount.match(/^\d*\.?\d*$/)) {
-      this.setState({
-        amountTo: amount,
-      });
+      setAmountTo(amount);
     }
   };
 
-  private changeCategories = (categories: Category[]) => {
-    this.setState({categories: categories});
-  };
-
-  private changeNote = (note: string) => {
-    this.setState({note: note});
-  };
-
-  private changeDate = (date: Date) => {
-    const {isDateFromInputPressed, isDateToInputPressed} = this.state;
+  const changeDate = (date: Date) => {
     if (isDateFromInputPressed) {
-      this.changeDateFrom(date);
+      setDateFrom(date);
+      setIsDateFromInputPressed(false);
     } else if (isDateToInputPressed) {
-      this.changeDateTo(date);
+      setDateTo(date);
+      setIsDateToInputPressed(false);
     }
+    setDatePickerVisible(false);
   };
 
-  private changeDateFrom = (date: Date | undefined) => {
-    this.setState({
-      isDateFromInputPressed: false,
-      datePickerVisible: false,
-      dateFrom: date,
-    });
-  };
-
-  private changeDateTo = (date: Date | undefined) => {
-    this.setState({
-      isDateToInputPressed: false,
-      datePickerVisible: false,
-      dateTo: date,
-    });
-  };
-
-  handleDateFromInputPress = () => {
-    this.setState({isDateFromInputPressed: true, datePickerVisible: true});
-  };
-
-  handleDateToInputPress = () => {
-    this.setState({isDateToInputPressed: true, datePickerVisible: true});
-  };
-
-  hideDatePicker = () => {
-    this.setState({
-      datePickerVisible: false,
-      isDateFromInputPressed: false,
-      isDateToInputPressed: false,
-    });
-  };
-
-  componentDidMount() {
-    console.log('FILTERS DID MOUNT');
-  }
-
-  componentWillUnmount() {
-    console.log('FILTERS WILL UNMOUNT');
-  }
-
-  render() {
-    const {
-      amountFrom,
-      amountTo,
-      categories,
-      dateFrom,
-      dateTo,
-      note,
-      datePickerVisible,
-      isDateFromInputPressed,
-    } = this.state;
-    const {navigation} = this.props;
-    return (
-      <View style={{flex: 1}}>
-        {this.renderAppBar()}
-        <View style={styles.mainContainer}>
-          <ScrollView>
-            <Input
-              label={I18n.t('label_category')}
-              value={this.createCategoriesString()}
-              editable={false}
-              onClearPress={() => this.changeCategories([])}
-              onInputPress={() =>
-                navigation.navigate('Categories', {
-                  setCategories: this.changeCategories,
-                  selectedCategories: categories,
-                })
-              }
-            />
-            <View style={styles.rowContainer}>
-              <Input
-                style={styles.leftInput}
-                label={I18n.t('label_amount_from')}
-                value={amountFrom}
-                keyboardType="numeric"
-                selectTextOnFocus={true}
-                onChangeText={this.changeAmountFrom}
-              />
-              <Input
-                style={styles.rightInput}
-                label={I18n.t('label_amount_to')}
-                value={amountTo}
-                keyboardType="numeric"
-                selectTextOnFocus={true}
-                onChangeText={this.changeAmountTo}
-              />
-            </View>
-            <View style={styles.rowContainer}>
-              <Input
-                style={styles.leftInput}
-                label={I18n.t('label_date_from')}
-                editable={false}
-                value={convertDate(dateFrom)}
-                onClearPress={() => this.changeDateFrom(undefined)}
-                onInputPress={this.handleDateFromInputPress}
-              />
-              <Input
-                style={styles.rightInput}
-                label={I18n.t('label_date_to')}
-                editable={false}
-                value={convertDate(dateTo)}
-                onClearPress={() => this.changeDateTo(undefined)}
-                onInputPress={this.handleDateToInputPress}
-              />
-            </View>
-            <Input
-              label={I18n.t('label_note')}
-              value={note}
-              onChangeText={this.changeNote}
-              multiline={true}
-            />
-          </ScrollView>
-          <DateTimePickerModal
-            date={isDateFromInputPressed ? dateFrom : dateTo}
-            isVisible={datePickerVisible}
-            mode="date"
-            maximumDate={new Date()}
-            onConfirm={this.changeDate}
-            onCancel={this.hideDatePicker}
-            headerTextIOS={I18n.t('label_choose_date')}
-            cancelTextIOS={I18n.t('action_cancel')}
-            confirmTextIOS={I18n.t('action_confirm')}
-            locale={I18n.t('locale')}
-          />
-        </View>
-      </View>
-    );
-  }
-
-  renderAppBar() {
-    const {navigation} = this.props;
-    return (
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={I18n.t('filters_screen')} />
-        <Appbar.Action icon="content-save" onPress={this.handleApplyButton} />
-      </Appbar.Header>
-    );
-  }
-
-  createCategoriesString() {
-    const {categories} = this.state;
+  const createCategoriesString = () => {
     let string = '';
     for (let i = 0; i < categories.length; i++) {
       string += I18n.t(categories[i].name, {defaultValue: categories[i].name});
@@ -299,8 +138,88 @@ class FiltersScreen extends React.PureComponent<FiltersProps, FiltersState> {
       }
     }
     return string;
-  }
-}
+  };
+
+  return (
+    <View style={{flex: 1}}>
+      <GeneralAppBar
+        onBackButtonPress={navigation.goBack}
+        onSaveButtonPress={handleSaveButton}
+        title={I18n.t('filters_screen')}
+      />
+      <View style={styles.mainContainer}>
+        <ScrollView>
+          <Input
+            label={I18n.t('label_category')}
+            value={createCategoriesString()}
+            editable={false}
+            onClearPress={clearAllCategories}
+            onInputPress={() =>
+              navigation.navigate('Categories', {
+                selectedCategories: categories,
+                canSetSeveralCategory: true,
+              })
+            }
+          />
+          <View style={styles.rowContainer}>
+            <Input
+              style={styles.leftInput}
+              label={I18n.t('label_amount_from')}
+              value={amountFrom}
+              keyboardType="numeric"
+              selectTextOnFocus={true}
+              onChangeText={changeAmountFrom}
+            />
+            <Input
+              style={styles.rightInput}
+              label={I18n.t('label_amount_to')}
+              value={amountTo}
+              keyboardType="numeric"
+              selectTextOnFocus={true}
+              onChangeText={changeAmountTo}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            <Input
+              style={styles.leftInput}
+              label={I18n.t('label_date_from')}
+              editable={false}
+              value={convertDate(dateFrom)}
+              onClearPress={clearDateFrom}
+              onInputPress={handleDateFromInputPress}
+            />
+            <Input
+              style={styles.rightInput}
+              label={I18n.t('label_date_to')}
+              editable={false}
+              value={convertDate(dateTo)}
+              onClearPress={clearDateTo}
+              onInputPress={handleDateToInputPress}
+            />
+          </View>
+          <Input
+            label={I18n.t('label_note')}
+            value={note}
+            onChangeText={setNote}
+            multiline={true}
+          />
+        </ScrollView>
+        <DateTimePickerModal
+          date={isDateFromInputPressed ? dateFrom : dateTo}
+          isVisible={datePickerVisible}
+          mode="date"
+          maximumDate={new Date()}
+          onConfirm={changeDate}
+          onCancel={hideDatePicker}
+          headerTextIOS={I18n.t('label_choose_date')}
+          cancelTextIOS={I18n.t('action_cancel')}
+          confirmTextIOS={I18n.t('action_confirm')}
+          locale={I18n.t('locale')}
+        />
+      </View>
+    </View>
+  );
+};
 
 const mapStateToProps = (state: AppState) => ({
   filter: state.homeReducer.filter,

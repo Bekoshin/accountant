@@ -31,7 +31,7 @@ import {
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
-import {RootStackParamList, TabStackParamList} from '../../App';
+import {RootStackParamList} from '../../App';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -51,26 +51,7 @@ type HomeProps = {
 };
 
 const HomeScreen = (props: HomeProps) => {
-  // constructor(props: HomeProps) {
-  //   super(props);
-  //   const selectedDate = moment();
-  //   const selectedIndex = 1;
-  //   const filteredOperations = filterOperationsByDate(
-  //     this.props.operations,
-  //     selectedDate,
-  //     UNITS_OF_DATE[selectedIndex],
-  //   );
-  //   const operationsMap = groupByDate(filteredOperations);
-  //   this.state = {
-  //     // total: calculateTotalAmount(filteredOperations),
-  //     searchMode: false,
-  //     menuAnchorX: 0,
-  //     menuAnchorY: 0,
-  //     selectedOperation: null,
-  //   };
-  // }
-
-  const {operations, navigation, filter, applyFilter, deleteOperation} = props;
+  const {operations, navigation, filter} = props;
 
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [selectedDate, setSelectedDate] = useState(moment());
@@ -230,7 +211,7 @@ const HomeScreen = (props: HomeProps) => {
           title={I18n.t('action_drop_filters')}
           onPress={async () => {
             hideMoreMenu();
-            await applyFilter(null);
+            await props.applyFilter(null);
           }}
         />
       );
@@ -277,9 +258,9 @@ const HomeScreen = (props: HomeProps) => {
     }
   };
 
-  const renderOperations = (operations: Operation[]) => {
+  const renderOperations = (groupedOperations: Operation[]) => {
     let operationComponents = [];
-    for (let operation of operations) {
+    for (let operation of groupedOperations) {
       let title;
       if (groupedBy === 'date') {
         title = I18n.t(operation.category.name, {
@@ -302,7 +283,7 @@ const HomeScreen = (props: HomeProps) => {
               const x = evt.nativeEvent.pageX;
               const y = evt.nativeEvent.pageY;
               setMenuAnchor({x: x, y: y});
-              setOperationMenuVisible(true);
+              showOperationMenu();
               setSelectedOperation(operation);
             }) as () => void
           }
@@ -362,7 +343,7 @@ const HomeScreen = (props: HomeProps) => {
         onPress: () => {
           console.log('OPERATION FOR DELETE: ', selectedOperation);
           if (selectedOperation) {
-            deleteOperation(selectedOperation);
+            props.deleteOperation(selectedOperation);
           }
         },
       },
