@@ -13,6 +13,7 @@ import I18n from '../../i18n/i18n';
 
 import styles from './styles';
 import IMAGES from '../../images';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export interface InputProps {
   style?: any | {};
@@ -270,7 +271,7 @@ export default class Input extends React.PureComponent<InputProps> {
               }
             }
           }}>
-          <Image resizeMode="contain" source={IMAGES.CANCEL} />
+          <Icon size={24} name="close-circle" color="gray" />
         </TouchableOpacity>
       );
     }

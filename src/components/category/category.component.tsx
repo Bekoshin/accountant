@@ -118,7 +118,7 @@ export const CategoryComponent = (props: CategoryProps) => {
           </View>
           <ChildCategories />
         </View>
-        <CheckIcon isSelected={true} />
+        <CheckIcon isSelected={isSelected} />
       </View>
     </TouchableRipple>
   );

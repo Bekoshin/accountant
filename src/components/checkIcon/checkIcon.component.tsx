@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, View} from 'react-native';
-import IMAGES from '../../images';
+import {View} from 'react-native';
 import styles from './checkIcon.styles';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CheckIconProps {
   isSelected: boolean | undefined;
@@ -13,7 +13,7 @@ export const CheckIcon = (props: CheckIconProps) => {
   if (isSelected) {
     return (
       <View style={styles.mainContainer}>
-        <Image resizeMode="contain" source={IMAGES.CHECK} />
+        <Icon size={24} name="check-circle" color="white" />
       </View>
     );
   }

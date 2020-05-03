@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import moment from 'moment';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -87,63 +87,52 @@ const HomeScreen = (props: HomeProps) => {
     null,
   );
 
+  const updateVisibleOperations = useCallback(
+    (date: moment.Moment, index: number, attribute?: GropedBy) => {
+      console.log('UPDATE VISIBLE OPERATIONS');
+      const unitOfDate = UNITS_OF_DATE[index];
+      const filteredOperations = filterOperationsByDate(
+        operations,
+        date,
+        unitOfDate,
+      );
+      if (!attribute) {
+        attribute = groupedBy;
+      }
+      let newOperationsMap;
+      if (attribute === DATE) {
+        if (unitOfDate === 'year') {
+          newOperationsMap = groupByMonth(filteredOperations);
+        } else {
+          newOperationsMap = groupByDate(filteredOperations);
+        }
+      } else {
+        newOperationsMap = groupByCategory(filteredOperations);
+      }
+      setOperationsMap(newOperationsMap);
+      setTotal(calculateTotalAmount(filteredOperations));
+      setMoreMenuVisible(false);
+      setGroupedBy(attribute);
+    },
+    [groupedBy, operations],
+  );
+
+  useEffect(() => {
+    updateVisibleOperations(selectedDate, selectedIndex);
+  }, [selectedDate, selectedIndex, updateVisibleOperations]);
+
   const handleGroupBy = async (attribute: GropedBy) => {
     await updateVisibleOperations(selectedDate, selectedIndex, attribute);
   };
-
-  // componentDidUpdate(prevProps: HomeProps) {
-  //   console.log('COMPONENT DID UPDATE');
-  //   if (this.props.operations !== prevProps.operations) {
-  //     console.log('THIS PROPS  OPERATIONS: ', this.props.operations);
-  //     console.log('PREV PROPS  OPERATIONS: ', prevProps.operations);
-  //     this.updateVisibleOperations(
-  //       this.state.selectedDate,
-  //       this.state.selectedIndex,
-  //     );
-  //   }
-  // }
 
   const handleIndexChanged = (index: number) => {
     const currentDate = moment();
     setSelectedIndex(index);
     setSelectedDate(currentDate);
-    updateVisibleOperations(currentDate, index);
   };
 
   const handleDateChanged = (date: moment.Moment) => {
     setSelectedDate(date);
-    updateVisibleOperations(date, selectedIndex);
-  };
-
-  const updateVisibleOperations = (
-    date: moment.Moment,
-    index: number,
-    attribute?: GropedBy,
-  ) => {
-    console.log('UPDATE VISIBLE OPERATIONS');
-    const unitOfDate = UNITS_OF_DATE[index];
-    const filteredOperations = filterOperationsByDate(
-      operations,
-      date,
-      unitOfDate,
-    );
-    if (!attribute) {
-      attribute = groupedBy;
-    }
-    let newOperationsMap;
-    if (attribute === DATE) {
-      if (unitOfDate === 'year') {
-        newOperationsMap = groupByMonth(filteredOperations);
-      } else {
-        newOperationsMap = groupByDate(filteredOperations);
-      }
-    } else {
-      newOperationsMap = groupByCategory(filteredOperations);
-    }
-    setOperationsMap(newOperationsMap);
-    setTotal(calculateTotalAmount(filteredOperations));
-    setMoreMenuVisible(false);
-    setGroupedBy(attribute);
   };
 
   const renderMainAppBar = () => {
@@ -271,7 +260,7 @@ const HomeScreen = (props: HomeProps) => {
         operationComponents.push(
           <List.Section key={key}>
             <List.Subheader>{subheader}</List.Subheader>
-            {renderOperations(operations)}
+            {renderOperations(tempOperations)}
           </List.Section>,
         );
       }
