@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import Category from '../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
-import ChildCategoryComponent from '../childCategory/childCategory.component';
+import {ChildCategoryComponent} from '../childCategory/childCategory.component';
 import I18n from '../../i18n/i18n';
 import {CheckIcon} from '../checkIcon/checkIcon.component';
 
@@ -77,7 +77,7 @@ export const CategoryComponent = (props: CategoryProps) => {
             <ChildCategoryComponent
               category={childCategory}
               key={childCategory.id}
-              onPress={onPressHandle(isSelected)}
+              onPress={onPressHandle(childCategoryIsSelected)}
               onLongPress={onLongPressHandle()}
               isSelected={childCategoryIsSelected}
               selectMode={isSelectMode}
