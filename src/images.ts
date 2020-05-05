@@ -1,8 +1,5 @@
 const IMAGES = {
   ADD: require('../assets/images/add.png'),
-  ERROR: require('../assets/images/error.png'),
-  CANCEL: require('../assets/images/cancel.png'),
-  CHECK: require('../assets/images/check_circle.png'),
 
   PETROL: require('../assets/images/petrol.png'),
   TAXI: require('../assets/images/taxi.png'),

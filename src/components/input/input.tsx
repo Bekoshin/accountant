@@ -249,7 +249,7 @@ export default class Input extends React.PureComponent<InputProps> {
     };
     if (this.props.errorMessage) {
       return (
-        <Image style={iconStyle} resizeMode="contain" source={IMAGES.ERROR} />
+        <Icon style={iconStyle} size={24} name="alert-circle" color="#E52117" />
       );
     } else if (
       this.props.value &&

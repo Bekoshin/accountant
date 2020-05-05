@@ -13,7 +13,7 @@ import {
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
-import NoExpensesComponent from '../../components/noExpenses/noExpenses.Component';
+import {NoExpensesComponent} from '../../components/noExpenses/noExpenses.Component';
 import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import {DateSelector} from '../../components/dateSelector/dateSelector.component';
