@@ -175,6 +175,7 @@ const OperationScreen = (props: OperationProps) => {
                 hideCategoryError();
                 navigation.navigate('Categories', {
                   canSetSeveralCategory: false,
+                  previousScreen: 'Operation',
                 });
               }}
             />

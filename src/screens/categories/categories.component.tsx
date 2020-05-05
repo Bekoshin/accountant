@@ -24,7 +24,7 @@ type CategoriesProps = {
 
 const CategoriesScreen = (props: CategoriesProps) => {
   const {navigation, route, categories, deleteCategories} = props;
-  const {canSetSeveralCategory} = route.params;
+  const {canSetSeveralCategory, previousScreen} = route.params;
 
   const [selectedCategories, setSelectedCategories] = useState(
     route.params.selectedCategories || [],
@@ -43,7 +43,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
   };
 
   const handleCategoryPress = (category: Category) => {
-    navigation.navigate('Operation', {selectedCategory: category});
+    navigation.navigate(previousScreen, {selectedCategory: category});
   };
 
   const handleDeleteButton = () => {

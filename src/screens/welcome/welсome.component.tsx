@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
@@ -36,6 +36,30 @@ const WelcomeScreen = (props: WelcomeProps) => {
     createOperation,
   } = props;
 
+  const [storageConnected, setStorageConnected] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const _storageHandler: StorageHandler = new StorageHandler();
+      await _storageHandler.connect();
+      setStorageConnected(true);
+      await _storageHandler.initCategoryRepo();
+      await _storageHandler.initOperationRepo();
+      await _storageHandler.initSubscriptionRepo();
+      console.log('WELCOME. STORAGE HANDLER INITIALIZED');
+
+      await loadAllOperations(_storageHandler);
+      await loadAllCategories(_storageHandler);
+      await loadAllSubscriptions(_storageHandler);
+    };
+
+    loadData();
+  }, [
+    loadAllCategories,
+    loadAllOperations,
+    loadAllSubscriptions,
+  ]);
+
   useEffect(() => {
     const createTodaysMonthlyOperations = async () => {
       for (let subscription of subscriptions) {
@@ -46,27 +70,12 @@ const WelcomeScreen = (props: WelcomeProps) => {
           createOperation(operation);
         }
       }
-    };
-
-    const loadData = async () => {
-      const _storageHandler: StorageHandler = new StorageHandler();
-      await _storageHandler.connect();
-      await _storageHandler.initCategoryRepo();
-      await _storageHandler.initOperationRepo();
-      await _storageHandler.initSubscriptionRepo();
-      console.log('WELCOME. STORAGE HANDLER INITIALIZED');
-
-      await loadAllOperations(_storageHandler);
-      await loadAllCategories(_storageHandler);
-      await loadAllSubscriptions(_storageHandler);
-
-      await createTodaysMonthlyOperations();
-
       await setInitialized(true);
     };
-
-    loadData();
-  }, []);
+    if (storageConnected) {
+      createTodaysMonthlyOperations();
+    }
+  }, [createOperation, setInitialized, storageConnected, subscriptions]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

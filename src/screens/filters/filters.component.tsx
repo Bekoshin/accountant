@@ -157,6 +157,7 @@ const FiltersScreen = (props: FiltersScreenProps) => {
             onInputPress={() =>
               navigation.navigate('Categories', {
                 selectedCategories: categories,
+                previousScreen: 'Filters',
                 canSetSeveralCategory: true,
               })
             }
