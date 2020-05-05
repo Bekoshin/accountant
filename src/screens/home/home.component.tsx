@@ -16,7 +16,7 @@ import Operation from '../../entities/Operation';
 import NoExpensesComponent from '../../components/noExpenses/noExpenses.Component';
 import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import DateSelector from '../../components/dateSelector/dateSelector.Component';
+import DateSelector from '../../components/dateSelector/dateSelector.component';
 import I18n from '../../i18n/i18n';
 import {convertDate, getMonthName} from '../../utils/DateUtils';
 import {

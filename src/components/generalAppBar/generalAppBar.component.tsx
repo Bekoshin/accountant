@@ -4,7 +4,7 @@ import React from 'react';
 type AppBarProps = {
   title: string;
   onBackButtonPress: () => void;
-  onSaveButtonPress: () => void;
+  onSaveButtonPress?: () => void;
 };
 
 export const GeneralAppBar = (props: AppBarProps) => {
@@ -13,7 +13,9 @@ export const GeneralAppBar = (props: AppBarProps) => {
     <Appbar.Header>
       <Appbar.BackAction onPress={onBackButtonPress} />
       <Appbar.Content title={title} />
-      <Appbar.Action icon="content-save" onPress={onSaveButtonPress} />
+      {onSaveButtonPress ? (
+        <Appbar.Action icon="content-save" onPress={onSaveButtonPress} />
+      ) : null}
     </Appbar.Header>
   );
 };

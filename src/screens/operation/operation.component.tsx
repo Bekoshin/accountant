@@ -12,7 +12,7 @@ import {convertDate} from '../../utils/DateUtils';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.Component';
+import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
 
 type OperationProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
@@ -20,20 +20,6 @@ type OperationProps = {
 
   saveOperation: (operation: Operation) => void;
 };
-
-interface OperationState {
-  amount: string;
-  category: Category | null;
-  timestamp: Date;
-  note: string;
-  isIgnored: boolean;
-
-  amountError: string;
-  categoryError: string;
-  dateError: string;
-
-  datePickerVisible: boolean;
-}
 
 const OperationScreen = (props: OperationProps) => {
   const {operation, selectedCategory} = props.route.params;

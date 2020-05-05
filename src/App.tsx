@@ -35,7 +35,11 @@ export type RootStackParamList = {
   Operation: {operation?: Operation; selectedCategory?: Category};
   Subscription: undefined;
   Categories: {canSetSeveralCategory: boolean; selectedCategories?: Category[]};
-  Category: {category?: Category; parentCategory?: Category};
+  Category: {
+    category?: Category;
+    parentCategory?: Category;
+    selectedParentCategory?: Category;
+  };
   ParentCategories: undefined;
   Filters: {selectedCategories?: Category[]};
 };

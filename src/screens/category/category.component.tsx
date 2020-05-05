@@ -1,8 +1,7 @@
-import React from 'react';
-import {View, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, ScrollView, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
-import {Button} from 'react-native-paper';
 import Category from '../../entities/Category';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
@@ -10,59 +9,57 @@ import StorageHandler from '../../storage/StorageHandler';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../App';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
 
-interface CategoryProps {
-  navigation: any;
-  categories: Category[];
+type CategoryScreenProps = {
+  route: RouteProp<RootStackParamList, 'Category'>;
+  navigation: StackNavigationProp<RootStackParamList, 'Category'>;
   saveCategory: (category: Category) => void;
-}
+};
 
-interface CategoryState {
-  name: string;
-  parentCategory: Category | null;
-  nameError: string;
-}
+const CategoryScreen = (props: CategoryScreenProps) => {
+  const {navigation, route, saveCategory} = props;
+  const params = route.params;
+  const {category, selectedParentCategory} = params;
 
-class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
-  private readonly category: Category | undefined = undefined;
-  constructor(props: CategoryProps) {
-    super(props);
-    this.category = props.navigation.getParam('category');
-    const parentCategory = props.navigation.getParam('parentCategory');
-    this.state = {
-      name: this.category ? this.category.name : '',
-      parentCategory: this.category
-        ? this.category.parentCategory
-        : parentCategory
-        ? parentCategory
-        : null,
-      nameError: '',
-    };
-  }
+  const [name, setName] = useState<string>(category ? category.name : '');
+  const [parentCategory, setParentCategory] = useState<Category | null>(
+    category
+      ? category.parentCategory
+      : params.parentCategory
+      ? params.parentCategory
+      : null,
+  );
+  const [nameError, setNameError] = useState<string>('');
 
-  static navigationOptions = ({navigation}: any) => {
-    let params = navigation.state.params;
-    console.log('params: ', params);
-    return {
-      title: I18n.t(
-        params && params.category ? 'category_screen' : 'new_category_screen',
-      ),
-      headerRight: () => (
-        <Button onPress={() => params.saveButtonHandler()}>
-          {I18n.t('action_save')}
-        </Button>
-      ),
-    };
+  useEffect(() => {
+    if (selectedParentCategory) {
+      setParentCategory(selectedParentCategory);
+    }
+  }, [selectedParentCategory]);
+
+  const showNameError = () => {
+    setNameError(I18n.t('label_required'));
   };
 
-  handleSaveButton = async () => {
+  const hideNameError = () => {
+    setNameError('');
+  };
+
+  const handleParentCategoryInputPress = () => {
+    navigation.navigate('ParentCategories');
+  };
+
+  const handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {name, parentCategory} = this.state;
     if (name) {
       try {
         let category: Category;
-        if (this.category) {
-          category = this.category;
+        if (params.category) {
+          category = params.category;
         } else {
           category = new Category(name);
         }
@@ -70,74 +67,55 @@ class CategoryScreen extends React.PureComponent<CategoryProps, CategoryState> {
           //todo need check parentCategory for exist
           category.parentCategory = parentCategory;
         }
-        console.log('handle save button. category: ')
-        await this.props.saveCategory(category);
-        this.props.navigation.goBack();
+        console.log('handle save button. category: ');
+        await saveCategory(category);
+        navigation.goBack();
       } catch (error) {
         console.log('HANDLE SAVE BUTTON. ERROR: ', error);
       }
+    } else {
+      showNameError();
     }
   };
 
-  showNameError = () => {
-    this.setState({nameError: I18n.t('label_required')});
-  };
-
-  hideNameError = () => {
-    this.setState({nameError: ''});
-  };
-
-  changeParentCategory = (category: Category) => {
-    this.setState({parentCategory: category});
-  };
-
-  changeCategoryName = (name: string) => {
-    this.setState({name: name});
-  };
-
-  componentDidMount(): void {
-    this.props.navigation.setParams({saveButtonHandler: this.handleSaveButton});
-    console.log('CATEGORY DID MOUNT');
-  }
-
-  componentWillUnmount(): void {
-    console.log('CATEGORY WILL UNMOUNT');
-  }
-
-  render() {
-    const {name, parentCategory} = this.state;
-    return (
-      <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-        <ScrollView>
-          <Input
-            label="Наименование"
-            value={name}
-            required={true}
-            errorMessage={this.state.nameError}
-            onFocus={this.hideNameError}
-            onChangeText={this.changeCategoryName}
-          />
-          <Input
-            label="Parent category"
-            value={
-              parentCategory
-                ? I18n.t(parentCategory.name, {
-                    defaultValue: parentCategory.name,
-                  })
-                : ''
-            }
-            editable={false}
-            onInputPress={() => {
-              this.props.navigation.navigate('ParentCategories', {
-                setCategory: this.changeParentCategory,
-              });
-            }}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
-}
+  return (
+    <View style={{flex: 1}}>
+      <GeneralAppBar
+        title={I18n.t(
+          params && params.category ? 'category_screen' : 'new_category_screen',
+        )}
+        onBackButtonPress={navigation.goBack}
+        onSaveButtonPress={handleSaveButton}
+      />
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
+          <ScrollView>
+            <Input
+              label="Наименование"
+              value={name}
+              required={true}
+              errorMessage={nameError}
+              onFocus={hideNameError}
+              onChangeText={setName}
+            />
+            <Input
+              label="Parent category"
+              value={
+                parentCategory
+                  ? I18n.t(parentCategory.name, {
+                      defaultValue: parentCategory.name,
+                    })
+                  : ''
+              }
+              editable={false}
+              onInputPress={handleParentCategoryInputPress}
+            />
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+};
 
 const saveCategory = (
   category: Category,
