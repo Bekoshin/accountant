@@ -29,11 +29,12 @@ import FiltersScreen from './screens/filters/filters.component';
 import 'react-native-gesture-handler';
 import Operation from './entities/Operation';
 import Category from './entities/Category';
+import Subscription from './entities/Subscription';
 
 export type RootStackParamList = {
   Tab: undefined;
   Operation: {operation?: Operation; selectedCategory?: Category};
-  Subscription: undefined;
+  Subscription: {subscription?: Subscription; selectedCategory?: Category};
   Categories: {canSetSeveralCategory: boolean; selectedCategories?: Category[]};
   Category: {
     category?: Category;
@@ -56,8 +57,16 @@ const RootStack = () => {
       headerMode="none"
       initialRouteName="Tab">
       <Stack.Screen name="Tab" component={TabStack} />
-      <Stack.Screen name="Operation" component={OperationScreen} />
-      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+      <Stack.Screen
+        name="Operation"
+        component={OperationScreen}
+        initialParams={{operation: undefined}}
+      />
+      <Stack.Screen
+        name="Subscription"
+        component={SubscriptionScreen}
+        initialParams={{subscription: undefined}}
+      />
       <Stack.Screen name="Categories" component={CategoriesSreen} />
       <Stack.Screen name="Category" component={CategoryScreen} />
       <Stack.Screen

@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, ScrollView, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Input from '../../components/input/input';
@@ -10,194 +10,162 @@ import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Subscription from '../../entities/Subscription';
-import {Appbar} from 'react-native-paper';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../App';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
 
-interface SubscriptionProps {
-  navigation: any;
-
+type SubscriptionScreenProps = {
+  route: RouteProp<RootStackParamList, 'Subscription'>;
+  navigation: StackNavigationProp<RootStackParamList, 'Subscription'>;
   saveSubscription: (subscription: Subscription) => void;
-}
+};
 
-interface SubscriptionState {
-  name: string;
-  value: string;
-  category: Category | null;
-  day: string;
-  note: string;
+const SubscriptionScreen = (props: SubscriptionScreenProps) => {
+  const {navigation, route} = props;
+  const {subscription, selectedCategory} = route.params;
 
-  nameError: string;
-  valueError: string;
-  categoryError: string;
-  dayError: string;
-}
+  const [name, setName] = useState<string>(
+    subscription ? subscription.name : '',
+  );
+  const [value, setValue] = useState<string>(
+    subscription ? subscription.value.toString() : '',
+  );
+  const [category, setCategory] = useState<Category | null>(
+    subscription ? subscription.category : null,
+  );
+  const [day, setDay] = useState<string>(
+    subscription ? subscription.day.toString() : '',
+  );
+  const [note, setNote] = useState<string>(
+    subscription ? subscription.note : '',
+  );
+  const [nameError, setNameError] = useState<string>('');
+  const [valueError, setValueError] = useState<string>('');
+  const [categoryError, setCategoryError] = useState<string>('');
+  const [dayError, setDayError] = useState<string>('');
 
-class SubscriptionScreen extends React.PureComponent<
-  SubscriptionProps,
-  SubscriptionState
-> {
-  private readonly subscription: Subscription | undefined = undefined;
+  useEffect(() => {
+    if (selectedCategory) {
+      setCategory(selectedCategory);
+    }
+  }, [selectedCategory]);
 
-  constructor(props: SubscriptionProps) {
-    super(props);
-    this.subscription = props.navigation.getParam('subscription');
-    this.state = {
-      name: this.subscription ? this.subscription.name : '',
-      value: this.subscription ? this.subscription.value.toString() : '',
-      category: this.subscription ? this.subscription.category : null,
-      day: this.subscription ? this.subscription.day.toString() : '',
-      note: this.subscription ? this.subscription.note : '',
-      nameError: '',
-      valueError: '',
-      categoryError: '',
-      dayError: '',
-    };
-  }
-
-  static navigationOptions = () => {
-    return {
-      header: null,
-    };
+  const hideNameError = () => {
+    setNameError('');
   };
 
-  private handleSaveButton = async () => {
+  const showNameError = () => {
+    setNameError(I18n.t('label_required'));
+  };
+
+  const hideValueError = () => {
+    setValueError('');
+  };
+
+  const showValueError = () => {
+    setValueError(I18n.t('label_required'));
+  };
+
+  const hideCategoryError = () => {
+    setCategoryError('');
+  };
+
+  const showCategoryError = () => {
+    setCategoryError(I18n.t('label_required'));
+  };
+
+  const hideDayError = () => {
+    setDayError('');
+  };
+
+  const showDayError = () => {
+    setDayError(I18n.t('label_required'));
+  };
+
+  const changeValue = (newValue: string) => {
+    if (newValue.match(/^\d*\.?\d*$/)) {
+      setValue(newValue);
+    }
+  };
+
+  const changeDay = (newDay: string) => {
+    if (newDay.match(/^\d+$/)) {
+      const num = parseInt(newDay, 10);
+      if (num > 0 && num <= 31) {
+        setDay(newDay);
+      }
+    } else if (newDay === '') {
+      setDay(newDay);
+    }
+  };
+
+  const handleCategoryInputPress = () => {
+    hideCategoryError();
+    navigation.navigate('Categories', {canSetSeveralCategory: false});
+  };
+
+  const checkFields = () => {
+    let allFieldsFilled = true;
+    if (!name) {
+      allFieldsFilled = false;
+      showNameError();
+    }
+    if (!value || value === '0') {
+      allFieldsFilled = false;
+      showValueError();
+    }
+    if (!category) {
+      allFieldsFilled = false;
+      showCategoryError();
+    }
+    if (!day) {
+      allFieldsFilled = false;
+      showDayError();
+    }
+    return allFieldsFilled;
+  };
+
+  const handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
-    const {name, value, category, day, note} = this.state;
-    if (this.checkFields()) {
+    if (checkFields()) {
       try {
-        let subscription: Subscription;
-        subscription = new Subscription(
+        let newSubscription: Subscription;
+        newSubscription = new Subscription(
           name,
           category as Category,
           parseFloat(value),
           parseInt(day, 10),
           note,
-          this.subscription ? this.subscription.id : undefined,
+          subscription ? subscription.id : undefined,
         );
-        await this.props.saveSubscription(subscription);
-        await this.props.navigation.goBack();
+        await props.saveSubscription(newSubscription);
+        await navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
       }
     }
   };
 
-  private checkFields = () => {
-    const {name, value, category, day} = this.state;
-    let allFieldsFilled = true;
-    if (!name) {
-      allFieldsFilled = false;
-      this.showNameError();
-    }
-    if (!value || value === '0') {
-      allFieldsFilled = false;
-      this.showValueError();
-    }
-    if (!category) {
-      allFieldsFilled = false;
-      this.showCategoryError();
-    }
-    if (!day) {
-      allFieldsFilled = false;
-      this.showDayError();
-    }
-    return allFieldsFilled;
-  };
-
-  private hideNameError = () => {
-    this.setState({nameError: ''});
-  };
-
-  private showNameError = () => {
-    this.setState({nameError: I18n.t('label_required')});
-  };
-
-  private hideValueError = () => {
-    this.setState({valueError: ''});
-  };
-
-  private showValueError = () => {
-    this.setState({valueError: I18n.t('label_required')});
-  };
-
-  private hideCategoryError = () => {
-    this.setState({categoryError: ''});
-  };
-
-  private showCategoryError = () => {
-    this.setState({categoryError: I18n.t('label_required')});
-  };
-
-  private hideDayError = () => {
-    this.setState({dayError: ''});
-  };
-
-  private showDayError = () => {
-    this.setState({dayError: I18n.t('label_required')});
-  };
-
-  private changeName = (name: string) => {
-    this.setState({name: name});
-  };
-
-  private changeValue = (value: string) => {
-    if (value.match(/^\d*\.?\d*$/)) {
-      this.setState({
-        value: value,
-      });
-    }
-  };
-
-  private changeCategory = (category: Category | null) => {
-    this.setState({category: category});
-  };
-
-  private changeDay = (day: string) => {
-    if (day.match(/^\d+$/)) {
-      const num = parseInt(day, 10);
-      if (num > 0 && num <= 31) {
-        this.setState({day: day});
-      }
-    } else if (day === '') {
-      this.setState({day: day});
-    }
-  };
-
-  private changeNote = (note: string) => {
-    this.setState({note: note});
-  };
-
-  componentDidMount() {
-    console.log('OPERATION DID MOUNT');
-  }
-
-  componentWillUnmount() {
-    console.log('OPERATION WILL UNMOUNT');
-  }
-
-  render() {
-    const {
-      name,
-      value,
-      category,
-      day,
-      note,
-      nameError,
-      valueError,
-      categoryError,
-      dayError,
-    } = this.state;
-    return (
-      <View style={{flex: 1}}>
-        {this.renderAppBar()}
+  return (
+    <View style={{flex: 1}}>
+      <GeneralAppBar
+        title={I18n.t(
+          subscription ? 'subscription_screen' : 'new_subscription_screen',
+        )}
+        onBackButtonPress={navigation.goBack}
+        onSaveButtonPress={handleSaveButton}
+      />
+      <SafeAreaView style={{flex: 1}}>
         <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-          <ScrollView>
+          <ScrollView bounces={false}>
             <Input
               label={I18n.t('label_name')}
               value={name}
               required={true}
               errorMessage={nameError}
-              onFocus={this.hideNameError}
-              onChangeText={this.changeName}
+              onFocus={hideNameError}
+              onChangeText={setName}
             />
             <Input
               label={I18n.t('label_value')}
@@ -206,8 +174,8 @@ class SubscriptionScreen extends React.PureComponent<
               required={true}
               selectTextOnFocus={true}
               errorMessage={valueError}
-              onFocus={this.hideValueError}
-              onChangeText={this.changeValue}
+              onFocus={hideValueError}
+              onChangeText={changeValue}
             />
             <Input
               label={I18n.t('label_category')}
@@ -221,14 +189,9 @@ class SubscriptionScreen extends React.PureComponent<
               required={true}
               editable={false}
               errorMessage={categoryError}
-              onFocus={this.hideCategoryError}
+              onFocus={hideCategoryError}
               hideClearButton={true}
-              onInputPress={() => {
-                this.hideCategoryError();
-                this.props.navigation.navigate('Categories', {
-                  setCategory: this.changeCategory,
-                });
-              }}
+              onInputPress={handleCategoryInputPress}
             />
             <Input
               label={I18n.t('label_day')}
@@ -237,41 +200,21 @@ class SubscriptionScreen extends React.PureComponent<
               required={true}
               selectTextOnFocus={true}
               errorMessage={dayError}
-              onFocus={this.hideDayError}
-              onChangeText={this.changeDay}
+              onFocus={hideDayError}
+              onChangeText={changeDay}
             />
             <Input
               label={I18n.t('label_note')}
               value={note}
-              onChangeText={this.changeNote}
+              onChangeText={setNote}
               multiline={true}
             />
           </ScrollView>
         </View>
-      </View>
-    );
-  }
-
-  renderAppBar() {
-    const {navigation} = this.props;
-    return (
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content
-          title={I18n.t(
-            this.subscription
-              ? 'subscription_screen'
-              : 'new_subscription_screen',
-          )}
-        />
-        <Appbar.Action
-          icon="content-save"
-          onPress={(() => this.handleSaveButton()) as () => void}
-        />
-      </Appbar.Header>
-    );
-  }
-}
+      </SafeAreaView>
+    </View>
+  );
+};
 
 const saveSubscription = (
   subscription: Subscription,

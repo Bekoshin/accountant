@@ -365,9 +365,7 @@ const HomeScreen = (props: HomeProps) => {
       />
       {renderOperationSections()}
       <Fab
-        addOperation={() =>
-          navigation.navigate('Operation', {operation: undefined})
-        }
+        addOperation={() => navigation.navigate('Operation')}
         addSubscription={() => navigation.navigate('Subscription')}
       />
       {renderOperationMenu()}
