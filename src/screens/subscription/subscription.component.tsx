@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, SafeAreaView} from 'react-native';
+import {View, ScrollView, SafeAreaView, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Input from '../../components/input/input';
@@ -14,9 +14,12 @@ import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
-import {createOperationBySubscription, needToCreateOperation} from "../../utils/SubscriptionUtils";
-import Operation from "../../entities/Operation";
-import {saveOperation} from "../../utils/OperationUtils";
+import {
+  createOperationBySubscription,
+  needToCreateOperation,
+} from '../../utils/SubscriptionUtils';
+import Operation from '../../entities/Operation';
+import {saveOperation} from '../../utils/OperationUtils';
 
 type SubscriptionScreenProps = {
   route: RouteProp<RootStackParamList, 'Subscription'>;
@@ -148,12 +151,25 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
         );
         await props.saveSubscription(newSubscription);
         if (await needToCreateOperation(newSubscription)) {
-          const operation: Operation = createOperationBySubscription(
-            newSubscription,
-          );
-          createOperation(operation);
+          const message = I18n.t('message_create_operation');
+          Alert.alert(I18n.t('label_operation_adding'), message, [
+            {
+              text: I18n.t('action_no'),
+              onPress: navigation.goBack,
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => {
+                const operation: Operation = createOperationBySubscription(
+                  newSubscription,
+                );
+                createOperation(operation);
+                navigation.goBack();
+              },
+            },
+          ]);
         }
-        await navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
       }
