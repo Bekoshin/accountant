@@ -37,7 +37,7 @@ export type RootStackParamList = {
   Subscription: {subscription?: Subscription; selectedCategory?: Category};
   Categories: {
     canSetSeveralCategory: boolean;
-    previousScreen: 'Subscription' | 'Operation';
+    previousScreen: 'Subscription' | 'Operation' | 'Filters';
     selectedCategories?: Category[];
   };
   Category: {

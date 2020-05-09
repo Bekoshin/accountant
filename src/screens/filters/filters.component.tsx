@@ -12,7 +12,7 @@ import {applyFilter} from '../../utils/FilterUtils';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
 
 type FiltersScreenProps = {
   route: RouteProp<RootStackParamList, 'Filters'>;

@@ -32,12 +32,13 @@ import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
 import {RootStackParamList} from '../../App';
+import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar.component';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
-const DATE = 'date';
-const CATEGORY = 'category';
-type GropedBy = 'date' | 'category';
+export const DATE = 'date';
+export const CATEGORY = 'category';
+export type GropedBy = 'date' | 'category';
 
 type HomeProps = {
   route: RouteProp<RootStackParamList, 'Tab'>;
@@ -102,7 +103,8 @@ const HomeScreen = (props: HomeProps) => {
     updateVisibleOperations(selectedDate, selectedIndex);
   }, [selectedDate, selectedIndex, updateVisibleOperations]);
 
-  const handleGroupBy = async (attribute: GropedBy) => {
+  const handleGroupBy = async () => {
+    const attribute = groupedBy === DATE ? CATEGORY : DATE;
     await updateVisibleOperations(selectedDate, selectedIndex, attribute);
   };
 
@@ -114,48 +116,6 @@ const HomeScreen = (props: HomeProps) => {
 
   const handleDateChanged = (date: moment.Moment) => {
     setSelectedDate(date);
-  };
-
-  const renderMainAppBar = () => {
-    return (
-      <Appbar.Header>
-        <Appbar.Content
-          title={
-            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
-          }
-        />
-        <Appbar.Action icon="magnify" onPress={showSearchMode} />
-        <Menu
-          onDismiss={hideMoreMenu}
-          visible={moreMenuVisible}
-          anchor={
-            <Appbar.Action
-              color="white"
-              icon="dots-vertical"
-              onPress={showMoreMenu}
-            />
-          }>
-          <Menu.Item
-            title={
-              groupedBy === DATE
-                ? I18n.t('action_group_by_category')
-                : I18n.t('action_group_by_date')
-            }
-            onPress={() => handleGroupBy(groupedBy === DATE ? CATEGORY : DATE)}
-          />
-          <Menu.Item
-            title={I18n.t(
-              filter ? 'action_change_filters' : 'action_set_filters',
-            )}
-            onPress={() => {
-              hideMoreMenu();
-              navigation.navigate('Filters');
-            }}
-          />
-          {renderDropFiltersButton()}
-        </Menu>
-      </Appbar.Header>
-    );
   };
 
   const showMoreMenu = () => {
@@ -202,20 +162,6 @@ const HomeScreen = (props: HomeProps) => {
 
   const hideSearchMode = () => {
     setSearchMode(false);
-  };
-
-  const renderDropFiltersButton = () => {
-    if (filter) {
-      return (
-        <Menu.Item
-          title={I18n.t('action_drop_filters')}
-          onPress={async () => {
-            hideMoreMenu();
-            await props.applyFilter(null);
-          }}
-        />
-      );
-    }
   };
 
   const renderOperationSections = () => {
@@ -297,7 +243,11 @@ const HomeScreen = (props: HomeProps) => {
                 )
               : undefined
           }
-          right={() => <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>}
+          right={() => (
+            <View style={{justifyContent: 'center'}}>
+              <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>
+            </View>
+          )}
         />,
       );
     }
@@ -350,9 +300,36 @@ const HomeScreen = (props: HomeProps) => {
     ]);
   };
 
+  const handleFiltersButton = () => {
+    hideMoreMenu();
+    navigation.navigate('Filters');
+  };
+
+  const handleDropFiltersButton = async () => {
+    hideMoreMenu();
+    await props.applyFilter(null);
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      {searchMode ? renderSearchAppBar() : renderMainAppBar()}
+      {searchMode ? (
+        renderSearchAppBar()
+      ) : (
+        <HomeMainAppBar
+          title={
+            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
+          }
+          groupedBy={groupedBy}
+          hasFilter={!!filter}
+          menuVisible={moreMenuVisible}
+          onDropFiltersPress={handleDropFiltersButton}
+          onFilterPress={handleFiltersButton}
+          onGroupByPress={handleGroupBy}
+          onMenuButtonPress={showMoreMenu}
+          onMenuDismiss={hideMoreMenu}
+          onSearchButtonPress={showSearchMode}
+        />
+      )}
       <SegmentedControlTab
         values={['Неделя', 'Месяц', 'Год']}
         selectedIndex={selectedIndex}

@@ -7,7 +7,7 @@ import Category from '../../entities/Category';
 import I18n from '../../i18n/i18n';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
 
 type ParentCategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'ParentCategories'>;
