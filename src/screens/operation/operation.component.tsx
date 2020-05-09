@@ -24,6 +24,8 @@ type OperationProps = {
 const OperationScreen = (props: OperationProps) => {
   const {operation, selectedCategory} = props.route.params;
   const {navigation} = props;
+
+  const isBySubscription = operation ? !!operation.subscriptionId : false;
   const [amount, setAmount] = useState(
     operation ? operation.amount.toString() : '0',
   );
@@ -70,19 +72,19 @@ const OperationScreen = (props: OperationProps) => {
     setDateError(I18n.t('label_required'));
   };
 
-  const changeAmount = (amount: string) => {
-    if (amount.match(/^\d*\.?\d*$/)) {
-      setAmount(amount);
+  const changeAmount = (newAmount: string) => {
+    if (newAmount.match(/^\d*\.?\d*$/)) {
+      setAmount(newAmount);
     }
   };
 
-  const changeDate = (date: Date) => {
-    setDate(date);
+  const changeDate = (newDate: Date) => {
+    setDate(newDate);
     setDatePickerVisible(false);
   };
 
-  const changeNote = (note: string) => {
-    setNote(note);
+  const changeNote = (newNote: string) => {
+    setNote(newNote);
   };
 
   const changeIsIgnored = () => {
@@ -147,6 +149,18 @@ const OperationScreen = (props: OperationProps) => {
       <View style={{flex: 1, padding: 8}}>
         <SafeAreaView style={{flex: 1}}>
           <ScrollView>
+            {isBySubscription ? (
+              <View style={{alignItems: 'flex-end'}}>
+                <View
+                  style={{
+                    padding: 4,
+                    backgroundColor: 'orange',
+                    borderRadius: 6,
+                  }}>
+                  <Text>{I18n.t('label_by_subscription')}</Text>
+                </View>
+              </View>
+            ) : null}
             <Input
               label={I18n.t('label_amount')}
               value={amount}

@@ -29,6 +29,7 @@ export default {
   label_value: 'Стоимость',
   label_day: 'День',
   label_operation_adding: 'Добавление операции',
+  label_by_subscription: 'По подписке',
 
   operation_screen: 'Операция',
   new_operation_screen: 'Новая операция',

@@ -29,6 +29,7 @@ export default {
   label_value: 'Value',
   label_day: 'Day',
   label_operation_adding: 'Operation adding',
+  label_by_subscription: 'By subscription',
 
   operation_screen: 'Operation',
   new_operation_screen: 'New operation',
