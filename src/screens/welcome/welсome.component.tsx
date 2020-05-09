@@ -36,13 +36,12 @@ const WelcomeScreen = (props: WelcomeProps) => {
     createOperation,
   } = props;
 
-  const [storageConnected, setStorageConnected] = useState(false);
+  const [storageInitialized, setStorageInitialized] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       const _storageHandler: StorageHandler = new StorageHandler();
       await _storageHandler.connect();
-      setStorageConnected(true);
       await _storageHandler.initCategoryRepo();
       await _storageHandler.initOperationRepo();
       await _storageHandler.initSubscriptionRepo();
@@ -51,14 +50,12 @@ const WelcomeScreen = (props: WelcomeProps) => {
       await loadAllOperations(_storageHandler);
       await loadAllCategories(_storageHandler);
       await loadAllSubscriptions(_storageHandler);
+
+      setStorageInitialized(true);
     };
 
     loadData();
-  }, [
-    loadAllCategories,
-    loadAllOperations,
-    loadAllSubscriptions,
-  ]);
+  }, [loadAllCategories, loadAllOperations, loadAllSubscriptions]);
 
   useEffect(() => {
     const createTodaysMonthlyOperations = async () => {
@@ -72,10 +69,10 @@ const WelcomeScreen = (props: WelcomeProps) => {
       }
       await setInitialized(true);
     };
-    if (storageConnected) {
+    if (storageInitialized) {
       createTodaysMonthlyOperations();
     }
-  }, [createOperation, setInitialized, storageConnected, subscriptions]);
+  }, [createOperation, setInitialized, storageInitialized, subscriptions]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

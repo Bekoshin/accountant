@@ -14,15 +14,19 @@ import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {GeneralAppBar} from '../../components/generalAppBar/generalAppBar.component';
+import {createOperationBySubscription, needToCreateOperation} from "../../utils/SubscriptionUtils";
+import Operation from "../../entities/Operation";
+import {saveOperation} from "../../utils/OperationUtils";
 
 type SubscriptionScreenProps = {
   route: RouteProp<RootStackParamList, 'Subscription'>;
   navigation: StackNavigationProp<RootStackParamList, 'Subscription'>;
-  saveSubscription: (subscription: Subscription) => void;
+  saveSubscription: (subscription: Subscription) => Promise<void>;
+  createOperation: (operation: Operation) => void;
 };
 
 const SubscriptionScreen = (props: SubscriptionScreenProps) => {
-  const {navigation, route} = props;
+  const {navigation, route, createOperation} = props;
   const {subscription, selectedCategory} = route.params;
 
   const [name, setName] = useState<string>(
@@ -143,6 +147,12 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
           subscription ? subscription.id : undefined,
         );
         await props.saveSubscription(newSubscription);
+        if (await needToCreateOperation(newSubscription)) {
+          const operation: Operation = createOperationBySubscription(
+            newSubscription,
+          );
+          createOperation(operation);
+        }
         await navigation.goBack();
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);
@@ -221,12 +231,17 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
 
 const saveSubscription = (
   subscription: Subscription,
-): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+): ThunkAction<
+  Promise<void>,
+  AppState,
+  null,
+  Action<string>
+> => async dispatch => {
   let storageHandler = new StorageHandler();
   await storageHandler.initSubscriptionRepo();
   await storageHandler.saveSubscription(subscription);
   const subscriptions = await storageHandler.getAllSubscriptions();
-  dispatch({
+  await dispatch({
     type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
     subscriptions: subscriptions,
   });
@@ -239,5 +254,6 @@ export default connect(
   {
     saveSubscription: (subscription: Subscription) =>
       saveSubscription(subscription),
+    createOperation: (operation: Operation) => saveOperation(operation),
   },
 )(SubscriptionScreen);

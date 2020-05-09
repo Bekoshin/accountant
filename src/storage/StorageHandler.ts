@@ -216,7 +216,9 @@ export default class StorageHandler {
     }
   };
 
-  public saveSubscription = async (subscription: Subscription) => {
+  public saveSubscription = async (
+    subscription: Subscription,
+  ) => {
     if (this._subscriptionRepo) {
       await this._subscriptionRepo.save(subscription);
     }

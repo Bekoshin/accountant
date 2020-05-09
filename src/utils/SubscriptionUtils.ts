@@ -63,7 +63,7 @@ export const needToCreateOperation = async (subscription: Subscription) => {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
 
-  return !!(
+  return (
     todayIsRecordDay(currentDay, subscription.day) &&
     (await operationNotYetCreatedToday(currentDate, subscription.id as number))
   );
