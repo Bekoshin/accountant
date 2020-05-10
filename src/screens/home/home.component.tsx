@@ -5,7 +5,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {
   Alert,
   GestureResponderEvent,
-  Image,
   ScrollView,
   Text,
   View,
@@ -33,6 +32,7 @@ import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
 import {RootStackParamList} from '../../App';
 import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar.component';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -234,11 +234,12 @@ const HomeScreen = (props: HomeProps) => {
             }) as () => void
           }
           left={
-            operation.category.image
+            operation.category.iconName
               ? () => (
-                  <Image
-                    source={operation.category.image as number}
-                    style={{width: 40, height: 40}}
+                  <Icon
+                    name={operation.category.iconName}
+                    size={48}
+                    color="black"
                   />
                 )
               : undefined

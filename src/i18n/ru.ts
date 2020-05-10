@@ -53,7 +53,8 @@ export default {
   action_confirm: 'Подтвердить',
   action_add_subscription: 'Добавить подписку',
   action_add_operation: 'Добавить операцию',
-  action_no: 'No',
+  action_no: 'Нет',
+  action_add: 'Добавить',
 
   placeholder_search: 'Поиск',
 

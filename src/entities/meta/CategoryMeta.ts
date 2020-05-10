@@ -18,9 +18,9 @@ export class CategoryMeta {
       type: 'integer',
       isNullable: true,
     },
-    image: {
-      name: 'image',
-      type: 'integer',
+    iconName: {
+      name: 'icon_name',
+      type: 'varchar',
       isNullable: true,
     },
     isDefault: {

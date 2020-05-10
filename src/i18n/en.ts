@@ -54,6 +54,7 @@ export default {
   action_add_subscription: 'Add subscription',
   action_add_operation: 'Add operation',
   action_no: 'No',
+  action_add: 'Add',
 
   placeholder_search: 'Search',
 

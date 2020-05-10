@@ -28,8 +28,8 @@ export default class Category {
   @OneToMany(type => Category, category => category._parentCategory)
   private _childCategories: Category[] | null;
 
-  @Column(CategoryMeta.columns.image as ColumnOptions)
-  private _image: number | undefined;
+  @Column(CategoryMeta.columns.iconName as ColumnOptions)
+  private _iconName: string | undefined;
 
   @Column(CategoryMeta.columns.isDefault as ColumnOptions)
   private _isDefault: boolean;
@@ -42,13 +42,13 @@ export default class Category {
     isDefault: boolean = false,
     isValid: boolean = true,
     parentCategory?: Category,
-    image?: number,
+    iconName?: string,
     childCategories?: Category[],
     id?: number,
   ) {
     this._id = id;
     this._name = name;
-    this._image = image;
+    this._iconName = iconName;
     if (childCategories) {
       this._childCategories = childCategories;
     } else {
@@ -95,12 +95,12 @@ export default class Category {
     this._name = value;
   }
 
-  get image(): number | undefined {
-    return this._image;
+  get iconName(): string | undefined {
+    return this._iconName;
   }
 
-  set image(value: number | undefined) {
-    this._image = value;
+  set iconName(value: string | undefined) {
+    this._iconName = value;
   }
 
   get isDefault(): boolean {

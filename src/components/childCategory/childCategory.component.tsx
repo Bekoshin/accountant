@@ -1,10 +1,10 @@
 import styles from './childCategory.styles';
 import React from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View} from 'react-native';
 import I18n from '../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../entities/Category';
-import IMAGES from '../../images';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CheckIcon} from '../checkIcon/checkIcon.component';
 
 type ChildCategoryProps = {
@@ -48,7 +48,7 @@ export const ChildCategoryComponent = (props: ChildCategoryProps) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          {renderIcon(category.image)}
+          {renderIcon(category.iconName)}
           <Text style={styles.headerText}>
             {I18n.t(category.name, {defaultValue: category.name})}
           </Text>
@@ -62,16 +62,16 @@ export const ChildCategoryComponent = (props: ChildCategoryProps) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          {renderIcon(IMAGES.ADD)}
-          <Text style={styles.headerText}>Добавить</Text>
+          {renderIcon('plus')}
+          <Text style={styles.headerText}>{I18n.t('action_add')}</Text>
         </View>
       );
     }
   };
 
-  const renderIcon = (source: number | undefined) => {
-    if (source) {
-      return <Image source={source} style={{width: 40, height: 40}} />;
+  const renderIcon = (iconName: string | undefined) => {
+    if (iconName) {
+      return <Icon name={iconName} size={48} color="#5a03fc" />;
     }
   };
 
