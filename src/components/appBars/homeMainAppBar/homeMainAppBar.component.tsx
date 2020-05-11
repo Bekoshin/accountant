@@ -1,7 +1,7 @@
 import React from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import I18n from '../../../i18n/i18n';
-import {DATE, GropedBy} from '../../../screens/home/home.component';
+import {DATE, GroupedBy} from '../../../screens/home/home.component';
 
 type AppBarProps = {
   title: string;
@@ -12,7 +12,7 @@ type AppBarProps = {
   onGroupByPress: () => void;
   onFilterPress: () => void;
   onDropFiltersPress: () => void;
-  groupedBy: GropedBy;
+  groupedBy: GroupedBy;
   hasFilter: boolean;
 };
 

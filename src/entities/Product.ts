@@ -5,19 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Operation from './Operation';
-import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
+import {BaseEntity} from './BaseEntity';
 
 @Entity(ProductMeta.table.name)
-export default class Product {
-  @PrimaryGeneratedColumn({
-    name: ProductMeta.columns.id.name,
-    type: ProductMeta.columns.id.type as PrimaryGeneratedColumnType,
-  })
-  private _id: number | undefined;
-
+export default class Product extends BaseEntity {
   @Column(ProductMeta.columns.name as ColumnOptions)
   private _name: string;
 
@@ -35,7 +28,7 @@ export default class Product {
     value?: number,
     id?: number,
   ) {
-    this._id = id;
+    super(id);
     this._name = name;
     this._value = value;
     if (operation) {
@@ -43,10 +36,6 @@ export default class Product {
     } else {
       this._operation = null;
     }
-  }
-
-  get id(): number | undefined {
-    return this._id;
   }
 
   get name(): string {

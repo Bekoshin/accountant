@@ -4,20 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Category from './Category';
 import {SubscriptionMeta} from './meta/SubscriptionMeta';
-import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
+import {BaseEntity} from './BaseEntity';
 
 @Entity(SubscriptionMeta.table.name)
-export default class Subscription {
-  @PrimaryGeneratedColumn({
-    name: SubscriptionMeta.columns.id.name,
-    type: SubscriptionMeta.columns.id.type as PrimaryGeneratedColumnType,
-  })
-  private _id: number | undefined;
-
+export default class Subscription extends BaseEntity {
   @Column(SubscriptionMeta.columns.name as ColumnOptions)
   private _name: string;
 
@@ -42,16 +35,12 @@ export default class Subscription {
     note: string,
     id?: number,
   ) {
-    this._id = id;
+    super(id);
     this._name = name;
     this._category = category;
     this._value = value;
     this._day = day;
     this._note = note;
-  }
-
-  get id(): number | undefined {
-    return this._id;
   }
 
   get name(): string {

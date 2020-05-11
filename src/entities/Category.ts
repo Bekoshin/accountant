@@ -1,6 +1,5 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   ManyToOne,
@@ -8,16 +7,10 @@ import {
   ColumnOptions,
 } from 'typeorm/browser';
 import {CategoryMeta} from './meta/CategoryMeta';
-import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
+import {BaseEntity} from './BaseEntity';
 
 @Entity(CategoryMeta.table.name)
-export default class Category {
-  @PrimaryGeneratedColumn({
-    name: CategoryMeta.columns.id.name,
-    type: CategoryMeta.columns.id.type as PrimaryGeneratedColumnType,
-  })
-  private readonly _id: number | undefined;
-
+export default class Category extends BaseEntity {
   @Column(CategoryMeta.columns.name as ColumnOptions)
   private _name: string;
 
@@ -46,7 +39,7 @@ export default class Category {
     childCategories?: Category[],
     id?: number,
   ) {
-    this._id = id;
+    super(id);
     this._name = name;
     this._iconName = iconName;
     if (childCategories) {
@@ -81,10 +74,6 @@ export default class Category {
     } else {
       this._childCategories = [category];
     }
-  }
-
-  get id(): number | undefined {
-    return this._id;
   }
 
   get name(): string {

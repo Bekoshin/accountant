@@ -18,8 +18,9 @@ import WelcomeScreen from './screens/welcome/welсome.component';
 import HomeScreen from './screens/home/home.component';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
-import Settings from './screens/settings/settings';
+import SettingsScreen from './screens/settings/settings.component';
 import OperationScreen from './screens/operation/operation.component';
+import SubscriptionsScreen from './screens/subscriptions/subscriptions.component';
 import SubscriptionScreen from './screens/subscription/subscription.component';
 import CategoriesSreen from './screens/categories/categories.component';
 import CategoryScreen from './screens/category/category.component';
@@ -34,6 +35,7 @@ import Subscription from './entities/Subscription';
 export type RootStackParamList = {
   Tab: undefined;
   Operation: {operation?: Operation; selectedCategory?: Category};
+  Subscriptions: undefined;
   Subscription: {subscription?: Subscription; selectedCategory?: Category};
   Categories: {
     canSetSeveralCategory: boolean;
@@ -66,6 +68,7 @@ const RootStack = () => {
         component={OperationScreen}
         initialParams={{operation: undefined}}
       />
+      <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
       <Stack.Screen
         name="Subscription"
         component={SubscriptionScreen}
@@ -132,7 +135,7 @@ const TabStack = () => (
     />
     <Tab.Screen
       name="Settings"
-      component={Settings}
+      component={SettingsScreen}
       options={{
         tabBarIcon: ({color}) => (
           <View>

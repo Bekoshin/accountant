@@ -5,21 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm/browser';
 import Category from './Category';
 import {OperationMeta} from './meta/OperationMeta';
 import Product from './Product';
-import {PrimaryGeneratedColumnType} from 'typeorm/browser/driver/types/ColumnTypes';
+import {BaseEntity} from './BaseEntity';
 
 @Entity(OperationMeta.table.name)
-export default class Operation {
-  @PrimaryGeneratedColumn({
-    name: OperationMeta.columns.id.name,
-    type: OperationMeta.columns.id.type as PrimaryGeneratedColumnType,
-  })
-  private _id: number | undefined;
-
+export default class Operation extends BaseEntity {
   @Column(OperationMeta.columns.amount as ColumnOptions)
   private _amount: number;
 
@@ -53,7 +46,7 @@ export default class Operation {
     products?: Product[],
     id?: number,
   ) {
-    this._id = id;
+    super(id);
     this._amount = amount;
     this._category = category;
     this._timestamp = timestamp;
@@ -65,10 +58,6 @@ export default class Operation {
     } else {
       this._products = null;
     }
-  }
-
-  get id(): number | undefined {
-    return this._id;
   }
 
   get amount(): number {

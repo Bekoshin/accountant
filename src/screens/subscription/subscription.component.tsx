@@ -169,6 +169,8 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
               },
             },
           ]);
+        } else {
+          navigation.goBack();
         }
       } catch (error) {
         console.error('HANDLE SAVE BUTTON. ERROR: ', error);

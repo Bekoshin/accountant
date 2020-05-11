@@ -38,9 +38,9 @@ export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
 export const DATE = 'date';
 export const CATEGORY = 'category';
-export type GropedBy = 'date' | 'category';
+export type GroupedBy = 'date' | 'category';
 
-type HomeProps = {
+type HomeScreenProps = {
   route: RouteProp<RootStackParamList, 'Tab'>;
   navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
 
@@ -51,7 +51,7 @@ type HomeProps = {
   applyFilter: (filter: Filter | null) => void;
 };
 
-const HomeScreen = (props: HomeProps) => {
+const HomeScreen = (props: HomeScreenProps) => {
   const {operations, navigation, filter} = props;
 
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -62,7 +62,7 @@ const HomeScreen = (props: HomeProps) => {
   const [total, setTotal] = useState(0);
   const [moreMenuVisible, setMoreMenuVisible] = useState(false);
   const [operationMenuVisible, setOperationMenuVisible] = useState(false);
-  const [groupedBy, setGroupedBy] = useState<GropedBy>(DATE);
+  const [groupedBy, setGroupedBy] = useState<GroupedBy>(DATE);
   const [searchMode, setSearchMode] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState({x: 0, y: 0});
   const [selectedOperation, setSelectedOperation] = useState<Operation | null>(
@@ -70,7 +70,7 @@ const HomeScreen = (props: HomeProps) => {
   );
 
   const updateVisibleOperations = useCallback(
-    (date: moment.Moment, index: number, attribute?: GropedBy) => {
+    (date: moment.Moment, index: number, attribute?: GroupedBy) => {
       console.log('UPDATE VISIBLE OPERATIONS');
       const unitOfDate = UNITS_OF_DATE[index];
       const filteredOperations = filterOperationsByDate(
@@ -165,7 +165,7 @@ const HomeScreen = (props: HomeProps) => {
   };
 
   const renderOperationSections = () => {
-    let operationComponents: any = [];
+    let operationComponents: any[] = [];
     operationsMap.forEach((tempOperations: Operation[]) => {
       if (tempOperations.length > 0) {
         let key;
@@ -237,7 +237,7 @@ const HomeScreen = (props: HomeProps) => {
             operation.category.iconName
               ? () => (
                   <Icon
-                    name={operation.category.iconName}
+                    name={operation.category.iconName as string}
                     size={48}
                     color="black"
                   />
