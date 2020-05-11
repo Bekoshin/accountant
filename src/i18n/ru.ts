@@ -67,12 +67,14 @@ export default {
   subway: 'Метро',
   transport_card: 'Транспортная карта',
   petrol: 'Бензин',
+  carsharing: 'Каршеринг',
 
   products: 'Продукты',
 
   entertainment: 'Развлечения',
   games: 'Игры',
   movies: 'Кино',
+  music: 'Музыка',
   concerts_and_theaters: 'Концерты и театры',
 
   health: 'Здоровье',

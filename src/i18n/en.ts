@@ -67,12 +67,14 @@ export default {
   subway: 'Subway',
   transport_card: 'Transport card',
   petrol: 'Petrol',
+  carsharing: 'Carsharing',
 
   products: 'Products',
 
   entertainment: 'Entertainment',
   games: 'Games',
   movies: 'Movies',
+  music: 'Music',
   concerts_and_theaters: 'Concerts and theaters',
 
   health: 'Health',

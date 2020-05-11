@@ -198,6 +198,8 @@ export default class StorageHandler {
         .where('category.is_valid = :is_valid', {is_valid: 1})
         .leftJoinAndSelect('category._parentCategory', 'pc')
         .leftJoinAndSelect('category._childCategories', 'cc')
+        .orderBy('category._id', 'ASC')
+        .addOrderBy('cc._id', 'ASC')
         .getMany();
     }
     return categories;
@@ -273,6 +275,7 @@ export default class StorageHandler {
     categories.push(
       new Category('petrol', true, true, transport, 'gas-station'),
     );
+    categories.push(new Category('carsharing', true, true, transport, 'car'));
 
     let entertainment = new Category(
       'entertainment',
@@ -282,6 +285,13 @@ export default class StorageHandler {
       'emoticon',
     );
     categories.push(entertainment);
+    categories.push(new Category('movies', true, true, entertainment, 'movie'));
+    categories.push(
+      new Category('games', true, true, entertainment, 'google-controller'),
+    );
+    categories.push(
+      new Category('music', true, true, entertainment, 'music-note'),
+    );
     categories.push(
       new Category(
         'concerts_and_theaters',
@@ -291,10 +301,6 @@ export default class StorageHandler {
         'drama-masks',
       ),
     );
-    categories.push(
-      new Category('games', true, true, entertainment, 'google-controller'),
-    );
-    categories.push(new Category('movies', true, true, entertainment, 'movie'));
 
     let health = new Category('health', true, true, undefined, 'hospital');
     categories.push(health);
@@ -311,10 +317,13 @@ export default class StorageHandler {
     );
     categories.push(cafesAndRestaurants);
     categories.push(
-      new Category('bars', true, true, cafesAndRestaurants, 'glass-cocktail'),
+      new Category('fast_food', true, true, cafesAndRestaurants, 'food'),
     );
     categories.push(
       new Category('cafes', true, true, cafesAndRestaurants, 'coffee'),
+    );
+    categories.push(
+      new Category('bars', true, true, cafesAndRestaurants, 'glass-cocktail'),
     );
     categories.push(
       new Category(
@@ -324,9 +333,6 @@ export default class StorageHandler {
         cafesAndRestaurants,
         'silverware-fork-knife',
       ),
-    );
-    categories.push(
-      new Category('fast_food', true, true, cafesAndRestaurants, 'food'),
     );
 
     let billsAndUtilities = new Category(
@@ -359,16 +365,16 @@ export default class StorageHandler {
 
     let shopping = new Category('shopping', true, true, undefined, 'shopping');
     categories.push(shopping);
+    categories.push(
+      new Category('products', true, true, shopping, 'food-variant'),
+    );
+    categories.push(new Category('care', true, true, shopping, 'face'));
     categories.push(new Category('household', true, true, shopping, 'home'));
     categories.push(
       new Category('clothing', true, true, shopping, 'tshirt-crew'),
     );
     categories.push(
       new Category('electronics', true, true, shopping, 'laptop'),
-    );
-    categories.push(new Category('care', true, true, shopping, 'face'));
-    categories.push(
-      new Category('products', true, true, shopping, 'food-variant'),
     );
 
     let others = new Category('others', true);
