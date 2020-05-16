@@ -164,6 +164,37 @@ const HomeScreen = (props: HomeScreenProps) => {
     setSearchMode(false);
   };
 
+  const handleDeleteButton = () => {
+    hideOperationMenu();
+    const message = I18n.t('message_delete_operation') + '?';
+    Alert.alert(I18n.t('label_deleting'), message, [
+      {
+        text: I18n.t('action_cancel'),
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          console.log('OPERATION FOR DELETE: ', selectedOperation);
+          if (selectedOperation) {
+            props.deleteOperation(selectedOperation);
+          }
+        },
+      },
+    ]);
+  };
+
+  const handleFiltersButton = () => {
+    hideMoreMenu();
+    navigation.navigate('Filters');
+  };
+
+  const handleDropFiltersButton = async () => {
+    hideMoreMenu();
+    await props.applyFilter(null);
+  };
+
   const renderOperationSections = () => {
     let operationComponents: any[] = [];
     operationsMap.forEach((tempOperations: Operation[]) => {
@@ -278,37 +309,6 @@ const HomeScreen = (props: HomeScreenProps) => {
         />
       </Menu>
     );
-  };
-
-  const handleDeleteButton = () => {
-    hideOperationMenu();
-    const message = I18n.t('message_delete_operation') + '?';
-    Alert.alert(I18n.t('label_deleting'), message, [
-      {
-        text: I18n.t('action_cancel'),
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'OK',
-        onPress: () => {
-          console.log('OPERATION FOR DELETE: ', selectedOperation);
-          if (selectedOperation) {
-            props.deleteOperation(selectedOperation);
-          }
-        },
-      },
-    ]);
-  };
-
-  const handleFiltersButton = () => {
-    hideMoreMenu();
-    navigation.navigate('Filters');
-  };
-
-  const handleDropFiltersButton = async () => {
-    hideMoreMenu();
-    await props.applyFilter(null);
   };
 
   return (

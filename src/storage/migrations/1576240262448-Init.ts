@@ -175,8 +175,8 @@ export class Init1576240262448 implements MigrationInterface {
             isNullable: SubscriptionMeta.columns.categoryId.isNullable,
           },
           {
-            name: SubscriptionMeta.columns.value.name,
-            type: SubscriptionMeta.columns.value.type,
+            name: SubscriptionMeta.columns.amount.name,
+            type: SubscriptionMeta.columns.amount.type,
           },
           {
             name: SubscriptionMeta.columns.day.name,

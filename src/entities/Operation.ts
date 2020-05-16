@@ -1,30 +1,13 @@
-import {
-  Column,
-  ColumnOptions,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm/browser';
+import {Column, ColumnOptions, Entity, OneToMany} from 'typeorm/browser';
 import Category from './Category';
 import {OperationMeta} from './meta/OperationMeta';
 import Product from './Product';
-import {BaseEntity} from './BaseEntity';
+import {OperationEntity} from './OperationEntity';
 
 @Entity(OperationMeta.table.name)
-export default class Operation extends BaseEntity {
-  @Column(OperationMeta.columns.amount as ColumnOptions)
-  private _amount: number;
-
-  @ManyToOne(() => Category)
-  @JoinColumn({name: OperationMeta.columns.categoryId.name})
-  private _category: Category;
-
+export default class Operation extends OperationEntity {
   @Column(OperationMeta.columns.timestamp as ColumnOptions)
   private _timestamp: number;
-
-  @Column(OperationMeta.columns.note as ColumnOptions)
-  private _note: string;
 
   @Column(OperationMeta.columns.isIgnored as ColumnOptions)
   private _isIgnored: boolean;
@@ -46,11 +29,8 @@ export default class Operation extends BaseEntity {
     products?: Product[],
     id?: number,
   ) {
-    super(id);
-    this._amount = amount;
-    this._category = category;
+    super(amount, category, note, id);
     this._timestamp = timestamp;
-    this._note = note;
     this._isIgnored = isIgnored;
     this._subscriptionId = subscriptionId;
     if (products) {
@@ -58,22 +38,6 @@ export default class Operation extends BaseEntity {
     } else {
       this._products = null;
     }
-  }
-
-  get amount(): number {
-    return this._amount;
-  }
-
-  set amount(value: number) {
-    this._amount = value;
-  }
-
-  get category(): Category {
-    return this._category;
-  }
-
-  set category(value: Category) {
-    this._category = value;
   }
 
   get date(): Date {
@@ -86,14 +50,6 @@ export default class Operation extends BaseEntity {
 
   set timestamp(value: number) {
     this._timestamp = value;
-  }
-
-  get note(): string {
-    return this._note;
-  }
-
-  set note(value: string) {
-    this._note = value;
   }
 
   get products(): Product[] | null {

@@ -26,7 +26,6 @@ export default {
   label_deleting: 'Удаление',
   label_choose_date: 'Выберите дату',
   label_name: 'Наименование',
-  label_value: 'Стоимость',
   label_day: 'День',
   label_operation_adding: 'Добавление операции',
   label_by_subscription: 'По подписке',

@@ -22,8 +22,8 @@ export class SubscriptionMeta {
       name: 'number',
       type: 'integer',
     },
-    value: {
-      name: 'value',
+    amount: {
+      name: 'amount',
       type: 'double precision',
     },
     note: {

@@ -26,7 +26,6 @@ export default {
   label_deleting: 'Deleting',
   label_choose_date: 'Choose a date',
   label_name: 'Name',
-  label_value: 'Value',
   label_day: 'Day',
   label_operation_adding: 'Operation adding',
   label_by_subscription: 'By subscription',

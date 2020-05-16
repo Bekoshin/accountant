@@ -29,14 +29,14 @@ const SubscriptionsScreen = (props: SubscriptionsScreenProps) => {
   );
   const [groupedBy, setGroupedBy] = useState<GroupedBy>(DAY);
 
-  // useEffect(() => {
-  //   const newSubscriptionMap = new Map<string, Subscription[]>();
-  //   if (groupedBy === CATEGORY) {
-  //     for (let subscription of subscriptions) {
-  //
-  //     }
-  //   }
-  // }, [groupedBy, subscriptions]);
+  useEffect(() => {
+    const newSubscriptionMap = new Map<string, Subscription[]>();
+    if (groupedBy === CATEGORY) {
+      for (let subscription of subscriptions) {
+
+      }
+    }
+  }, [groupedBy, subscriptions]);
 
   const renderSubscriptionSections = () => {
     let subscriptionComponents: any[] = [];
@@ -49,11 +49,16 @@ const SubscriptionsScreen = (props: SubscriptionsScreenProps) => {
         );
       },
     );
-    return (
-      <ScrollView contentContainerStyle={{paddingBottom: 60}}>
-        {subscriptionComponents}
-      </ScrollView>
-    );
+
+    if (subscriptionComponents.length > 0) {
+      return (
+        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
+          {subscriptionComponents}
+        </ScrollView>
+      );
+    } else {
+      return <Text>Вы еще не добавили ни одну подписку</Text>;
+    }
   };
 
   return (

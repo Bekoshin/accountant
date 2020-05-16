@@ -7,14 +7,14 @@ import StorageHandler from '../storage/StorageHandler';
 export const createOperationBySubscription = (
   subscription: Subscription,
 ): Operation => {
-  let {id, day, value, category, note} = subscription;
+  let {id, day, amount, category, note} = subscription;
 
   let currentDate = new Date();
   currentDate.setDate(day);
   const currentTimestamp = currentDate.setHours(0, 0, 0, 0);
 
   return new Operation(
-    value,
+    amount,
     category,
     currentTimestamp,
     note,

@@ -1,46 +1,27 @@
-import {
-  Column,
-  ColumnOptions,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm/browser';
+import {Column, ColumnOptions, Entity} from 'typeorm/browser';
 import Category from './Category';
 import {SubscriptionMeta} from './meta/SubscriptionMeta';
-import {BaseEntity} from './BaseEntity';
+import {OperationEntity} from './OperationEntity';
 
 @Entity(SubscriptionMeta.table.name)
-export default class Subscription extends BaseEntity {
+export default class Subscription extends OperationEntity {
   @Column(SubscriptionMeta.columns.name as ColumnOptions)
   private _name: string;
-
-  @ManyToOne(() => Category)
-  @JoinColumn({name: SubscriptionMeta.columns.categoryId.name})
-  private _category: Category;
-
-  @Column(SubscriptionMeta.columns.value as ColumnOptions)
-  private _value: number;
 
   @Column(SubscriptionMeta.columns.day as ColumnOptions)
   private _day: number;
 
-  @Column(SubscriptionMeta.columns.note as ColumnOptions)
-  private _note: string;
-
   constructor(
     name: string,
     category: Category,
-    value: number,
+    amount: number,
     day: number,
     note: string,
     id?: number,
   ) {
-    super(id);
+    super(amount, category, note, id);
     this._name = name;
-    this._category = category;
-    this._value = value;
     this._day = day;
-    this._note = note;
   }
 
   get name(): string {
@@ -51,35 +32,11 @@ export default class Subscription extends BaseEntity {
     this._name = value;
   }
 
-  get category(): Category {
-    return this._category;
-  }
-
-  set category(value: Category) {
-    this._category = value;
-  }
-
-  get value(): number {
-    return this._value;
-  }
-
-  set value(value: number) {
-    this._value = value;
-  }
-
   get day(): number {
     return this._day;
   }
 
   set day(value: number) {
     this._day = value;
-  }
-
-  get note(): string {
-    return this._note;
-  }
-
-  set note(value: string) {
-    this._note = value;
   }
 }

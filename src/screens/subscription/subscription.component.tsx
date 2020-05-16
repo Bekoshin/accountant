@@ -35,8 +35,8 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   const [name, setName] = useState<string>(
     subscription ? subscription.name : '',
   );
-  const [value, setValue] = useState<string>(
-    subscription ? subscription.value.toString() : '',
+  const [amount, setAmount] = useState<string>(
+    subscription ? subscription.amount.toString() : '',
   );
   const [category, setCategory] = useState<Category | null>(
     subscription ? subscription.category : null,
@@ -48,7 +48,7 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
     subscription ? subscription.note : '',
   );
   const [nameError, setNameError] = useState<string>('');
-  const [valueError, setValueError] = useState<string>('');
+  const [amountError, setAmountError] = useState<string>('');
   const [categoryError, setCategoryError] = useState<string>('');
   const [dayError, setDayError] = useState<string>('');
 
@@ -66,12 +66,12 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
     setNameError(I18n.t('label_required'));
   };
 
-  const hideValueError = () => {
-    setValueError('');
+  const hideAmountError = () => {
+    setAmountError('');
   };
 
-  const showValueError = () => {
-    setValueError(I18n.t('label_required'));
+  const showAmountError = () => {
+    setAmountError(I18n.t('label_required'));
   };
 
   const hideCategoryError = () => {
@@ -90,9 +90,9 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
     setDayError(I18n.t('label_required'));
   };
 
-  const changeValue = (newValue: string) => {
-    if (newValue.match(/^\d*\.?\d*$/)) {
-      setValue(newValue);
+  const changeAmount = (newAmount: string) => {
+    if (newAmount.match(/^\d*\.?\d*$/)) {
+      setAmount(newAmount);
     }
   };
 
@@ -121,9 +121,9 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
       allFieldsFilled = false;
       showNameError();
     }
-    if (!value || value === '0') {
+    if (!amount || amount === '0') {
       allFieldsFilled = false;
-      showValueError();
+      showAmountError();
     }
     if (!category) {
       allFieldsFilled = false;
@@ -144,7 +144,7 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
         newSubscription = new Subscription(
           name,
           category as Category,
-          parseFloat(value),
+          parseFloat(amount),
           parseInt(day, 10),
           note,
           subscription ? subscription.id : undefined,
@@ -199,14 +199,14 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
               onChangeText={setName}
             />
             <Input
-              label={I18n.t('label_value')}
-              value={value}
+              label={I18n.t('label_amount')}
+              value={amount}
               keyboardType="numeric"
               required={true}
               selectTextOnFocus={true}
-              errorMessage={valueError}
-              onFocus={hideValueError}
-              onChangeText={changeValue}
+              errorMessage={amountError}
+              onFocus={hideAmountError}
+              onChangeText={changeAmount}
             />
             <Input
               label={I18n.t('label_category')}
