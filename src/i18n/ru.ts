@@ -33,6 +33,7 @@ export default {
   label_subscription_management: 'Управление подписками',
   label_wipe_all_data: 'Стереть все данные',
   label_return_default_categories: 'Вернуть категории по умолчанию',
+  label_day_of_month: 'день месяца',
 
   operation_screen: 'Операция',
   new_operation_screen: 'Новая операция',

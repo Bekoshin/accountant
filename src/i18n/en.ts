@@ -33,6 +33,7 @@ export default {
   label_subscription_management: 'Subscription management',
   label_wipe_all_data: 'Wipe all data',
   label_return_default_categories: 'Return default categories',
+  label_day_of_month: 'day of month',
 
   operation_screen: 'Operation',
   new_operation_screen: 'New operation',
