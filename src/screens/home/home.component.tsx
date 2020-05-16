@@ -91,7 +91,7 @@ const HomeScreen = (props: HomeScreenProps) => {
       } else {
         newOperationsMap = groupByCategory(filteredOperations);
       }
-      setOperationsMap(newOperationsMap);
+      setOperationsMap(newOperationsMap as Map<string, Operation[]>);
       setTotal(calculateTotalAmount(filteredOperations));
       setMoreMenuVisible(false);
       setGroupedBy(attribute);

@@ -6,6 +6,7 @@ import {AppState} from '../store/store';
 import {Action} from 'redux';
 import StorageHandler from '../storage/StorageHandler';
 import {ACTION_TYPES} from '../store/ACTION_TYPES';
+import {OperationEntity} from '../entities/OperationEntity';
 
 export const saveOperation = (
   operation: Operation,
@@ -66,20 +67,20 @@ export const groupByMonth = (
 };
 
 export const groupByCategory = (
-  operations: Operation[],
-): Map<string, Operation[]> => {
-  let operationsMap = new Map();
-  operations.forEach(operation => {
-    const categoryId = operation.category.id;
+  entities: OperationEntity[],
+): Map<string, OperationEntity[]> => {
+  let entitiesMap = new Map();
+  entities.forEach(entity => {
+    const categoryId = entity.category.id;
     if (categoryId) {
-      const operationIdStr = categoryId.toString();
-      if (!operationsMap.has(operationIdStr)) {
-        operationsMap.set(operationIdStr, []);
+      const entityIdStr = categoryId.toString();
+      if (!entitiesMap.has(entityIdStr)) {
+        entitiesMap.set(entityIdStr, []);
       }
-      operationsMap.get(operationIdStr).push(operation);
+      entitiesMap.get(entityIdStr).push(entity);
     }
   });
-  return operationsMap;
+  return entitiesMap;
 };
 
 export const filterOperationsByDate = (
