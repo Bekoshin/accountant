@@ -9,6 +9,8 @@ import Subscription from '../../entities/Subscription';
 import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
 import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
+import {groupByCategory} from '../../utils/OperationUtils';
+import {groupByDay} from "../../utils/SubscriptionUtils";
 
 const DAY = 'day';
 const CATEGORY = 'category';
@@ -30,12 +32,16 @@ const SubscriptionsScreen = (props: SubscriptionsScreenProps) => {
   const [groupedBy, setGroupedBy] = useState<GroupedBy>(DAY);
 
   useEffect(() => {
-    const newSubscriptionMap = new Map<string, Subscription[]>();
+    let newSubscriptionMap = new Map<string, Subscription[]>();
     if (groupedBy === CATEGORY) {
-      for (let subscription of subscriptions) {
-
-      }
+      newSubscriptionMap = groupByCategory(subscriptions) as Map<
+        string,
+        Subscription[]
+      >;
+    } else {
+      newSubscriptionMap = groupByDay(subscriptions);
     }
+    setSubscriptionMap(newSubscriptionMap);
   }, [groupedBy, subscriptions]);
 
   const renderSubscriptionSections = () => {

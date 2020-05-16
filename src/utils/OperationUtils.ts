@@ -36,7 +36,7 @@ export const deleteOperation = (
 export const groupByDate = (
   operations: Operation[],
 ): Map<string, Operation[]> => {
-  let operationsMap = new Map();
+  let operationsMap = new Map<string, Operation[]>();
   operations.forEach(operation => {
     const operationDate = new Date(operation.date)
       .setHours(0, 0, 0, 0)
@@ -44,7 +44,7 @@ export const groupByDate = (
     if (!operationsMap.has(operationDate)) {
       operationsMap.set(operationDate, []);
     }
-    operationsMap.get(operationDate).push(operation);
+    (operationsMap.get(operationDate) as Operation[]).push(operation);
   });
   return operationsMap;
 };
@@ -52,7 +52,7 @@ export const groupByDate = (
 export const groupByMonth = (
   operations: Operation[],
 ): Map<string, Operation[]> => {
-  let operationsMap = new Map();
+  let operationsMap = new Map<string, Operation[]>();
   operations.forEach(operation => {
     const operationDate = new Date(
       operation.date.getFullYear(),
@@ -61,7 +61,7 @@ export const groupByMonth = (
     if (!operationsMap.has(operationDate)) {
       operationsMap.set(operationDate, []);
     }
-    operationsMap.get(operationDate).push(operation);
+    (operationsMap.get(operationDate) as Operation[]).push(operation);
   });
   return operationsMap;
 };
@@ -69,7 +69,7 @@ export const groupByMonth = (
 export const groupByCategory = (
   entities: OperationEntity[],
 ): Map<string, OperationEntity[]> => {
-  let entitiesMap = new Map();
+  let entitiesMap = new Map<string, OperationEntity[]>();
   entities.forEach(entity => {
     const categoryId = entity.category.id;
     if (categoryId) {
@@ -77,7 +77,7 @@ export const groupByCategory = (
       if (!entitiesMap.has(entityIdStr)) {
         entitiesMap.set(entityIdStr, []);
       }
-      entitiesMap.get(entityIdStr).push(entity);
+      (entitiesMap.get(entityIdStr) as OperationEntity[]).push(entity);
     }
   });
   return entitiesMap;

@@ -81,7 +81,7 @@ const HomeScreen = (props: HomeScreenProps) => {
       if (!attribute) {
         attribute = groupedBy;
       }
-      let newOperationsMap;
+      let newOperationsMap: Map<string, Operation[]>;
       if (attribute === DATE) {
         if (unitOfDate === 'year') {
           newOperationsMap = groupByMonth(filteredOperations);
@@ -89,9 +89,12 @@ const HomeScreen = (props: HomeScreenProps) => {
           newOperationsMap = groupByDate(filteredOperations);
         }
       } else {
-        newOperationsMap = groupByCategory(filteredOperations);
+        newOperationsMap = groupByCategory(filteredOperations) as Map<
+          string,
+          Operation[]
+        >;
       }
-      setOperationsMap(newOperationsMap as Map<string, Operation[]>);
+      setOperationsMap(newOperationsMap);
       setTotal(calculateTotalAmount(filteredOperations));
       setMoreMenuVisible(false);
       setGroupedBy(attribute);

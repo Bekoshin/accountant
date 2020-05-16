@@ -68,3 +68,17 @@ export const needToCreateOperation = async (subscription: Subscription) => {
     (await operationNotYetCreatedToday(currentDate, subscription.id as number))
   );
 };
+
+export const groupByDay = (
+  subscriptions: Subscription[],
+): Map<string, Subscription[]> => {
+  let subscriptionMap = new Map<string, Subscription[]>();
+  for (let subscription of subscriptions) {
+    const day = subscription.day.toString();
+    if (!subscriptionMap.has(day)) {
+      subscriptionMap.set(day, []);
+    }
+    (subscriptionMap.get(day) as Subscription[]).push(subscription);
+  }
+  return subscriptionMap;
+};
