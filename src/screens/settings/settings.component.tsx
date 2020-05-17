@@ -16,7 +16,13 @@ type SettingsScreenProps = {
 const SettingsScreen = (props: SettingsScreenProps) => {
   const {navigation, route} = props;
 
-  const handleSubscriptionPress = () => {
+  const handleCategoryManagementPress = () => {
+    navigation.navigate('Categories', {
+      previousScreen: 'Settings',
+    });
+  };
+
+  const handleSubscriptionManagementPress = () => {
     navigation.navigate('Subscriptions');
   };
 
@@ -26,12 +32,12 @@ const SettingsScreen = (props: SettingsScreenProps) => {
         <ScrollView>
           <List.Item
             title={I18n.t('label_category_management')}
-            onPress={() => {}}
+            onPress={handleCategoryManagementPress}
           />
           <Divider />
           <List.Item
             title={I18n.t('label_subscription_management')}
-            onPress={handleSubscriptionPress}
+            onPress={handleSubscriptionManagementPress}
           />
           <Divider />
           <List.Item

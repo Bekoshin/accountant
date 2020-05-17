@@ -158,7 +158,6 @@ const FiltersScreen = (props: FiltersScreenProps) => {
               navigation.navigate('Categories', {
                 selectedCategories: categories,
                 previousScreen: 'Filters',
-                canSetSeveralCategory: true,
               })
             }
           />

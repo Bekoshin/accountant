@@ -110,7 +110,6 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   const handleCategoryInputPress = () => {
     hideCategoryError();
     navigation.navigate('Categories', {
-      canSetSeveralCategory: false,
       previousScreen: 'Subscription',
     });
   };

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, ScrollView, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
-import {Divider, Appbar} from 'react-native-paper';
+import {Divider} from 'react-native-paper';
 import Category from '../../entities/Category';
 import {CategoryComponent} from '../../components/category/category.component';
 import I18n from '../../i18n/i18n';
@@ -13,6 +13,8 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {SelectAppBar} from '../../components/appBars/selectAppBar/selectAppBar.component';
 
 type CategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Categories'>;
@@ -24,7 +26,9 @@ type CategoriesProps = {
 
 const CategoriesScreen = (props: CategoriesProps) => {
   const {navigation, route, categories, deleteCategories} = props;
-  const {canSetSeveralCategory, previousScreen} = route.params;
+  const {previousScreen} = route.params;
+
+  const canSetSeveralCategory = previousScreen === 'Filters';
 
   const [selectedCategories, setSelectedCategories] = useState(
     route.params.selectedCategories || [],
@@ -43,7 +47,11 @@ const CategoriesScreen = (props: CategoriesProps) => {
   };
 
   const handleCategoryPress = (category: Category) => {
-    navigation.navigate(previousScreen, {selectedCategory: category});
+    if (previousScreen === 'Settings') {
+      navigation.navigate('Category', {category: category});
+    } else {
+      navigation.navigate(previousScreen, {selectedCategory: category});
+    }
   };
 
   const handleDeleteButton = () => {
@@ -90,10 +98,6 @@ const CategoriesScreen = (props: CategoriesProps) => {
         '.';
     }
     return message;
-  };
-
-  const navigateToCategory = (category: Category) => {
-    navigation.navigate('Category', {category: category});
   };
 
   const selectCategory = (category: Category) => {
@@ -147,49 +151,36 @@ const CategoriesScreen = (props: CategoriesProps) => {
     }
   };
 
-  const AppBarComponent = () => {
+  const handleEditCategoryButton = () => {
+    navigation.navigate('Category', {category: selectedCategories[0]});
+  };
+
+  const renderAppBar = () => {
     if (selectedCategories.length > 0 || canSetSeveralCategory) {
-      return <SelectAppBar />;
-    } else {
-      return <MainAppBar />;
-    }
-  };
-
-  const MainAppBar = () => {
-    return (
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={I18n.t('categories_screen')} />
-        <Appbar.Action icon="plus" onPress={() => handleAddCategoryButton()} />
-      </Appbar.Header>
-    );
-  };
-
-  const SelectAppBar = () => {
-    return (
-      <Appbar.Header>
-        {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="close" onPress={dropSelectedCategories} />
-        ) : (
-          <Appbar.BackAction onPress={() => navigation.goBack()} />
-        )}
-        <Appbar.Content
-          title={selectedCategories.length + ' ' + I18n.t('label_selected')}
+      return (
+        <SelectAppBar
+          count={selectedCategories.length}
+          onDropButtonPress={dropSelectedCategories}
+          onEditButtonPress={
+            !selectedCategories[0].isDefault
+              ? handleEditCategoryButton
+              : undefined
+          }
+          onDeleteButtonPress={handleDeleteButton}
+          onConfirmButtonPress={
+            canSetSeveralCategory ? handleConfirmSelectButton : undefined
+          }
         />
-        {selectedCategories.length === 1 && !selectedCategories[0].isDefault ? (
-          <Appbar.Action
-            icon="pencil"
-            onPress={() => navigateToCategory(selectedCategories[0])}
-          />
-        ) : null}
-        {selectedCategories.length > 0 ? (
-          <Appbar.Action icon="delete" onPress={handleDeleteButton} />
-        ) : null}
-        {canSetSeveralCategory ? (
-          <Appbar.Action icon="check" onPress={handleConfirmSelectButton} />
-        ) : null}
-      </Appbar.Header>
-    );
+      );
+    } else {
+      return (
+        <GeneralAppBar
+          title={I18n.t('categories_screen')}
+          onBackButtonPress={navigation.goBack}
+          onAddButtonPress={handleAddCategoryButton}
+        />
+      );
+    }
   };
 
   const Categories = () => {
@@ -217,7 +208,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
 
   return (
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      <AppBarComponent />
+      {renderAppBar()}
       <ScrollView
         style={{flex: 1}}
         bounces={false}

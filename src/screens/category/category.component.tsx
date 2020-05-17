@@ -53,22 +53,26 @@ const CategoryScreen = (props: CategoryScreenProps) => {
     navigation.navigate('ParentCategories');
   };
 
+  const handleClearParentCategoryPress = () => {
+    setParentCategory(null);
+  };
+
   const handleSaveButton = async () => {
     console.log('HANDLE SAVE BUTTON');
     if (name) {
       try {
-        let category: Category;
+        let newCategory: Category;
         if (params.category) {
-          category = params.category;
+          newCategory = params.category;
         } else {
-          category = new Category(name);
+          newCategory = new Category(name);
         }
         if (parentCategory) {
           //todo need check parentCategory for exist
-          category.parentCategory = parentCategory;
+          newCategory.parentCategory = parentCategory;
         }
         console.log('handle save button. category: ');
-        await saveCategory(category);
+        await saveCategory(newCategory);
         navigation.goBack();
       } catch (error) {
         console.log('HANDLE SAVE BUTTON. ERROR: ', error);
@@ -109,6 +113,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
               }
               editable={false}
               onInputPress={handleParentCategoryInputPress}
+              onClearPress={handleClearParentCategoryPress}
             />
           </ScrollView>
         </View>
