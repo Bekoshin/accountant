@@ -254,8 +254,7 @@ const saveSubscription = (
   null,
   Action<string>
 > => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initSubscriptionRepo();
+  let storageHandler = StorageHandler.getInstance();
   await storageHandler.saveSubscription(subscription);
   const subscriptions = await storageHandler.getAllSubscriptions();
   await dispatch({

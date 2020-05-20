@@ -9,8 +9,7 @@ import {ACTION_TYPES} from '../store/ACTION_TYPES';
 export const applyFilter = (
   filter: Filter | null,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initOperationRepo();
+  let storageHandler = StorageHandler.getInstance();
   let operations: Operation[];
 
   if (filter) {

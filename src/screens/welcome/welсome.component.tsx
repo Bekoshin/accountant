@@ -40,11 +40,7 @@ const WelcomeScreen = (props: WelcomeProps) => {
 
   useEffect(() => {
     const loadData = async () => {
-      const _storageHandler: StorageHandler = new StorageHandler();
-      await _storageHandler.connect();
-      await _storageHandler.initCategoryRepo();
-      await _storageHandler.initOperationRepo();
-      await _storageHandler.initSubscriptionRepo();
+      const _storageHandler: StorageHandler = await StorageHandler.getInstance();
       console.log('WELCOME. STORAGE HANDLER INITIALIZED');
 
       await loadAllOperations(_storageHandler);

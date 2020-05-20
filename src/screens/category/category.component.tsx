@@ -125,8 +125,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
 const saveCategory = (
   category: Category,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initCategoryRepo();
+  let storageHandler = StorageHandler.getInstance();
   console.log('saveCategory. category: ', category);
   await storageHandler.saveCategory(category);
   const categories = await storageHandler.getAllValidCategories();

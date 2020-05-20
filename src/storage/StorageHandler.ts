@@ -16,17 +16,30 @@ import Subscription from '../entities/Subscription';
 const DATABASE_NAME = 'main.db';
 
 export default class StorageHandler {
+  private static _instance: StorageHandler;
+
   private _connection: Connection | undefined;
 
   private _categoryRepo: Repository<Category> | undefined;
   private _operationRepo: Repository<Operation> | undefined;
   private _subscriptionRepo: Repository<Subscription> | undefined;
 
-  constructor() {
+  private constructor() {
     this._connection = undefined;
   }
 
-  public connect = async () => {
+  public static async getInstance(): Promise<StorageHandler> {
+    if (!StorageHandler._instance) {
+      StorageHandler._instance = new StorageHandler();
+      await StorageHandler._instance.connect();
+      StorageHandler._instance.initCategoryRepo();
+      StorageHandler._instance.initOperationRepo();
+      StorageHandler._instance.initSubscriptionRepo();
+    }
+    return StorageHandler._instance;
+  }
+
+  private connect = async () => {
     this._connection = await createConnection({
       type: 'react-native',
       database: DATABASE_NAME,

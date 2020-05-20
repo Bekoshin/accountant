@@ -209,8 +209,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
 const deleteCategories = (
   categories: Category[],
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = new StorageHandler();
-  await storageHandler.initCategoryRepo();
+  let storageHandler = StorageHandler.getInstance();
   await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getAllValidCategories();
   dispatch({
