@@ -51,15 +51,15 @@ export default class StorageHandler {
     });
   };
 
-  public initCategoryRepo = () => {
+  private initCategoryRepo = () => {
     this._categoryRepo = getRepository(Category);
   };
 
-  public initOperationRepo = () => {
+  private initOperationRepo = () => {
     this._operationRepo = getRepository(Operation);
   };
 
-  public initSubscriptionRepo = () => {
+  private initSubscriptionRepo = () => {
     this._subscriptionRepo = getRepository(Subscription);
   };
 
@@ -268,14 +268,14 @@ export default class StorageHandler {
   };
 
   public wipeAllData = async () => {
-    if (this._categoryRepo) {
-      await this._categoryRepo.clear();
-    }
     if (this._operationRepo) {
       await this._operationRepo.clear();
     }
     if (this._subscriptionRepo) {
       await this._subscriptionRepo.clear();
+    }
+    if (this._categoryRepo) {
+      await this._categoryRepo.clear();
     }
   };
 

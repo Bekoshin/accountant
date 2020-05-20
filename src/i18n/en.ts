@@ -10,6 +10,7 @@ export default {
     'Are you sure you want to delete the selected operation',
   message_create_operation:
     'You have created a subscription for today. Want to add an operation for this subscription? (Otherwise, the operation will be added the next time the app starts)',
+  message_successful_data_wipe: 'Successful data wipe.',
 
   label_required: 'Required',
   label_amount: 'Amount',
