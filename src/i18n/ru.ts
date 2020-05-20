@@ -32,7 +32,7 @@ export default {
   label_category_management: 'Управление категориями',
   label_subscription_management: 'Управление подписками',
   label_wipe_all_data: 'Стереть все данные',
-  label_return_default_categories: 'Вернуть категории по умолчанию',
+  label_restore_default_categories: 'Восстановить категории по умолчанию',
   label_day_of_month: 'день месяца',
 
   operation_screen: 'Операция',

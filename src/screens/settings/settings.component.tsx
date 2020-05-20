@@ -41,7 +41,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
           />
           <Divider />
           <List.Item
-            title={I18n.t('label_return_default_categories')}
+            title={I18n.t('label_restore_default_categories')}
             onPress={() => {}}
           />
           <Divider />

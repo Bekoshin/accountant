@@ -254,6 +254,18 @@ export default class StorageHandler {
     return subscriptions;
   };
 
+  public wipeAllData = async () => {
+    if (this._categoryRepo) {
+      await this._categoryRepo.clear();
+    }
+    if (this._operationRepo) {
+      await this._operationRepo.clear();
+    }
+    if (this._subscriptionRepo) {
+      await this._subscriptionRepo.clear();
+    }
+  };
+
   static createDefaultCategories = () => {
     let categories: Category[] = [];
 
