@@ -51,7 +51,7 @@ const operationNotYetCreatedToday = async (
     subscriptionId,
   );
 
-  const storageHandler = StorageHandler.getInstance();
+  const storageHandler = await StorageHandler.getInstance();
   const operations: Operation[] = await storageHandler.getFilteredOperations(
     filter,
   );

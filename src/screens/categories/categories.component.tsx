@@ -37,6 +37,10 @@ const CategoriesScreen = (props: CategoriesProps) => {
     setSelectedCategories([]);
   };
 
+  const handleAddCategoryAppBarButton = () => {
+    navigation.navigate('Category');
+  };
+
   const handleAddCategoryButton = (parentCategory?: Category) => {
     navigation.navigate('Category', {parentCategory: parentCategory});
   };
@@ -184,7 +188,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
         selectedCount={selectedCategories.length}
         forceSelectMode={canSetSeveralCategory}
         onBackButtonPress={navigation.goBack}
-        onAddButtonPress={handleAddCategoryButton}
+        onAddButtonPress={handleAddCategoryAppBarButton}
         onDropButtonPress={dropSelectedCategories}
         onEditButtonPress={
           selectedCategories[0] && !selectedCategories[0].isDefault
@@ -209,7 +213,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
 const deleteCategories = (
   categories: Category[],
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = StorageHandler.getInstance();
+  let storageHandler = await StorageHandler.getInstance();
   await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getAllValidCategories();
   dispatch({

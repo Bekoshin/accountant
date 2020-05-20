@@ -24,6 +24,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
   const {navigation, route, saveCategory} = props;
   const params = route.params;
   const {category, selectedParentCategory} = params;
+  console.log('params: ', params);
 
   const [name, setName] = useState<string>(category ? category.name : '');
   const [parentCategory, setParentCategory] = useState<Category | null>(
@@ -125,7 +126,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
 const saveCategory = (
   category: Category,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let storageHandler = StorageHandler.getInstance();
+  let storageHandler = await StorageHandler.getInstance();
   console.log('saveCategory. category: ', category);
   await storageHandler.saveCategory(category);
   const categories = await storageHandler.getAllValidCategories();

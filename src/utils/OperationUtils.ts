@@ -11,7 +11,7 @@ import {OperationEntity} from '../entities/OperationEntity';
 export const saveOperation = (
   operation: Operation,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  const storageHandler = StorageHandler.getInstance();
+  const storageHandler = await StorageHandler.getInstance();
   await storageHandler.saveOperation(operation);
   const operations = await storageHandler.getAllOperations();
   dispatch({
@@ -22,7 +22,7 @@ export const saveOperation = (
 export const deleteOperation = (
   operation: Operation,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  const storageHandler = StorageHandler.getInstance();
+  const storageHandler = await StorageHandler.getInstance();
   await storageHandler.deleteOperation(operation);
   const operations = await storageHandler.getAllOperations();
   dispatch({

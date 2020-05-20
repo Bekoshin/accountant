@@ -74,7 +74,15 @@ const RootStack = () => {
         initialParams={{subscription: undefined}}
       />
       <Stack.Screen name="Categories" component={CategoriesSreen} />
-      <Stack.Screen name="Category" component={CategoryScreen} />
+      <Stack.Screen
+        name="Category"
+        component={CategoryScreen}
+        initialParams={{
+          category: undefined,
+          parentCategory: undefined,
+          selectedParentCategory: undefined,
+        }}
+      />
       <Stack.Screen
         name="ParentCategories"
         component={ParentCategoriesScreen}
