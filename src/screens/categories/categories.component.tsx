@@ -14,7 +14,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
 import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
-import {SelectAppBar} from '../../components/appBars/selectAppBar/selectAppBar.component';
 
 type CategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Categories'>;
@@ -155,34 +154,6 @@ const CategoriesScreen = (props: CategoriesProps) => {
     navigation.navigate('Category', {category: selectedCategories[0]});
   };
 
-  const renderAppBar = () => {
-    if (selectedCategories.length > 0 || canSetSeveralCategory) {
-      return (
-        <SelectAppBar
-          count={selectedCategories.length}
-          onDropButtonPress={dropSelectedCategories}
-          onEditButtonPress={
-            !selectedCategories[0].isDefault
-              ? handleEditCategoryButton
-              : undefined
-          }
-          onDeleteButtonPress={handleDeleteButton}
-          onConfirmButtonPress={
-            canSetSeveralCategory ? handleConfirmSelectButton : undefined
-          }
-        />
-      );
-    } else {
-      return (
-        <GeneralAppBar
-          title={I18n.t('categories_screen')}
-          onBackButtonPress={navigation.goBack}
-          onAddButtonPress={handleAddCategoryButton}
-        />
-      );
-    }
-  };
-
   const Categories = () => {
     let categoryComponents = [];
     for (let category of categories) {
@@ -208,7 +179,23 @@ const CategoriesScreen = (props: CategoriesProps) => {
 
   return (
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      {renderAppBar()}
+      <GeneralAppBar
+        title={I18n.t('categories_screen')}
+        selectedCount={selectedCategories.length}
+        forceSelectMode={canSetSeveralCategory}
+        onBackButtonPress={navigation.goBack}
+        onAddButtonPress={handleAddCategoryButton}
+        onDropButtonPress={dropSelectedCategories}
+        onEditButtonPress={
+          selectedCategories[0] && !selectedCategories[0].isDefault
+            ? handleEditCategoryButton
+            : undefined
+        }
+        onDeleteButtonPress={handleDeleteButton}
+        onConfirmButtonPress={
+          canSetSeveralCategory ? handleConfirmSelectButton : undefined
+        }
+      />
       <ScrollView
         style={{flex: 1}}
         bounces={false}
