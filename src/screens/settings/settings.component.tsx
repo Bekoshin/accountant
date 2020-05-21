@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
@@ -11,15 +11,36 @@ import StorageHandler from '../../storage/StorageHandler';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import Subscription from '../../entities/Subscription';
+import Operation from '../../entities/Operation';
+import Category from '../../entities/Category';
 
 type SettingsScreenProps = {
   route: RouteProp<RootStackParamList, 'Tab'>;
   navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
+  operations: Operation[];
+  subscriptions: Subscription[];
+  categories: Category[];
   clearAllData: () => void;
 };
 
 const SettingsScreen = (props: SettingsScreenProps) => {
-  const {navigation, clearAllData} = props;
+  const {
+    navigation,
+    operations,
+    subscriptions,
+    categories,
+    clearAllData,
+  } = props;
+
+  const [canWipeData, setCanWipeData] = useState(true);
+  useEffect(() => {
+    setCanWipeData(
+      operations.length > 0 ||
+        subscriptions.length > 0 ||
+        categories.length > 0,
+    );
+  }, [categories.length, operations.length, subscriptions.length]);
 
   const handleCategoryManagementPress = () => {
     navigation.navigate('Categories', {
@@ -62,6 +83,8 @@ const SettingsScreen = (props: SettingsScreenProps) => {
           />
           <Divider />
           <List.Item
+            titleStyle={{color: canWipeData ? undefined : 'gray'}}
+            disabled={!canWipeData}
             title={I18n.t('label_wipe_all_data')}
             onPress={handleWipeAllDataButton}
           />
@@ -92,7 +115,11 @@ const clearAllData = (): ThunkAction<
   });
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: AppState) => ({
+  operations: state.operationReducer.operations,
+  subscriptions: state.subscriptionReducer.subscriptions,
+  categories: state.categoryReducer.categories,
+});
 
 const mapDispatchToProps = {
   clearAllData,
