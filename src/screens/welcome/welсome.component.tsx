@@ -54,7 +54,7 @@ const WelcomeScreen = (props: WelcomeProps) => {
   }, [loadAllCategories, loadAllOperations, loadAllSubscriptions]);
 
   useEffect(() => {
-    const createTodaysMonthlyOperations = async () => {
+    const createPastMonthlyOperations = async () => {
       for (let subscription of subscriptions) {
         if (await needToCreateOperation(subscription)) {
           const operation: Operation = createOperationBySubscription(
@@ -66,7 +66,7 @@ const WelcomeScreen = (props: WelcomeProps) => {
       await setInitialized(true);
     };
     if (storageInitialized) {
-      createTodaysMonthlyOperations();
+      createPastMonthlyOperations();
     }
   }, [createOperation, setInitialized, storageInitialized, subscriptions]);
 

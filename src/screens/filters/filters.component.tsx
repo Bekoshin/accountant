@@ -225,9 +225,11 @@ const mapStateToProps = (state: AppState) => ({
   filter: state.homeReducer.filter,
 });
 
+const mapDispatchToProps = {
+  applyFilter,
+};
+
 export default connect(
   mapStateToProps,
-  {
-    applyFilter: (filter: Filter | null) => applyFilter(filter),
-  },
+  mapDispatchToProps,
 )(FiltersScreen);

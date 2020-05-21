@@ -24,7 +24,7 @@ export const createOperationBySubscription = (
   );
 };
 
-const todayIsRecordDay = (
+const isDayOfSubscriptionPassed = (
   currentDay: number,
   subscriptionDay: number,
 ): boolean => {
@@ -34,18 +34,21 @@ const todayIsRecordDay = (
     subscriptionDay = lastDayOfMonth;
   }
 
-  return currentDay === subscriptionDay;
+  return currentDay >= subscriptionDay;
 };
 
-const operationNotYetCreatedToday = async (
+const operationNotYetCreatedYet = async (
   currentDate: Date,
   subscriptionId: number,
 ): Promise<boolean> => {
+  const firstDayOfMonth = moment(currentDate)
+    .startOf('month')
+    .toDate();
   let filter: Filter = new Filter(
     undefined,
     undefined,
     [],
-    currentDate,
+    firstDayOfMonth,
     currentDate,
     '',
     subscriptionId,
@@ -63,8 +66,8 @@ export const needToCreateOperation = async (subscription: Subscription) => {
   const currentDay = currentDate.getDate();
 
   return (
-    todayIsRecordDay(currentDay, subscription.day) &&
-    (await operationNotYetCreatedToday(currentDate, subscription.id as number))
+    isDayOfSubscriptionPassed(currentDay, subscription.day) &&
+    (await operationNotYetCreatedYet(currentDate, subscription.id as number))
   );
 };
 
