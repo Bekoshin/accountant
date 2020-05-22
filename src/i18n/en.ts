@@ -10,7 +10,9 @@ export default {
     'Are you sure you want to delete the selected operation',
   message_create_operation:
     'You have successfully created a subscription. Want to add an operation for this subscription for the current month? (Otherwise, the operation will be added the next time the app starts)',
-  message_successful_data_wipe: 'Successful data wipe.',
+  message_successful_data_wipe: 'Successful data wipe',
+  message_successful_restore_default_categories:
+    'Default categories successfully restored',
 
   label_required: 'Required',
   label_amount: 'Amount',

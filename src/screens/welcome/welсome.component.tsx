@@ -90,7 +90,7 @@ const loadAllOperations = (
 const loadAllCategories = (
   storageHandler: StorageHandler,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
-  let categories: Category[] = await storageHandler.getAllValidCategories();
+  let categories: Category[] = await storageHandler.getCategories({isValid: true});
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,

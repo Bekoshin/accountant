@@ -22,6 +22,7 @@ type SettingsScreenProps = {
   subscriptions: Subscription[];
   categories: Category[];
   clearAllData: () => void;
+  loadCategoriesToStore: (categories: Category[]) => void;
 };
 
 const SettingsScreen = (props: SettingsScreenProps) => {
@@ -31,6 +32,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
     subscriptions,
     categories,
     clearAllData,
+    loadCategoriesToStore,
   } = props;
 
   const [canWipeData, setCanWipeData] = useState(true);
@@ -50,6 +52,32 @@ const SettingsScreen = (props: SettingsScreenProps) => {
 
   const handleSubscriptionManagementPress = () => {
     navigation.navigate('Subscriptions');
+  };
+
+  const handleRestoreDefaultCategoriesPress = async () => {
+    try {
+      const storageHandler: StorageHandler = await StorageHandler.getInstance();
+      const defaultCategories = StorageHandler.createDefaultCategories();
+      let restoredDefaultCategories: Category[] = [];
+      if (categories.length === 0) {
+        await storageHandler.saveCategories(defaultCategories);
+      } else {
+        const deletedDefaultCategories = await storageHandler.getCategories({
+          isValid: false,
+          isDefault: true,
+        });
+        deletedDefaultCategories.forEach(category => (category.isValid = true));
+        await storageHandler.saveCategories(deletedDefaultCategories);
+      }
+      restoredDefaultCategories = await storageHandler.getCategories({
+        isValid: true,
+      });
+      loadCategoriesToStore(restoredDefaultCategories);
+
+      alert(I18n.t('message_successful_restore_default_categories'));
+    } catch (error) {
+      console.log('HANDLE RESTORE DEFAULT CATEGORIES ERROR: ', error);
+    }
   };
 
   const handleWipeAllDataButton = async () => {
@@ -79,7 +107,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
           <Divider />
           <List.Item
             title={I18n.t('label_restore_default_categories')}
-            onPress={() => {}}
+            onPress={handleRestoreDefaultCategoriesPress}
           />
           <Divider />
           <List.Item
@@ -95,6 +123,15 @@ const SettingsScreen = (props: SettingsScreenProps) => {
   );
 };
 
+const loadCategoriesToStore = (
+  categories: Category[],
+): ThunkAction<void, AppState, null, Action<string>> => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.CATEGORIES_LOADED,
+    categories: categories,
+  });
+};
+
 const clearAllData = (): ThunkAction<
   void,
   AppState,
@@ -103,7 +140,7 @@ const clearAllData = (): ThunkAction<
 > => dispatch => {
   dispatch({
     type: ACTION_TYPES.OPERATIONS_LOADED,
-    operations: [],
+    operations: new Map(),
   });
   dispatch({
     type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
@@ -123,6 +160,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = {
   clearAllData,
+  loadCategoriesToStore,
 };
 
 export default connect(

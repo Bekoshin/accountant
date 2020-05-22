@@ -82,7 +82,7 @@ export default class StorageHandler {
   ): Promise<Operation[]> => {
     let operations: Operation[] = [];
     if (this._operationRepo) {
-      let builder: SelectQueryBuilder<
+      const builder: SelectQueryBuilder<
         Operation
       > = this._operationRepo.createQueryBuilder('o');
       let filtered = false;
@@ -203,12 +203,35 @@ export default class StorageHandler {
     return operations;
   };
 
-  public getAllValidCategories = async (): Promise<Category[]> => {
+  public getCategories = async (options: {
+    isValid?: boolean;
+    isDefault?: boolean;
+  }): Promise<Category[]> => {
+    const {isValid, isDefault} = options;
     let categories: Category[] = [];
     if (this._categoryRepo) {
-      categories = await this._categoryRepo
-        .createQueryBuilder('category')
-        .where('category.is_valid = :is_valid', {is_valid: 1})
+      const builder: SelectQueryBuilder<
+        Category
+      > = await this._categoryRepo.createQueryBuilder('category');
+
+      let filtered = false;
+      if (isValid !== undefined) {
+        builder.where('category.is_valid = :is_valid', {is_valid: isValid});
+        filtered = true;
+      }
+      if (isDefault !== undefined) {
+        if (filtered) {
+          builder.andWhere('category.is_default = :is_default', {
+            is_default: isDefault,
+          });
+        } else {
+          builder.where('category.is_default = :is_default', {
+            is_default: isDefault,
+          });
+        }
+      }
+
+      categories = await builder
         .leftJoinAndSelect('category._parentCategory', 'pc')
         .leftJoinAndSelect('category._childCategories', 'cc')
         .orderBy('category._id', 'ASC')
@@ -221,6 +244,12 @@ export default class StorageHandler {
   public saveCategory = async (category: Category) => {
     if (this._categoryRepo) {
       await this._categoryRepo.save(category);
+    }
+  };
+
+  public saveCategories = async (categories: Category[]) => {
+    if (this._categoryRepo) {
+      await this._categoryRepo.save(categories);
     }
   };
 

@@ -129,7 +129,9 @@ const saveCategory = (
   let storageHandler = await StorageHandler.getInstance();
   console.log('saveCategory. category: ', category);
   await storageHandler.saveCategory(category);
-  const categories = await storageHandler.getAllValidCategories();
+  const categories = await storageHandler.getCategories({
+    isValid: true,
+  });
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,

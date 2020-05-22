@@ -1,15 +1,20 @@
 import {ACTION_TYPES} from '../ACTION_TYPES';
 import Category from '../../entities/Category';
 
-export interface CategoryState {
+type CategoryState = {
   categories: Category[];
-}
+};
+
+type Action = {
+  type: string;
+  categories: Category[];
+};
 
 const initialState: CategoryState = {
   categories: [],
 };
 
-export default (state = initialState, action: any) => {
+export default (state = initialState, action: Action) => {
   switch (action.type) {
     case ACTION_TYPES.CATEGORIES_LOADED: {
       return {

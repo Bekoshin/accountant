@@ -215,7 +215,9 @@ const deleteCategories = (
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   let storageHandler = await StorageHandler.getInstance();
   await storageHandler.markCategoriesInvalid(categories);
-  const updatedCategories = await storageHandler.getAllValidCategories();
+  const updatedCategories = await storageHandler.getCategories({
+    isValid: true,
+  });
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: updatedCategories,
