@@ -7,7 +7,7 @@ import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import I18n from '../../i18n/i18n';
 import {Divider, List} from 'react-native-paper';
-import StorageHandler from '../../storage/StorageHandler';
+import StorageHandler, {DEFAULT_CATEGORIES_LENGTH} from '../../storage/StorageHandler';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
@@ -35,7 +35,25 @@ const SettingsScreen = (props: SettingsScreenProps) => {
     loadCategoriesToStore,
   } = props;
 
+  const [
+    canRestoreDefaultCategories,
+    setCanRestoreDefaultCategories,
+  ] = useState(true);
   const [canWipeData, setCanWipeData] = useState(true);
+
+  useEffect(() => {
+    if (categories.length === 0) {
+      setCanRestoreDefaultCategories(true);
+    } else if (
+      categories.filter(item => item.isDefault).length !==
+      DEFAULT_CATEGORIES_LENGTH //todo maybe need change
+    ) {
+      setCanRestoreDefaultCategories(true);
+    } else {
+      setCanRestoreDefaultCategories(false);
+    }
+  }, [categories]);
+
   useEffect(() => {
     setCanWipeData(
       operations.length > 0 ||
@@ -106,6 +124,10 @@ const SettingsScreen = (props: SettingsScreenProps) => {
           />
           <Divider />
           <List.Item
+            titleStyle={{
+              color: canRestoreDefaultCategories ? undefined : 'gray',
+            }}
+            disabled={!canRestoreDefaultCategories}
             title={I18n.t('label_restore_default_categories')}
             onPress={handleRestoreDefaultCategoriesPress}
           />

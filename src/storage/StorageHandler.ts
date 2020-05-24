@@ -14,6 +14,7 @@ import {Filter} from '../entities/Filter';
 import Subscription from '../entities/Subscription';
 
 const DATABASE_NAME = 'main.db';
+export const DEFAULT_CATEGORIES_LENGTH = 35;
 
 export default class StorageHandler {
   private static _instance: StorageHandler;
