@@ -37,6 +37,12 @@ export default {
   label_wipe_all_data: 'Стереть все данные',
   label_restore_default_categories: 'Восстановить категории по умолчанию',
   label_day_of_month: 'день месяца',
+  label_this_week: 'На этой неделе',
+  label_last_week: 'На прошлой неделе',
+  label_this_month: 'В этом месяце',
+  label_last_month: 'В прошлом месяце',
+  label_this_year: 'В этом году',
+  label_last_year: 'В прошлом году',
 
   operation_screen: 'Операция',
   new_operation_screen: 'Новая операция',

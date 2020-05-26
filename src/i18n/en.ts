@@ -37,6 +37,12 @@ export default {
   label_wipe_all_data: 'Wipe all data',
   label_restore_default_categories: 'Restore default categories',
   label_day_of_month: 'day of month',
+  label_this_week: 'This week',
+  label_last_week: 'Last week',
+  label_this_month: 'This month',
+  label_last_month: 'Last month',
+  label_this_year: 'This year',
+  label_last_year: 'Last year',
 
   operation_screen: 'Operation',
   new_operation_screen: 'New operation',

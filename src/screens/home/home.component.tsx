@@ -1,41 +1,30 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import moment, {DurationInputArg2} from 'moment';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {
-  Alert,
-  GestureResponderEvent,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import {Alert, View} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
-import {NoExpensesComponent} from '../../components/noExpenses/noExpenses.Component';
-import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
+import {Menu, Appbar, Searchbar} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import {DateSelector} from '../../components/dateSelector/dateSelector.component';
 import I18n from '../../i18n/i18n';
-import {convertDate, getMonthName} from '../../utils/DateUtils';
 import {
-  groupByDate,
-  calculateTotalAmount,
-  filterOperationsByDate,
-  groupByCategory,
-  groupByMonth,
   formatNumberToDecimal,
   deleteOperation,
+  filterOperationsByDate,
+  calculateTotalAmount,
 } from '../../utils/OperationUtils';
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab.component';
 import {RootStackParamList} from '../../App';
 import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar.component';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import HomeTabView from './homeTabView/homeTabView.component';
+import {Route} from 'react-native-tab-view';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
-const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
+export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
 export const DATE = 'date';
 export const CATEGORY = 'category';
 export type GroupedBy = 'date' | 'category';
@@ -54,10 +43,11 @@ type HomeScreenProps = {
 const HomeScreen = (props: HomeScreenProps) => {
   const {operations, navigation, filter} = props;
 
-  const [selectedIndex, setSelectedIndex] = useState(1);
-  const [selectedDate, setSelectedDate] = useState(moment());
-  const [operationsMap, setOperationsMap] = useState(
-    new Map<string, Operation[]>(),
+  const [unitOfDateIndex, setUnitOfDateIndex] = useState(1);
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [tabIndex, setTabIndex] = useState(11);
+  const [routeOperationsMap, setRouteOperationsMap] = useState(
+    new Map<number, Operation[]>(),
   );
   const [total, setTotal] = useState(0);
   const [moreMenuVisible, setMoreMenuVisible] = useState(false);
@@ -69,56 +59,38 @@ const HomeScreen = (props: HomeScreenProps) => {
     null,
   );
 
-  const updateVisibleOperations = useCallback(
-    (date: moment.Moment, index: number, attribute?: GroupedBy) => {
-      console.log('UPDATE VISIBLE OPERATIONS');
-      const unitOfDate = UNITS_OF_DATE[index];
-      const filteredOperations = filterOperationsByDate(
-        operations,
-        date,
-        unitOfDate,
-      );
-      if (!attribute) {
-        attribute = groupedBy;
-      }
-      let newOperationsMap: Map<string, Operation[]>;
-      if (attribute === DATE) {
-        if (unitOfDate === 'year') {
-          newOperationsMap = groupByMonth(filteredOperations);
-        } else {
-          newOperationsMap = groupByDate(filteredOperations);
-        }
-      } else {
-        newOperationsMap = groupByCategory(filteredOperations) as Map<
-          string,
-          Operation[]
-        >;
-      }
-      setOperationsMap(newOperationsMap);
-      setTotal(calculateTotalAmount(filteredOperations));
-      setMoreMenuVisible(false);
-      setGroupedBy(attribute);
-    },
-    [groupedBy, operations],
-  );
+  useEffect(() => {
+    setRouteOperationsMap(
+      createRouteOperationsMap(operations, UNITS_OF_DATE[unitOfDateIndex]),
+    );
+    console.log('CREATE ROUT OPERATIONS MAP');
+  }, [operations, unitOfDateIndex]);
 
   useEffect(() => {
-    updateVisibleOperations(selectedDate, selectedIndex);
-  }, [selectedDate, selectedIndex, updateVisibleOperations]);
+    setRoutes(createRoutes(UNITS_OF_DATE[unitOfDateIndex]));
+    console.log('CREATE ROUTES');
+  }, [unitOfDateIndex]);
+
+  useEffect(() => {
+    const filteredOperations = routeOperationsMap.get(tabIndex);
+    if (!filteredOperations) {
+      return;
+    }
+
+    const newTotal = calculateTotalAmount(filteredOperations);
+    setTotal(newTotal);
+    console.log('TAB INDEX EFFECT');
+  }, [routeOperationsMap, tabIndex]);
 
   const handleGroupBy = async () => {
     const attribute = groupedBy === DATE ? CATEGORY : DATE;
-    await updateVisibleOperations(selectedDate, selectedIndex, attribute);
+    setGroupedBy(attribute);
+    setMoreMenuVisible(false);
   };
 
-  const handleIndexChanged = (index: number) => {
-    const currentDate = moment();
-    setSelectedIndex(index);
-    setSelectedDate(currentDate);
-  };
-
-  const handleDateChanged = (date: moment.Moment) => {
-    setSelectedDate(date);
+  const handleUnitOfDateIndexChanged = (index: number) => {
+    setUnitOfDateIndex(index);
+    setTabIndex(11);
   };
 
   const showMoreMenu = () => {
@@ -135,28 +107,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const hideOperationMenu = () => {
     setOperationMenuVisible(false);
-  };
-
-  const renderSearchAppBar = () => {
-    return (
-      <Appbar.Header>
-        <View style={{flex: 0.1}}>
-          <Appbar.Action icon="arrow-left" onPress={hideSearchMode} />
-        </View>
-        <View style={{flex: 0.8}}>
-          <Searchbar
-            placeholder="Search"
-            onChangeText={query => {
-              console.log(query);
-            }}
-            value="qwe"
-          />
-        </View>
-        <View style={{flex: 0.1}}>
-          <Appbar.Action icon="magnify" onPress={showSearchMode} />
-        </View>
-      </Appbar.Header>
-    );
   };
 
   const showSearchMode = () => {
@@ -198,95 +148,41 @@ const HomeScreen = (props: HomeScreenProps) => {
     await props.applyFilter(null);
   };
 
-  const renderOperationSections = () => {
-    let operationComponents: any[] = [];
-    operationsMap.forEach((tempOperations: Operation[]) => {
-      if (tempOperations.length > 0) {
-        let key;
-        let subheader;
-        if (groupedBy === 'date') {
-          if (UNITS_OF_DATE[selectedIndex] === 'year') {
-            key = tempOperations[0].date.toString();
-            subheader = getMonthName(tempOperations[0].date);
-          } else {
-            key = tempOperations[0].date.toString();
-            subheader = convertDate(tempOperations[0].date);
-          }
-        } else {
-          key = tempOperations[0].category.id;
-          subheader = I18n.t(tempOperations[0].category.name, {
-            defaultValue: tempOperations[0].category.name,
-          });
-        }
-        operationComponents.push(
-          <List.Section key={key}>
-            <List.Subheader>{subheader}</List.Subheader>
-            {renderOperations(tempOperations)}
-          </List.Section>,
-        );
-      }
+  const handleOperationPress = (operation: Operation) => {
+    navigation.navigate('Operation', {
+      operation: operation,
     });
-
-    if (operationComponents.length > 0) {
-      return (
-        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
-          {operationComponents}
-        </ScrollView>
-      );
-    } else {
-      return <NoExpensesComponent />;
-    }
   };
 
-  const renderOperations = (groupedOperations: Operation[]) => {
-    let operationComponents = [];
-    for (let operation of groupedOperations) {
-      let title;
-      if (groupedBy === 'date') {
-        title = I18n.t(operation.category.name, {
-          defaultValue: operation.category.name,
-        });
-      } else {
-        title = convertDate(operation.date);
-      }
-      operationComponents.push(
-        <List.Item
-          key={operation.id}
-          title={title}
-          onPress={() =>
-            navigation.navigate('Operation', {
-              operation: operation,
-            })
-          }
-          onLongPress={
-            ((evt: GestureResponderEvent) => {
-              const x = evt.nativeEvent.pageX;
-              const y = evt.nativeEvent.pageY;
-              setMenuAnchor({x: x, y: y});
-              showOperationMenu();
-              setSelectedOperation(operation);
-            }) as () => void
-          }
-          left={
-            operation.category.iconName
-              ? () => (
-                  <Icon
-                    name={operation.category.iconName as string}
-                    size={48}
-                    color="black"
-                  />
-                )
-              : undefined
-          }
-          right={() => (
-            <View style={{justifyContent: 'center'}}>
-              <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>
-            </View>
-          )}
-        />,
-      );
-    }
-    return operationComponents;
+  const handleOperationLongPress = (
+    operation: Operation,
+    anchor: {x: number; y: number},
+  ) => {
+    setMenuAnchor(anchor);
+    showOperationMenu();
+    setSelectedOperation(operation);
+  };
+
+  const renderSearchAppBar = () => {
+    return (
+      <Appbar.Header>
+        <View style={{flex: 0.1}}>
+          <Appbar.Action icon="arrow-left" onPress={hideSearchMode} />
+        </View>
+        <View style={{flex: 0.8}}>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={query => {
+              console.log(query);
+            }}
+            value="qwe"
+          />
+        </View>
+        <View style={{flex: 0.1}}>
+          <Appbar.Action icon="magnify" onPress={showSearchMode} />
+        </View>
+      </Appbar.Header>
+    );
   };
 
   const renderOperationMenu = () => {
@@ -314,6 +210,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     );
   };
 
+  console.log('HOME COMPONENT RENDER');
   return (
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
       {searchMode ? (
@@ -336,15 +233,21 @@ const HomeScreen = (props: HomeScreenProps) => {
       )}
       <SegmentedControlTab
         values={['Неделя', 'Месяц', 'Год']}
-        selectedIndex={selectedIndex}
-        onTabPress={handleIndexChanged}
+        selectedIndex={unitOfDateIndex}
+        onTabPress={handleUnitOfDateIndexChanged}
       />
-      <DateSelector
-        type={UNITS_OF_DATE[selectedIndex]}
-        date={selectedDate}
-        changeDate={handleDateChanged}
-      />
-      {renderOperationSections()}
+      {routes.length > 0 ? (
+        <HomeTabView
+          routeOperationsMap={routeOperationsMap}
+          routes={routes}
+          index={tabIndex}
+          groupedBy={groupedBy}
+          unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
+          changeIndex={setTabIndex}
+          onOperationPress={handleOperationPress}
+          onOperationLongPress={handleOperationLongPress}
+        />
+      ) : null}
       <Fab
         addOperation={() => navigation.navigate('Operation')}
         addSubscription={() => navigation.navigate('Subscription')}
@@ -352,6 +255,76 @@ const HomeScreen = (props: HomeScreenProps) => {
       {renderOperationMenu()}
     </View>
   );
+};
+
+const createRoutes = (unitOfDate: UnitOfDate): Route[] => {
+  const date = moment();
+  let routes: Route[] = [];
+  let currentTitle = '';
+  let lastTitle = '';
+  if (unitOfDate === 'isoWeek') {
+    date.subtract(11, 'week');
+    currentTitle = I18n.t('label_this_week');
+    lastTitle = I18n.t('label_last_week');
+  } else if (unitOfDate === 'month') {
+    date.subtract(11, 'month');
+    currentTitle = I18n.t('label_this_month');
+    lastTitle = I18n.t('label_last_month');
+  } else if (unitOfDate === 'year') {
+    date.subtract(11, 'year');
+    currentTitle = I18n.t('label_this_year');
+    lastTitle = I18n.t('label_last_year');
+  } else {
+    return routes;
+  }
+  for (let i = 0; i < 12; i++) {
+    let title = '';
+    if (unitOfDate === 'isoWeek') {
+      title =
+        date.startOf('isoWeek').format('D MMM') +
+        ' - ' +
+        date.endOf('isoWeek').format('D MMM');
+      date.add(1, 'week');
+    } else if (unitOfDate === 'month') {
+      title = date.format('MMMM') + ', ' + date.format('YY');
+      date.add(1, 'month');
+    } else if (unitOfDate === 'year') {
+      title = date.format('YYYY');
+      date.add(1, 'year');
+    }
+    if (i === 10) {
+      title = lastTitle;
+    }
+    if (i === 11) {
+      title = currentTitle;
+    }
+    routes.push({key: i.toString(), title: title});
+  }
+  return routes;
+};
+
+const createRouteOperationsMap = (
+  operations: Operation[],
+  unitOfDate: UnitOfDate,
+) => {
+  let unit: DurationInputArg2 = 'month';
+  if (unitOfDate === 'isoWeek') {
+    unit = 'week';
+  } else if (unitOfDate === 'year') {
+    unit = 'year';
+  }
+  const routeOperationsMap = new Map<number, Operation[]>();
+  const currentDate = moment().subtract(12, unit);
+  for (let i = 0; i < 12; i++) {
+    currentDate.add(1, unit);
+    const filteredOperations = filterOperationsByDate(
+      operations,
+      currentDate,
+      unitOfDate,
+    );
+    routeOperationsMap.set(i, filteredOperations);
+  }
+  return routeOperationsMap;
 };
 
 const mapStateToProps = (state: AppState) => ({

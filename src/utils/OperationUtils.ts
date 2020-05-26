@@ -7,6 +7,7 @@ import {Action} from 'redux';
 import StorageHandler from '../storage/StorageHandler';
 import {ACTION_TYPES} from '../store/ACTION_TYPES';
 import {OperationEntity} from '../entities/OperationEntity';
+import {UnitOfDate} from "../screens/home/home.component";
 
 export const saveOperation = (
   operation: Operation,
@@ -84,7 +85,7 @@ export const groupByCategory = (
 export const filterOperationsByDate = (
   operations: Operation[],
   selectedDate: moment.Moment,
-  selectedInterval: 'isoWeek' | 'month' | 'year',
+  selectedInterval: UnitOfDate,
 ): Operation[] => {
   let filteredOperations: Operation[] = [];
   for (let operation of operations) {

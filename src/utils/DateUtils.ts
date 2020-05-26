@@ -1,5 +1,6 @@
 import I18n from '../i18n/i18n';
 import moment from 'moment';
+import {UnitOfDate} from "../screens/home/home.component";
 
 export const convertDate = (date: Date | null | undefined) => {
   if (date) {
@@ -36,7 +37,7 @@ const compareDates = (firstDate: Date, secondDate: Date) => {
 export const isDateInSelectedInterval = (
   date: Date,
   selectedDate: moment.Moment,
-  selectedInterval: 'isoWeek' | 'month' | 'year',
+  selectedInterval: UnitOfDate,
 ) => {
   const dateBetweenInterval = moment(selectedDate);
   const startOfInterval = moment(dateBetweenInterval).startOf(selectedInterval);
