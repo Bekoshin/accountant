@@ -1,11 +1,11 @@
-import styles from './childCategory.styles';
+import styles from './styles';
 import React from 'react';
 import {Text, View} from 'react-native';
 import I18n from '../../i18n/i18n';
 import {TouchableRipple} from 'react-native-paper';
 import Category from '../../entities/Category';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {CheckIcon} from '../checkIcon/checkIcon.component';
+import {CheckIcon} from '../checkIcon/checkIcon';
 
 type ChildCategoryProps = {
   category?: Category;
@@ -16,7 +16,7 @@ type ChildCategoryProps = {
   isSelected?: boolean;
 };
 
-export const ChildCategoryComponent = (props: ChildCategoryProps) => {
+export const ChildCategory = (props: ChildCategoryProps) => {
   const {category, onPress, onLongPress, onAddPress, isSelected} = props;
 
   const onPressHandle = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import styles from './checkIcon.styles';
+import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CheckIconProps {

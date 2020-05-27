@@ -17,10 +17,10 @@ import {
 } from '../../utils/OperationUtils';
 import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
-import {Fab} from './fab/fab.component';
+import {Fab} from './fab/fab';
 import {RootStackParamList} from '../../App';
-import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar.component';
-import HomeTabView from './homeTabView/homeTabView.component';
+import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar';
+import HomeTabView from './homeTabView/homeTabView';
 import ScrollableTabView, {
   ChangeTabProperties,
 } from 'react-native-scrollable-tab-view';

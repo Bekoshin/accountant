@@ -2,7 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from './dateSelector.styles';
+import styles from './styles';
 
 type DateSelectorProps = {
   type: 'isoWeek' | 'month' | 'year';

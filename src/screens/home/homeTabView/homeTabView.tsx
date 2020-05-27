@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import HomeTabScene from './homeTabScene';
 import Operation from '../../../entities/Operation';
-import {GroupedBy, UnitOfDate} from '../home.component';
+import {GroupedBy, UnitOfDate} from '../home';
 import ScrollableTabView, {
   ChangeTabProperties,
   ScrollableTabBar,

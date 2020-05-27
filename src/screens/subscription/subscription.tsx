@@ -13,7 +13,7 @@ import Subscription from '../../entities/Subscription';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 import {
   createOperationBySubscription,
   needToCreateOperation,

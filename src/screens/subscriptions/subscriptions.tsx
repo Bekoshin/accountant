@@ -9,7 +9,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {SubscriptionsAppBar} from '../../components/appBars/subscriptionsAppBar/subscriptionsAppBar.component';
+import {SubscriptionsAppBar} from '../../components/appBars/subscriptionsAppBar/subscriptionsAppBar';
 import I18n from '../../i18n/i18n';
 import Subscription from '../../entities/Subscription';
 import {AppState} from '../../store/store';

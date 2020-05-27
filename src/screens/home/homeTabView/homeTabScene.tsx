@@ -4,7 +4,7 @@ import {convertDate, getMonthName} from '../../../utils/DateUtils';
 import I18n from '../../../i18n/i18n';
 import {List} from 'react-native-paper';
 import {GestureResponderEvent, ScrollView, Text, View} from 'react-native';
-import {NoExpensesComponent} from '../../../components/noExpenses/noExpenses.Component';
+import {NoExpenses} from '../../../components/noExpenses/noExpenses';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   formatNumberToDecimal,
@@ -12,7 +12,7 @@ import {
   groupByDate,
   groupByMonth,
 } from '../../../utils/OperationUtils';
-import {DATE, GroupedBy, UnitOfDate} from '../home.component';
+import {DATE, GroupedBy, UnitOfDate} from '../home';
 
 type HomeTabSceneProps = {
   tabLabel: string;
@@ -85,7 +85,7 @@ const HomeTabScene = (props: HomeTabSceneProps) => {
         </ScrollView>
       );
     } else {
-      return <NoExpensesComponent />;
+      return <NoExpenses />;
     }
   };
 

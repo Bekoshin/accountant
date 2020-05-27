@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {Divider} from 'react-native-paper';
 import Category from '../../entities/Category';
-import {CategoryComponent} from '../../components/category/category.component';
+import {CategoryComponent} from '../../components/category/category';
 import I18n from '../../i18n/i18n';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
@@ -13,7 +13,7 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 
 type CategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Categories'>;

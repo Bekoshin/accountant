@@ -12,7 +12,7 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 
 type CategoryScreenProps = {
   route: RouteProp<RootStackParamList, 'Category'>;

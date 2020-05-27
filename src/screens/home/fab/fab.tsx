@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FAB} from 'react-native-paper';
-import {styles} from './fab.styles';
+import {styles} from './styles';
 import I18n from '../../../i18n/i18n';
 
 interface FabProps {

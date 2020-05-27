@@ -1,11 +1,11 @@
-import styles from './category.styles';
+import styles from './styles';
 import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import Category from '../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
-import {ChildCategoryComponent} from '../childCategory/childCategory.component';
+import {ChildCategory} from '../childCategory/childCategory';
 import I18n from '../../i18n/i18n';
-import {CheckIcon} from '../checkIcon/checkIcon.component';
+import {CheckIcon} from '../checkIcon/checkIcon';
 
 type CategoryProps = {
   category: Category;
@@ -74,7 +74,7 @@ export const CategoryComponent = (props: CategoryProps) => {
           childCategory.parentCategory = category; //todo maybe need change
           const childCategoryIsSelected = checkIsSelected(childCategory);
           categoriesComponent.push(
-            <ChildCategoryComponent
+            <ChildCategory
               category={childCategory}
               key={childCategory.id}
               onPress={onPressHandle(childCategoryIsSelected)}
@@ -87,7 +87,7 @@ export const CategoryComponent = (props: CategoryProps) => {
       }
     }
     categoriesComponent.push(
-      <ChildCategoryComponent
+      <ChildCategory
         onAddPress={() => {
           addCategory(category);
         }}

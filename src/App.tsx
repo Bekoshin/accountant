@@ -14,18 +14,18 @@ import 'reflect-metadata';
 
 import store from './store/store';
 
-import WelcomeScreen from './screens/welcome/welсome.component';
-import HomeScreen from './screens/home/home.component';
+import WelcomeScreen from './screens/welcome/welсome';
+import HomeScreen from './screens/home/home';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
-import SettingsScreen from './screens/settings/settings.component';
-import OperationScreen from './screens/operation/operation.component';
-import SubscriptionsScreen from './screens/subscriptions/subscriptions.component';
-import SubscriptionScreen from './screens/subscription/subscription.component';
-import CategoriesSreen from './screens/categories/categories.component';
-import CategoryScreen from './screens/category/category.component';
-import ParentCategoriesScreen from './screens/parentCategories/parentCategories.component';
-import FiltersScreen from './screens/filters/filters.component';
+import SettingsScreen from './screens/settings/settings';
+import OperationScreen from './screens/operation/operation';
+import SubscriptionsScreen from './screens/subscriptions/subscriptions';
+import SubscriptionScreen from './screens/subscription/subscription';
+import CategoriesSreen from './screens/categories/categories';
+import CategoryScreen from './screens/category/category';
+import ParentCategoriesScreen from './screens/parentCategories/parentCategories';
+import FiltersScreen from './screens/filters/filters';
 
 import 'react-native-gesture-handler';
 import Operation from './entities/Operation';

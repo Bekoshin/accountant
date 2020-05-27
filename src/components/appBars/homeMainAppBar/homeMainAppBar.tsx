@@ -1,7 +1,7 @@
 import React from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import I18n from '../../../i18n/i18n';
-import {DATE, GroupedBy} from '../../../screens/home/home.component';
+import {DATE, GroupedBy} from '../../../screens/home/home';
 
 type AppBarProps = {
   title: string;

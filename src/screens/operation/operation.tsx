@@ -12,7 +12,7 @@ import {convertDate} from '../../utils/DateUtils';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 
 type OperationProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Operation'>;

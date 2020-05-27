@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import Input from '../../components/input/input';
 import I18n from '../../i18n/i18n';
-import styles from './filters.styles';
+import styles from './styles';
 import {convertDate} from '../../utils/DateUtils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
@@ -12,7 +12,7 @@ import {applyFilter} from '../../utils/FilterUtils';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar.component';
+import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 
 type FiltersScreenProps = {
   route: RouteProp<RootStackParamList, 'Filters'>;
