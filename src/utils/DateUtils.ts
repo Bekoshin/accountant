@@ -1,6 +1,6 @@
 import I18n from '../i18n/i18n';
 import moment from 'moment';
-import {UnitOfDate} from "../screens/home/home";
+import {UnitOfDate} from '../screens/home/home';
 
 export const convertDate = (date: Date | null | undefined) => {
   if (date) {

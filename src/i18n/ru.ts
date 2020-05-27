@@ -43,6 +43,9 @@ export default {
   label_last_month: 'В прошлом месяце',
   label_this_year: 'В этом году',
   label_last_year: 'В прошлом году',
+  label_week: 'Неделя',
+  label_month: 'Месяц',
+  label_year: 'Год',
 
   operation_screen: 'Операция',
   new_operation_screen: 'Новая операция',

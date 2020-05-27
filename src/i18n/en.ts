@@ -43,6 +43,9 @@ export default {
   label_last_month: 'Last month',
   label_this_year: 'This year',
   label_last_year: 'Last year',
+  label_week: 'Week',
+  label_month: 'Month',
+  label_year: 'Year',
 
   operation_screen: 'Operation',
   new_operation_screen: 'New operation',

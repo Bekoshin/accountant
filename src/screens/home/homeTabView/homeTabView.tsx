@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import HomeTabScene from './homeTabScene';
 import Operation from '../../../entities/Operation';
-import {GroupedBy, UnitOfDate} from '../home';
+import {GroupedBy, TABS_COUNT, UnitOfDate} from '../home';
 import ScrollableTabView, {
   ChangeTabProperties,
   ScrollableTabBar,
@@ -55,9 +55,13 @@ const HomeTabView = (props: HomeTabViewProps) => {
   return (
     <ScrollableTabView
       ref={setTabViewRef}
-      initialPage={11}
+      initialPage={TABS_COUNT - 1}
       renderTabBar={() => <ScrollableTabBar />}
-      onChangeTab={changeIndex}>
+      onChangeTab={changeIndex}
+      prerenderingSiblingsNumber={1}
+      tabBarUnderlineStyle={{backgroundColor: 'blue'}}
+      tabBarTextStyle={{fontWeight: 'normal' }}
+    >
       {renderScenes()}
     </ScrollableTabView>
   );

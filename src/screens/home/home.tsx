@@ -24,12 +24,15 @@ import HomeTabView from './homeTabView/homeTabView';
 import ScrollableTabView, {
   ChangeTabProperties,
 } from 'react-native-scrollable-tab-view';
+import {changeRoutesTitle, createRouteTitles} from "../../utils/HomeTabViewUtils";
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
 export const DATE = 'date';
 export const CATEGORY = 'category';
 export type GroupedBy = 'date' | 'category';
+
+export const TABS_COUNT = 12;
 
 type HomeScreenProps = {
   route: RouteProp<RootStackParamList, 'Tab'>;
@@ -47,7 +50,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const [unitOfDateIndex, setUnitOfDateIndex] = useState(1);
   const routeTitles = createRouteTitles(UNITS_OF_DATE[unitOfDateIndex]);
-  const [tabIndex, setTabIndex] = useState(11);
+  const [tabIndex, setTabIndex] = useState(TABS_COUNT - 1);
   const [routeOperationsMap, setRouteOperationsMap] = useState(
     new Map<number, Operation[]>(),
   );
@@ -91,7 +94,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     changeRoutesTitle(routeTitles, UNITS_OF_DATE[index]);
     if (tabViewRef) {
       // @ts-ignore
-      tabViewRef.goToPage(11);
+      tabViewRef.goToPage(TABS_COUNT - 1);
     }
   };
 
@@ -238,7 +241,11 @@ const HomeScreen = (props: HomeScreenProps) => {
         />
       )}
       <SegmentedControlTab
-        values={['Неделя', 'Месяц', 'Год']}
+        values={[
+          I18n.t('label_week'),
+          I18n.t('label_month'),
+          I18n.t('label_year'),
+        ]}
         selectedIndex={unitOfDateIndex}
         onTabPress={handleUnitOfDateIndexChanged}
       />
@@ -263,96 +270,6 @@ const HomeScreen = (props: HomeScreenProps) => {
   );
 };
 
-const createRouteTitles = (unitOfDate: UnitOfDate): string[] => {
-  const date = moment();
-  let titles: string[] = [];
-  let currentTitle = '';
-  let lastTitle = '';
-  if (unitOfDate === 'isoWeek') {
-    date.subtract(11, 'week');
-    currentTitle = I18n.t('label_this_week');
-    lastTitle = I18n.t('label_last_week');
-  } else if (unitOfDate === 'month') {
-    date.subtract(11, 'month');
-    currentTitle = I18n.t('label_this_month');
-    lastTitle = I18n.t('label_last_month');
-  } else if (unitOfDate === 'year') {
-    date.subtract(11, 'year');
-    currentTitle = I18n.t('label_this_year');
-    lastTitle = I18n.t('label_last_year');
-  } else {
-    return titles;
-  }
-  for (let i = 0; i < 12; i++) {
-    let title = '';
-    if (unitOfDate === 'isoWeek') {
-      title =
-        date.startOf('isoWeek').format('D MMM') +
-        ' - ' +
-        date.endOf('isoWeek').format('D MMM');
-      date.add(1, 'week');
-    } else if (unitOfDate === 'month') {
-      title = date.format('MMMM') + ', ' + date.format('YY');
-      date.add(1, 'month');
-    } else if (unitOfDate === 'year') {
-      title = date.format('YYYY');
-      date.add(1, 'year');
-    }
-    if (i === 10) {
-      title = lastTitle;
-    }
-    if (i === 11) {
-      title = currentTitle;
-    }
-    titles.push(title);
-  }
-  return titles;
-};
-
-const changeRoutesTitle = (titles: string[], unitOfDate: UnitOfDate) => {
-  const date = moment();
-  let currentTitle = '';
-  let lastTitle = '';
-  if (unitOfDate === 'isoWeek') {
-    date.subtract(11, 'week');
-    currentTitle = I18n.t('label_this_week');
-    lastTitle = I18n.t('label_last_week');
-  } else if (unitOfDate === 'month') {
-    date.subtract(11, 'month');
-    currentTitle = I18n.t('label_this_month');
-    lastTitle = I18n.t('label_last_month');
-  } else if (unitOfDate === 'year') {
-    date.subtract(11, 'year');
-    currentTitle = I18n.t('label_this_year');
-    lastTitle = I18n.t('label_last_year');
-  } else {
-    return titles;
-  }
-  for (let i = 0; i < titles.length; i++) {
-    let title = '';
-    if (unitOfDate === 'isoWeek') {
-      title =
-        date.startOf('isoWeek').format('D MMM') +
-        ' - ' +
-        date.endOf('isoWeek').format('D MMM');
-      date.add(1, 'week');
-    } else if (unitOfDate === 'month') {
-      title = date.format('MMMM') + ', ' + date.format('YY');
-      date.add(1, 'month');
-    } else if (unitOfDate === 'year') {
-      title = date.format('YYYY');
-      date.add(1, 'year');
-    }
-    if (i === 10) {
-      title = lastTitle;
-    }
-    if (i === 11) {
-      title = currentTitle;
-    }
-    titles[i] = title;
-  }
-};
-
 const createRouteOperationsMap = (
   operations: Operation[],
   unitOfDate: UnitOfDate,
@@ -364,8 +281,8 @@ const createRouteOperationsMap = (
     unit = 'year';
   }
   const routeOperationsMap = new Map<number, Operation[]>();
-  const currentDate = moment().subtract(12, unit);
-  for (let i = 0; i < 12; i++) {
+  const currentDate = moment().subtract(TABS_COUNT, unit);
+  for (let i = 0; i < TABS_COUNT; i++) {
     currentDate.add(1, unit);
     const filteredOperations = filterOperationsByDate(
       operations,
