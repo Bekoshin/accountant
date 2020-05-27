@@ -15,6 +15,7 @@ import {
 import {DATE, GroupedBy, UnitOfDate} from '../home.component';
 
 type HomeTabSceneProps = {
+  tabLabel: string;
   operations: Operation[];
   groupedBy: GroupedBy;
   unitOfDate: UnitOfDate;
