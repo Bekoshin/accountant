@@ -24,7 +24,11 @@ import HomeTabView from './homeTabView/homeTabView';
 import ScrollableTabView, {
   ChangeTabProperties,
 } from 'react-native-scrollable-tab-view';
-import {changeRoutesTitle, createRouteTitles} from "../../utils/HomeTabViewUtils";
+import {
+  changeRoutesTitle,
+  createRouteTitles,
+} from '../../utils/HomeTabViewUtils';
+import {RewindButton} from '../../components/rewindButton/RewindButton';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -92,10 +96,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const handleUnitOfDateIndexChanged = (index: number) => {
     setUnitOfDateIndex(index);
     changeRoutesTitle(routeTitles, UNITS_OF_DATE[index]);
-    if (tabViewRef) {
-      // @ts-ignore
-      tabViewRef.goToPage(TABS_COUNT - 1);
-    }
+    goToLastTabPage();
   };
 
   const handleTabChange = (value: ChangeTabProperties) => {
@@ -124,6 +125,13 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const hideSearchMode = () => {
     setSearchMode(false);
+  };
+
+  const goToLastTabPage = () => {
+    if (tabViewRef) {
+      // @ts-ignore
+      tabViewRef.goToPage(TABS_COUNT - 1);
+    }
   };
 
   const handleDeleteButton = () => {
@@ -250,16 +258,22 @@ const HomeScreen = (props: HomeScreenProps) => {
         onTabPress={handleUnitOfDateIndexChanged}
       />
       {routeTitles.length > 0 ? (
-        <HomeTabView
-          routeOperationsMap={routeOperationsMap}
-          titles={routeTitles}
-          groupedBy={groupedBy}
-          unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
-          changeIndex={handleTabChange}
-          onOperationPress={handleOperationPress}
-          onOperationLongPress={handleOperationLongPress}
-          setTabViewRef={setTabViewRef}
-        />
+        <View style={{flex: 1}}>
+          <HomeTabView
+            routeOperationsMap={routeOperationsMap}
+            titles={routeTitles}
+            groupedBy={groupedBy}
+            unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
+            changeIndex={handleTabChange}
+            onOperationPress={handleOperationPress}
+            onOperationLongPress={handleOperationLongPress}
+            setTabViewRef={setTabViewRef}
+          />
+          <RewindButton
+            visible={tabIndex < TABS_COUNT - 1}
+            onPress={goToLastTabPage}
+          />
+        </View>
       ) : null}
       <Fab
         addOperation={() => navigation.navigate('Operation')}
