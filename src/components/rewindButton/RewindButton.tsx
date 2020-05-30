@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Surface} from 'react-native-paper';
+import styles from './styles';
 
 type RewindButtonProps = {
   visible: boolean;
@@ -10,24 +11,9 @@ export const RewindButton = (props: RewindButtonProps) => {
   const {visible, onPress} = props;
   if (visible) {
     return (
-      <Surface
-        style={{
-          position: 'absolute',
-          right: 16,
-          top: 32,
-          borderRadius: 100,
-          width: 36,
-          height: 36,
-        }}>
+      <Surface style={styles.mainContainer}>
         <Button
-          style={{
-            padding: 0,
-            borderRadius: 100,
-            width: 36,
-            height: 36,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={styles.buttonStyle}
           mode="contained"
           icon="skip-forward"
           onPress={onPress}
