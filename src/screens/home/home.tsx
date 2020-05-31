@@ -6,7 +6,7 @@ import {Alert, View} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
-import {Menu, Appbar, Searchbar} from 'react-native-paper';
+import {Menu} from 'react-native-paper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import I18n from '../../i18n/i18n';
 import {
@@ -63,6 +63,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [operationMenuVisible, setOperationMenuVisible] = useState(false);
   const [groupedBy, setGroupedBy] = useState<GroupedBy>(DATE);
   const [searchMode, setSearchMode] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const [menuAnchor, setMenuAnchor] = useState({x: 0, y: 0});
   const [selectedOperation, setSelectedOperation] = useState<Operation | null>(
     null,
@@ -127,6 +128,10 @@ const HomeScreen = (props: HomeScreenProps) => {
     setSearchMode(false);
   };
 
+  const handleChangeSearchValue = (text: string) => {
+    setSearchValue(text);
+  };
+
   const goToLastTabPage = () => {
     if (tabViewRef) {
       // @ts-ignore
@@ -180,28 +185,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     setSelectedOperation(operation);
   };
 
-  const renderSearchAppBar = () => {
-    return (
-      <Appbar.Header>
-        <View style={{flex: 0.1}}>
-          <Appbar.Action icon="arrow-left" onPress={hideSearchMode} />
-        </View>
-        <View style={{flex: 0.8}}>
-          <Searchbar
-            placeholder="Search"
-            onChangeText={query => {
-              console.log(query);
-            }}
-            value="qwe"
-          />
-        </View>
-        <View style={{flex: 0.1}}>
-          <Appbar.Action icon="magnify" onPress={showSearchMode} />
-        </View>
-      </Appbar.Header>
-    );
-  };
-
   const renderOperationMenu = () => {
     return (
       <Menu
@@ -230,24 +213,24 @@ const HomeScreen = (props: HomeScreenProps) => {
   console.log('HOME COMPONENT RENDER');
   return (
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      {searchMode ? (
-        renderSearchAppBar()
-      ) : (
-        <HomeMainAppBar
-          title={
-            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
-          }
-          groupedBy={groupedBy}
-          hasFilter={!!filter}
-          menuVisible={moreMenuVisible}
-          onDropFiltersPress={handleDropFiltersButton}
-          onFilterPress={handleFiltersButton}
-          onGroupByPress={handleGroupBy}
-          onMenuButtonPress={showMoreMenu}
-          onMenuDismiss={hideMoreMenu}
-          onSearchButtonPress={showSearchMode}
-        />
-      )}
+      <HomeMainAppBar
+        searchMode={searchMode}
+        title={
+          I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
+        }
+        groupedBy={groupedBy}
+        hasFilter={!!filter}
+        menuVisible={moreMenuVisible}
+        onDropFiltersPress={handleDropFiltersButton}
+        onFilterPress={handleFiltersButton}
+        onGroupByPress={handleGroupBy}
+        onMenuButtonPress={showMoreMenu}
+        onMenuDismiss={hideMoreMenu}
+        onSearchButtonPress={showSearchMode}
+        searchValue={searchValue}
+        onHideSearchBarButtonPress={hideSearchMode}
+        onSearchValueChange={handleChangeSearchValue}
+      />
       <SegmentedControlTab
         values={[
           I18n.t('label_week'),
