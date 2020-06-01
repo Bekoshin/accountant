@@ -42,13 +42,26 @@ export const HomeMainAppBar = (props: AppBarProps) => {
   } = props;
 
   const [animatedSearchMode] = useState(new Animated.Value(0));
+  const [searchBarRef, setSearchBarRef] = useState<typeof Searchbar | null>(
+    null,
+  );
 
   useEffect(() => {
     Animated.timing(animatedSearchMode, {
       toValue: searchMode ? 1 : 0,
       duration: 200,
-    }).start();
-  }, [animatedSearchMode, searchMode]);
+    }).start(() => {
+      if (searchBarRef) {
+        if (searchMode) {
+          // @ts-ignore
+          searchBarRef.focus();
+        } else {
+          // @ts-ignore
+          searchBarRef.blur();
+        }
+      }
+    });
+  }, [animatedSearchMode, searchBarRef, searchMode]);
 
   const renderDropFiltersButton = () => {
     if (hasFilter) {
@@ -133,10 +146,12 @@ export const HomeMainAppBar = (props: AppBarProps) => {
           onPress={onHideSearchBarButtonPress}
         />
         <Searchbar
+          ref={setSearchBarRef}
           style={{flex: 1, height: 40}}
           placeholder="Search"
           onChangeText={onSearchValueChange}
           value={searchValue}
+          selectTextOnFocus={true}
         />
       </Animated.View>
     </Appbar.Header>
