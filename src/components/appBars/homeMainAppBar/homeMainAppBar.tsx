@@ -61,6 +61,7 @@ export const HomeMainAppBar = (props: AppBarProps) => {
         }
       }
     });
+    console.log('test');
   }, [animatedSearchMode, searchBarRef, searchMode]);
 
   const renderDropFiltersButton = () => {
@@ -148,6 +149,7 @@ export const HomeMainAppBar = (props: AppBarProps) => {
         <Searchbar
           ref={setSearchBarRef}
           style={{flex: 1, height: 40}}
+          inputStyle={{paddingVertical: 0}}
           placeholder="Search"
           onChangeText={onSearchValueChange}
           value={searchValue}
