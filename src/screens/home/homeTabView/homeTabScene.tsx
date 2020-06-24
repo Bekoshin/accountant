@@ -4,6 +4,7 @@ import {convertDate, getMonthName} from '../../../utils/DateUtils';
 import I18n from '../../../i18n/i18n';
 import {List} from 'react-native-paper';
 import {GestureResponderEvent, ScrollView, Text, View} from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {NoExpenses} from '../../../components/noExpenses/noExpenses';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -101,34 +102,36 @@ const HomeTabScene = (props: HomeTabSceneProps) => {
         title = convertDate(operation.date);
       }
       operationComponents.push(
-        <List.Item
-          key={operation.id}
-          title={title}
-          onPress={() => onOperationPress(operation)}
-          onLongPress={
-            ((evt: GestureResponderEvent) => {
-              const x = evt.nativeEvent.pageX;
-              const y = evt.nativeEvent.pageY;
-              onOperationLongPress(operation, {x: x, y: y});
-            }) as () => void
-          }
-          left={
-            operation.category.iconName
-              ? () => (
-                  <Icon
-                    name={operation.category.iconName as string}
-                    size={48}
-                    color="black"
-                  />
-                )
-              : undefined
-          }
-          right={() => (
-            <View style={{justifyContent: 'center'}}>
-              <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>
-            </View>
-          )}
-        />,
+        <GestureRecognizer key={operation.id}>
+          <List.Item
+            key={operation.id}
+            title={title}
+            onPress={() => onOperationPress(operation)}
+            onLongPress={
+              ((evt: GestureResponderEvent) => {
+                const x = evt.nativeEvent.pageX;
+                const y = evt.nativeEvent.pageY;
+                onOperationLongPress(operation, {x: x, y: y});
+              }) as () => void
+            }
+            left={
+              operation.category.iconName
+                ? () => (
+                    <Icon
+                      name={operation.category.iconName as string}
+                      size={48}
+                      color="black"
+                    />
+                  )
+                : undefined
+            }
+            right={() => (
+              <View style={{justifyContent: 'center'}}>
+                <Text>{formatNumberToDecimal(operation.amount)} ₽</Text>
+              </View>
+            )}
+          />
+        </GestureRecognizer>,
       );
     }
     return operationComponents;
