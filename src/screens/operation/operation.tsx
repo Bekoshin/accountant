@@ -79,8 +79,8 @@ const OperationScreen = (props: OperationProps) => {
   };
 
   const changeDate = (newDate: Date) => {
-    setDate(newDate);
     setDatePickerVisible(false);
+    setDate(newDate);
   };
 
   const changeNote = (newNote: string) => {
