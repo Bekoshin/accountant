@@ -3,7 +3,7 @@ import {View, ScrollView, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Category from '../../entities/Category';
-import Input from '../../components/input/input';
+import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import StorageHandler from '../../storage/StorageHandler';
 import {ThunkAction} from 'redux-thunk';
@@ -96,15 +96,15 @@ const CategoryScreen = (props: CategoryScreenProps) => {
         <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
           <ScrollView>
             <Input
-              label="Наименование"
+              // label="Наименование"
               value={name}
-              required={true}
-              errorMessage={nameError}
+              // required={true}
+              // errorMessage={nameError}
               onFocus={hideNameError}
               onChangeText={setName}
             />
             <Input
-              label="Parent category"
+              // label="Parent category"
               value={
                 parentCategory
                   ? I18n.t(parentCategory.name, {
@@ -113,8 +113,9 @@ const CategoryScreen = (props: CategoryScreenProps) => {
                   : ''
               }
               editable={false}
-              onInputPress={handleParentCategoryInputPress}
-              onClearPress={handleClearParentCategoryPress}
+              onChangeText={() => {}}
+              // onInputPress={handleParentCategoryInputPress}
+              // onClearPress={handleClearParentCategoryPress}
             />
           </ScrollView>
         </View>

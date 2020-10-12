@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView, SafeAreaView, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
-import Input from '../../components/input/input';
+import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
 import {ThunkAction} from 'redux-thunk';
@@ -190,25 +190,25 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
         <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
           <ScrollView bounces={false}>
             <Input
-              label={I18n.t('label_name')}
+              // label={I18n.t('label_name')}
               value={name}
-              required={true}
-              errorMessage={nameError}
+              // required={true}
+              // errorMessage={nameError}
               onFocus={hideNameError}
               onChangeText={setName}
             />
             <Input
-              label={I18n.t('label_amount')}
+              // label={I18n.t('label_amount')}
               value={amount}
               keyboardType="numeric"
-              required={true}
+              // required={true}
               selectTextOnFocus={true}
-              errorMessage={amountError}
+              // errorMessage={amountError}
               onFocus={hideAmountError}
               onChangeText={changeAmount}
             />
             <Input
-              label={I18n.t('label_category')}
+              // label={I18n.t('label_category')}
               value={
                 category
                   ? I18n.t(category.name, {
@@ -216,25 +216,26 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
                     })
                   : ''
               }
-              required={true}
+              // required={true}
               editable={false}
-              errorMessage={categoryError}
+              // errorMessage={categoryError}
               onFocus={hideCategoryError}
-              hideClearButton={true}
-              onInputPress={handleCategoryInputPress}
+              onChangeText={() => {}}
+              // hideClearButton={true}
+              // onInputPress={handleCategoryInputPress}
             />
             <Input
-              label={I18n.t('label_day')}
+              // label={I18n.t('label_day')}
               value={day}
               keyboardType="numeric"
-              required={true}
+              // required={true}
               selectTextOnFocus={true}
-              errorMessage={dayError}
+              // errorMessage={dayError}
               onFocus={hideDayError}
               onChangeText={changeDay}
             />
             <Input
-              label={I18n.t('label_note')}
+              // label={I18n.t('label_note')}
               value={note}
               onChangeText={setNote}
               multiline={true}

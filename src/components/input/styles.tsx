@@ -1,61 +1,27 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {TYPOGRAPHY} from '../../constants/typography';
+import {COLORS} from '../../constants/colors';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    minHeight: 56,
-  },
-  label: {
-    lineHeight: 12,
-    position: 'absolute',
-    left: 12,
-    top: 8,
-    fontSize: 12,
-    // fontFamily: 'Roboto',
-    paddingTop: 0,
-    paddingBottom: 0,
-    color: 'black',
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 12,
-    paddingTop: 24,
-    minHeight: 56,
-  },
-  text: {
-    fontSize: 16,
-    // fontFamily: 'Roboto',
-    color: 'black',
-  },
-  input: {
-    flex: 1,
-    minHeight: 56,
-    fontSize: 16,
-    justifyContent: 'flex-end',
-    // fontFamily: 'Roboto',
-    paddingHorizontal: 12,
-    paddingTop: Platform.OS === 'android' ? 18 : 24,
-    paddingBottom: 12,
-    color: 'black',
-  },
-  underlineContainer: {
+  mainContainer: {
+    backgroundColor: 'white',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 12,
-    marginTop: 4,
+    paddingLeft: 16,
+    paddingRight: 16,
+    borderRadius: 4,
   },
-  helperText: {
-    lineHeight: 12,
-    fontSize: 12,
-    // fontFamily: 'Roboto',
-    color: 'grey',
+  inputStyle: {
+    ...(TYPOGRAPHY.CAPTION as Object),
+    flex: 1,
+    // paddingTop: 15,
+    // paddingBottom: 14,
+    justifyContent: 'center',
+    color: COLORS.TEXT_INPUT_COLOR,
   },
-  errorText: {
-    lineHeight: 12,
-    fontSize: 12,
-    // fontFamily: 'Roboto',
-    color: '#b00020ff',
+  iconContainer: {
+    flex: 1,
+    paddingTop: 14,
+    paddingBottom: 11,
   },
 });
 

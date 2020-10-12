@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
-import Input from '../../components/input/input';
+import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import styles from './styles';
 import {convertDate} from '../../utils/DateUtils';
@@ -150,21 +150,22 @@ const FiltersScreen = (props: FiltersScreenProps) => {
       <View style={styles.mainContainer}>
         <ScrollView>
           <Input
-            label={I18n.t('label_category')}
+            // label={I18n.t('label_category')}
             value={createCategoriesString()}
             editable={false}
-            onClearPress={clearAllCategories}
-            onInputPress={() =>
-              navigation.navigate('Categories', {
-                selectedCategories: categories,
-                previousScreen: 'Filters',
-              })
-            }
+            // onClearPress={clearAllCategories}
+            // onInputPress={() =>
+            //   navigation.navigate('Categories', {
+            //     selectedCategories: categories,
+            //     previousScreen: 'Filters',
+            //   })
+            // }
+            onChangeText={() => {}}
           />
           <View style={styles.rowContainer}>
             <Input
               style={styles.leftInput}
-              label={I18n.t('label_amount_from')}
+              // label={I18n.t('label_amount_from')}
               value={amountFrom}
               keyboardType="numeric"
               selectTextOnFocus={true}
@@ -172,7 +173,7 @@ const FiltersScreen = (props: FiltersScreenProps) => {
             />
             <Input
               style={styles.rightInput}
-              label={I18n.t('label_amount_to')}
+              // label={I18n.t('label_amount_to')}
               value={amountTo}
               keyboardType="numeric"
               selectTextOnFocus={true}
@@ -182,23 +183,25 @@ const FiltersScreen = (props: FiltersScreenProps) => {
           <View style={styles.rowContainer}>
             <Input
               style={styles.leftInput}
-              label={I18n.t('label_date_from')}
+              // label={I18n.t('label_date_from')}
               editable={false}
               value={convertDate(dateFrom)}
-              onClearPress={clearDateFrom}
-              onInputPress={handleDateFromInputPress}
+              // onClearPress={clearDateFrom}
+              // onInputPress={handleDateFromInputPress}
+              onChangeText={() => {}}
             />
             <Input
               style={styles.rightInput}
-              label={I18n.t('label_date_to')}
+              // label={I18n.t('label_date_to')}
               editable={false}
               value={convertDate(dateTo)}
-              onClearPress={clearDateTo}
-              onInputPress={handleDateToInputPress}
+              // onClearPress={clearDateTo}
+              // onInputPress={handleDateToInputPress}
+              onChangeText={() => {}}
             />
           </View>
           <Input
-            label={I18n.t('label_note')}
+            // label={I18n.t('label_note')}
             value={note}
             onChangeText={setNote}
             multiline={true}

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Operation from '../../entities/Operation';
 import {Checkbox, TouchableRipple} from 'react-native-paper';
-import Input from '../../components/input/input';
+import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
 import {saveOperation} from '../../utils/OperationUtils';
@@ -162,17 +162,17 @@ const OperationScreen = (props: OperationProps) => {
               </View>
             ) : null}
             <Input
-              label={I18n.t('label_amount')}
+              // label={I18n.t('label_amount')}
               value={amount}
               keyboardType="numeric"
-              required={true}
+              // required={true}
               selectTextOnFocus={true}
-              errorMessage={amountError}
+              // errorMessage={amountError}
               onFocus={hideAmountError}
               onChangeText={changeAmount}
             />
             <Input
-              label={I18n.t('label_category')}
+              // label={I18n.t('label_category')}
               value={
                 category
                   ? I18n.t(category.name, {
@@ -180,30 +180,32 @@ const OperationScreen = (props: OperationProps) => {
                     })
                   : ''
               }
-              required={true}
+              // required={true}
               editable={false}
-              errorMessage={categoryError}
+              // errorMessage={categoryError}
               onFocus={hideCategoryError}
-              hideClearButton={true}
-              onInputPress={() => {
-                hideCategoryError();
-                navigation.navigate('Categories', {
-                  previousScreen: 'Operation',
-                });
-              }}
+              // hideClearButton={true}
+              // onInputPress={() => {
+              //   hideCategoryError();
+              //   navigation.navigate('Categories', {
+              //     previousScreen: 'Operation',
+              //   });
+              // }}
+              onChangeText={() => {}}
             />
             <Input
-              label={I18n.t('label_date')}
+              // label={I18n.t('label_date')}
               value={convertDate(date)}
-              required={true}
+              // required={true}
               editable={false}
-              errorMessage={dateError}
+              // errorMessage={dateError}
               onFocus={hideDateError}
-              hideClearButton={true}
-              onInputPress={handleDateInputPress}
+              onChangeText={() => {}}
+              // hideClearButton={true}
+              // onInputPress={handleDateInputPress}
             />
             <Input
-              label={I18n.t('label_note')}
+              // label={I18n.t('label_note')}
               value={note}
               onChangeText={changeNote}
               multiline={true}
