@@ -74,6 +74,8 @@ export default {
   action_add: 'Добавить',
 
   placeholder_search: 'Поиск',
+  placeholder_select_categories: 'Выберите категории',
+  placeholder_write_note: 'Введите заметку',
 
   today: 'Сегодня',
   yesterday: 'Вчера',

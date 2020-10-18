@@ -74,6 +74,8 @@ export default {
   action_add: 'Add',
 
   placeholder_search: 'Search',
+  placeholder_select_categories: 'Select categories',
+  placeholder_write_note: 'Write a note',
 
   today: 'Today',
   yesterday: 'Yesterday',
