@@ -75,6 +75,7 @@ export default {
 
   placeholder_search: 'Поиск',
   placeholder_select_categories: 'Выберите категории',
+  placeholder_select_category: 'Выберите категорию',
   placeholder_write_note: 'Введите заметку',
 
   today: 'Сегодня',

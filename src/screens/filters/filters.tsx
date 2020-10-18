@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Text, TouchableHighlight} from 'react-native';
 import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
-import styles from './styles';
+import {styles} from './styles';
 import {convertDate} from '../../utils/DateUtils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {AppState} from '../../store/store';
@@ -186,6 +186,7 @@ const FiltersScreen = (props: FiltersScreenProps) => {
               keyboardType="numeric"
               selectTextOnFocus={true}
               onChangeText={changeAmountFrom}
+              placeholder="0 ₽"
             />
           </View>
           <View style={styles.rightInputContainer}>
@@ -195,6 +196,7 @@ const FiltersScreen = (props: FiltersScreenProps) => {
               keyboardType="numeric"
               selectTextOnFocus={true}
               onChangeText={changeAmountTo}
+              placeholder="0 ₽"
             />
           </View>
         </View>

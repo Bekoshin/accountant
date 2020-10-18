@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Text, SafeAreaView} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  TouchableHighlight,
+  Switch,
+} from 'react-native';
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Operation from '../../entities/Operation';
@@ -13,6 +20,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
 import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
+import {styles} from './styles';
+import {COLORS} from '../../constants/colors';
 
 type OperationProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
@@ -37,9 +46,9 @@ const OperationScreen = (props: OperationProps) => {
   const [isIgnored, setIsIgnored] = useState(
     operation ? operation.isIgnored : false,
   );
-  const [amountError, setAmountError] = useState('');
-  const [categoryError, setCategoryError] = useState('');
-  const [dateError, setDateError] = useState('');
+  const [amountError, setAmountError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [dateError, setDateError] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
   useEffect(() => {
@@ -49,27 +58,27 @@ const OperationScreen = (props: OperationProps) => {
   }, [selectedCategory]);
 
   const hideAmountError = () => {
-    setAmountError('');
+    setAmountError(false);
   };
 
   const showAmountError = () => {
-    setAmountError(I18n.t('label_required'));
+    setAmountError(true);
   };
 
   const hideCategoryError = () => {
-    setCategoryError('');
+    setCategoryError(false);
   };
 
   const showCategoryError = () => {
-    setCategoryError(I18n.t('label_required'));
+    setCategoryError(true);
   };
 
   const hideDateError = () => {
-    setDateError('');
+    setDateError(false);
   };
 
   const showDateError = () => {
-    setDateError(I18n.t('label_required'));
+    setDateError(true);
   };
 
   const changeAmount = (newAmount: string) => {
@@ -139,98 +148,133 @@ const OperationScreen = (props: OperationProps) => {
     }
   };
 
+  const handleCategoryInputPress = () => {
+    hideCategoryError();
+    navigation.navigate('Categories', {
+      previousScreen: 'Operation',
+    });
+  };
+
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.mainContainer}>
       <GeneralAppBar
         onBackButtonPress={navigation.goBack}
         onSaveButtonPress={handleSaveButton}
         title={I18n.t(operation ? 'operation_screen' : 'new_operation_screen')}
       />
-      <View style={{flex: 1, padding: 8}}>
-        <SafeAreaView style={{flex: 1}}>
-          <ScrollView>
-            {isBySubscription ? (
-              <View style={{alignItems: 'flex-end'}}>
-                <View
-                  style={{
-                    padding: 4,
-                    backgroundColor: 'orange',
-                    borderRadius: 6,
-                  }}>
-                  <Text>{I18n.t('label_by_subscription')}</Text>
-                </View>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="handled">
+          {isBySubscription ? (
+            <View style={{alignItems: 'flex-end'}}>
+              <View
+                style={{
+                  padding: 4,
+                  backgroundColor: 'orange',
+                  borderRadius: 6,
+                }}>
+                <Text>{I18n.t('label_by_subscription')}</Text>
               </View>
-            ) : null}
+            </View>
+          ) : null}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_amount')}</Text>
             <Input
-              // label={I18n.t('label_amount')}
               value={amount}
               keyboardType="numeric"
-              // required={true}
               selectTextOnFocus={true}
-              // errorMessage={amountError}
+              error={amountError}
               onFocus={hideAmountError}
               onChangeText={changeAmount}
             />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_category')}</Text>
+            <TouchableHighlight
+              style={styles.touchableContainer}
+              onPress={handleCategoryInputPress}
+              activeOpacity={0.9}
+              underlayColor={COLORS.PRIMARY_DARK}>
+              <Input
+                value={
+                  category
+                    ? I18n.t(category.name, {
+                        defaultValue: category.name,
+                      })
+                    : ''
+                }
+                editable={false}
+                error={categoryError}
+                onFocus={hideCategoryError}
+                onChangeText={() => {}}
+                pointerEvents="none"
+                placeholder={I18n.t('placeholder_select_category')}
+              />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_date')}</Text>
+            <TouchableHighlight
+              style={styles.touchableContainer}
+              onPress={handleDateInputPress}
+              activeOpacity={0.9}
+              underlayColor={COLORS.PRIMARY_DARK}>
+              <Input
+                value={convertDate(date)}
+                editable={false}
+                error={dateError}
+                pointerEvents="none"
+                onFocus={hideDateError}
+                onChangeText={() => {}}
+              />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_note')}</Text>
             <Input
-              // label={I18n.t('label_category')}
-              value={
-                category
-                  ? I18n.t(category.name, {
-                      defaultValue: category.name,
-                    })
-                  : ''
-              }
-              // required={true}
-              editable={false}
-              // errorMessage={categoryError}
-              onFocus={hideCategoryError}
-              // hideClearButton={true}
-              // onInputPress={() => {
-              //   hideCategoryError();
-              //   navigation.navigate('Categories', {
-              //     previousScreen: 'Operation',
-              //   });
-              // }}
-              onChangeText={() => {}}
-            />
-            <Input
-              // label={I18n.t('label_date')}
-              value={convertDate(date)}
-              // required={true}
-              editable={false}
-              // errorMessage={dateError}
-              onFocus={hideDateError}
-              onChangeText={() => {}}
-              // hideClearButton={true}
-              // onInputPress={handleDateInputPress}
-            />
-            <Input
-              // label={I18n.t('label_note')}
               value={note}
               onChangeText={changeNote}
               multiline={true}
+              placeholder={I18n.t('placeholder_write_note')}
             />
-            <TouchableRipple onPress={changeIsIgnored}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Checkbox status={isIgnored ? 'checked' : 'unchecked'} />
-                <Text>{I18n.t('label_ignore')}</Text>
-              </View>
-            </TouchableRipple>
-          </ScrollView>
-          <DateTimePickerModal
-            date={date}
-            isVisible={datePickerVisible}
-            mode="date"
-            maximumDate={new Date()}
-            onConfirm={changeDate}
-            onCancel={hideDatePicker}
-            headerTextIOS={I18n.t('label_choose_date')}
-            cancelTextIOS={I18n.t('action_cancel')}
-            confirmTextIOS={I18n.t('action_confirm')}
-            locale={I18n.t('locale')}
-          />
-        </SafeAreaView>
-      </View>
+          </View>
+          <View style={styles.switchContainer}>
+            <Text
+              style={[
+                styles.switchLabel,
+                {
+                  color: isIgnored
+                    ? COLORS.PRIMARY_DARK
+                    : COLORS.SECONDARY_DARK_1,
+                },
+              ]}>
+              {I18n.t('label_ignore')}
+            </Text>
+            <Switch
+              thumbColor="white"
+              trackColor={{false: COLORS.BACKGROUND_1, true: COLORS.PRIMARY}}
+              ios_backgroundColor={COLORS.BACKGROUND_1}
+              value={isIgnored}
+              onValueChange={changeIsIgnored}
+            />
+          </View>
+        </ScrollView>
+        <DateTimePickerModal
+          date={date}
+          isVisible={datePickerVisible}
+          mode="date"
+          maximumDate={new Date()}
+          onConfirm={changeDate}
+          onCancel={hideDatePicker}
+          headerTextIOS={I18n.t('label_choose_date')}
+          cancelTextIOS={I18n.t('action_cancel')}
+          confirmTextIOS={I18n.t('action_confirm')}
+          locale={I18n.t('locale')}
+        />
+      </SafeAreaView>
     </View>
   );
 };

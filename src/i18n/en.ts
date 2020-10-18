@@ -75,6 +75,7 @@ export default {
 
   placeholder_search: 'Search',
   placeholder_select_categories: 'Select categories',
+  placeholder_select_category: 'Select a category',
   placeholder_write_note: 'Write a note',
 
   today: 'Today',
