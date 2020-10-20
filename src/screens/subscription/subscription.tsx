@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, SafeAreaView, Alert} from 'react-native';
+import {
+  View,
+  ScrollView,
+  SafeAreaView,
+  Alert,
+  Text,
+  TouchableHighlight,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {Input} from '../../components/input/Input';
@@ -20,6 +27,8 @@ import {
 } from '../../utils/SubscriptionUtils';
 import Operation from '../../entities/Operation';
 import {saveOperation} from '../../utils/OperationUtils';
+import {styles} from './styles';
+import {COLORS} from '../../constants/colors';
 
 type SubscriptionScreenProps = {
   route: RouteProp<RootStackParamList, 'Subscription'>;
@@ -47,10 +56,10 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   const [note, setNote] = useState<string>(
     subscription ? subscription.note : '',
   );
-  const [nameError, setNameError] = useState<string>('');
-  const [amountError, setAmountError] = useState<string>('');
-  const [categoryError, setCategoryError] = useState<string>('');
-  const [dayError, setDayError] = useState<string>('');
+  const [nameError, setNameError] = useState(false);
+  const [amountError, setAmountError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [dayError, setDayError] = useState(false);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -59,35 +68,35 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   }, [selectedCategory]);
 
   const hideNameError = () => {
-    setNameError('');
+    setNameError(false);
   };
 
   const showNameError = () => {
-    setNameError(I18n.t('label_required'));
+    setNameError(true);
   };
 
   const hideAmountError = () => {
-    setAmountError('');
+    setAmountError(false);
   };
 
   const showAmountError = () => {
-    setAmountError(I18n.t('label_required'));
+    setAmountError(true);
   };
 
   const hideCategoryError = () => {
-    setCategoryError('');
+    setCategoryError(false);
   };
 
   const showCategoryError = () => {
-    setCategoryError(I18n.t('label_required'));
+    setCategoryError(true);
   };
 
   const hideDayError = () => {
-    setDayError('');
+    setDayError(false);
   };
 
   const showDayError = () => {
-    setDayError(I18n.t('label_required'));
+    setDayError(true);
   };
 
   const changeAmount = (newAmount: string) => {
@@ -178,7 +187,7 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.mainContainer}>
       <GeneralAppBar
         title={I18n.t(
           subscription ? 'subscription_screen' : 'new_subscription_screen',
@@ -186,62 +195,80 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
         onBackButtonPress={navigation.goBack}
         onSaveButtonPress={handleSaveButton}
       />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-          <ScrollView bounces={false}>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="handled">
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_name')}</Text>
             <Input
-              // label={I18n.t('label_name')}
               value={name}
-              // required={true}
-              // errorMessage={nameError}
+              error={nameError}
               onFocus={hideNameError}
               onChangeText={setName}
+              placeholder={I18n.t('placeholder_write_name')}
             />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_amount')}</Text>
             <Input
-              // label={I18n.t('label_amount')}
               value={amount}
               keyboardType="numeric"
-              // required={true}
               selectTextOnFocus={true}
-              // errorMessage={amountError}
+              error={amountError}
               onFocus={hideAmountError}
               onChangeText={changeAmount}
+              placeholder="0 ₽"
             />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_category')}</Text>
+            <TouchableHighlight
+              style={styles.touchableContainer}
+              onPress={handleCategoryInputPress}
+              activeOpacity={0.9}
+              underlayColor={COLORS.PRIMARY_DARK}>
+              <Input
+                value={
+                  category
+                    ? I18n.t(category.name, {
+                        defaultValue: category.name,
+                      })
+                    : ''
+                }
+                editable={false}
+                error={categoryError}
+                onFocus={hideCategoryError}
+                onChangeText={() => {}}
+                pointerEvents="none"
+                placeholder={I18n.t('placeholder_select_category')}
+              />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_day')}</Text>
             <Input
-              // label={I18n.t('label_category')}
-              value={
-                category
-                  ? I18n.t(category.name, {
-                      defaultValue: category.name,
-                    })
-                  : ''
-              }
-              // required={true}
-              editable={false}
-              // errorMessage={categoryError}
-              onFocus={hideCategoryError}
-              onChangeText={() => {}}
-              // hideClearButton={true}
-              // onInputPress={handleCategoryInputPress}
-            />
-            <Input
-              // label={I18n.t('label_day')}
               value={day}
               keyboardType="numeric"
-              // required={true}
               selectTextOnFocus={true}
-              // errorMessage={dayError}
+              error={dayError}
               onFocus={hideDayError}
               onChangeText={changeDay}
+              placeholder={I18n.t('placeholder_write_day')}
             />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_note')}</Text>
             <Input
-              // label={I18n.t('label_note')}
               value={note}
               onChangeText={setNote}
               multiline={true}
+              placeholder={I18n.t('placeholder_write_note')}
             />
-          </ScrollView>
-        </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

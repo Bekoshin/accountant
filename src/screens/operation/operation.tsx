@@ -189,6 +189,7 @@ const OperationScreen = (props: OperationProps) => {
               error={amountError}
               onFocus={hideAmountError}
               onChangeText={changeAmount}
+              placeholder="0 ₽"
             />
           </View>
           <View style={styles.inputContainer}>

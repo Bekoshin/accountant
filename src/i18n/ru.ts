@@ -77,6 +77,8 @@ export default {
   placeholder_select_categories: 'Выберите категории',
   placeholder_select_category: 'Выберите категорию',
   placeholder_write_note: 'Введите заметку',
+  placeholder_write_day: 'Введите день',
+  placeholder_write_name: 'Введите наименование',
 
   today: 'Сегодня',
   yesterday: 'Вчера',

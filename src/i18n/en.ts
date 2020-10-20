@@ -77,6 +77,8 @@ export default {
   placeholder_select_categories: 'Select categories',
   placeholder_select_category: 'Select a category',
   placeholder_write_note: 'Write a note',
+  placeholder_write_day: 'Write a day',
+  placeholder_write_name: 'Write a name',
 
   today: 'Today',
   yesterday: 'Yesterday',
