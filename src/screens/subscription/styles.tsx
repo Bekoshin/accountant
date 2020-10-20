@@ -21,13 +21,4 @@ export const styles = StyleSheet.create({
     color: COLORS.SECONDARY_DARK_1,
     marginBottom: 12,
   },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  switchLabel: {
-    ...(TYPOGRAPHY.HEADER_5 as Object),
-    color: COLORS.PRIMARY_DARK,
-  },
 });

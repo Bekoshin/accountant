@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, SafeAreaView} from 'react-native';
+import {
+  View,
+  ScrollView,
+  SafeAreaView,
+  Text,
+  TouchableHighlight,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Category from '../../entities/Category';
@@ -13,6 +19,8 @@ import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
+import {styles} from './styles';
+import {COLORS} from '../../constants/colors';
 
 type CategoryScreenProps = {
   route: RouteProp<RootStackParamList, 'Category'>;
@@ -34,7 +42,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
       ? params.parentCategory
       : null,
   );
-  const [nameError, setNameError] = useState<string>('');
+  const [nameError, setNameError] = useState(false);
 
   useEffect(() => {
     if (selectedParentCategory) {
@@ -43,11 +51,11 @@ const CategoryScreen = (props: CategoryScreenProps) => {
   }, [selectedParentCategory]);
 
   const showNameError = () => {
-    setNameError(I18n.t('label_required'));
+    setNameError(true);
   };
 
   const hideNameError = () => {
-    setNameError('');
+    setNameError(false);
   };
 
   const handleParentCategoryInputPress = () => {
@@ -84,7 +92,7 @@ const CategoryScreen = (props: CategoryScreenProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.mainContainer}>
       <GeneralAppBar
         title={I18n.t(
           params && params.category ? 'category_screen' : 'new_category_screen',
@@ -92,33 +100,46 @@ const CategoryScreen = (props: CategoryScreenProps) => {
         onBackButtonPress={navigation.goBack}
         onSaveButtonPress={handleSaveButton}
       />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={{flex: 1, justifyContent: 'flex-start', padding: 8}}>
-          <ScrollView>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="handled">
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_name')}</Text>
             <Input
-              // label="Наименование"
               value={name}
-              // required={true}
-              // errorMessage={nameError}
+              error={nameError}
               onFocus={hideNameError}
               onChangeText={setName}
+              placeholder={I18n.t('placeholder_write_name')}
             />
-            <Input
-              // label="Parent category"
-              value={
-                parentCategory
-                  ? I18n.t(parentCategory.name, {
-                      defaultValue: parentCategory.name,
-                    })
-                  : ''
-              }
-              editable={false}
-              onChangeText={() => {}}
-              // onInputPress={handleParentCategoryInputPress}
-              // onClearPress={handleClearParentCategoryPress}
-            />
-          </ScrollView>
-        </View>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_parent_category')}</Text>
+            <TouchableHighlight
+              style={styles.touchableContainer}
+              onPress={handleParentCategoryInputPress}
+              activeOpacity={0.9}
+              underlayColor={COLORS.PRIMARY_DARK}>
+              <Input
+                value={
+                  parentCategory
+                    ? I18n.t(parentCategory.name, {
+                        defaultValue: parentCategory.name,
+                      })
+                    : ''
+                }
+                editable={false}
+                onChangeText={() => {}}
+                onClearButtonPress={handleClearParentCategoryPress}
+                pointerEvents="none"
+                placeholder={I18n.t('placeholder_select_parent_category')}
+              />
+            </TouchableHighlight>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
