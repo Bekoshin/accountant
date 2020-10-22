@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import 'moment/min/locales';
 import {NavigationContainer} from '@react-navigation/native';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import I18n from 'i18n-js';
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -31,6 +31,7 @@ import 'react-native-gesture-handler';
 import Operation from './entities/Operation';
 import Category from './entities/Category';
 import Subscription from './entities/Subscription';
+import {LineAwesomeIcon} from './constants/LineAwesomeIconSet';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -103,18 +104,21 @@ export type TabStackParamList = {
   Settings: undefined;
 };
 
-const Tab = createMaterialBottomTabNavigator<TabStackParamList>();
+const Tab = createBottomTabNavigator();
 const TabStack = () => (
-  <Tab.Navigator initialRouteName="Home">
+  <Tab.Navigator
+    initialRouteName="Home"
+    tabBarOptions={{
+      keyboardHidesTabBar: true,
+      labelStyle: {fontFamily: 'Rubik-Medium'},
+    }}>
     <Tab.Screen
       name="Home"
       component={HomeScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color}) => (
-          <View>
-            <Icon style={[{color: color}]} size={25} name={'home'} />
-          </View>
+          <LineAwesomeIcon name="home" color={color} size={26} />
         ),
       }}
     />
