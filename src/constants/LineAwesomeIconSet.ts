@@ -54,6 +54,7 @@ const glyphMap = {
   camera: 61488,
   note: 61557,
   share: 61921,
+  'chart-pie': 61952,
 };
 export const LineAwesomeIcon = createIconSet(
   glyphMap,

@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import 'moment/min/locales';
 import {NavigationContainer} from '@react-navigation/native';
@@ -127,9 +125,7 @@ const TabStack = () => (
       component={Shopping}
       options={{
         tabBarIcon: ({color}) => (
-          <View>
-            <Icon style={[{color: color}]} size={25} name={'shopping-cart'} />
-          </View>
+          <LineAwesomeIcon name="cart" color={color} size={26} />
         ),
       }}
     />
@@ -138,9 +134,7 @@ const TabStack = () => (
       component={Analytics}
       options={{
         tabBarIcon: ({color}) => (
-          <View>
-            <Icon style={[{color: color}]} size={25} name={'pie-chart'} />
-          </View>
+          <LineAwesomeIcon name="chart-pie" color={color} size={26} />
         ),
       }}
     />
@@ -149,9 +143,7 @@ const TabStack = () => (
       component={SettingsScreen}
       options={{
         tabBarIcon: ({color}) => (
-          <View>
-            <Icon style={[{color: color}]} size={25} name={'cog'} />
-          </View>
+          <LineAwesomeIcon name="cog" color={color} size={26} />
         ),
       }}
     />
