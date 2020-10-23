@@ -1,6 +1,6 @@
 import React from 'react';
-import {Input} from '../Input/Input';
 import {StyleProp, ViewStyle} from 'react-native';
+import {Input} from '../input/Input';
 
 type SearchBarProps = {
   value: string;

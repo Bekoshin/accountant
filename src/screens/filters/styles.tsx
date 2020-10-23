@@ -6,6 +6,11 @@ export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
+  headerRightContainer: {
+    position: undefined,
+    flex: 1,
+    left: 0,
+  },
   scrollViewContent: {
     padding: 10,
   },

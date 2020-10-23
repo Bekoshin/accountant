@@ -31,12 +31,13 @@ import Category from './entities/Category';
 import Subscription from './entities/Subscription';
 import {LineAwesomeIcon} from './constants/LineAwesomeIconSet';
 import {COLORS} from './constants/colors';
+import {TYPOGRAPHY} from "./constants/typography";
 
 const Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: COLORS.BACKGROUND_2,
+    background: COLORS.BACKGROUND_1,
     card: 'white',
   },
 };
@@ -67,8 +68,11 @@ const RootStack = () => {
   }
   return (
     <Stack.Navigator
-      screenOptions={{gestureEnabled: true}}
-      headerMode="none"
+      screenOptions={{
+        headerTitleStyle: TYPOGRAPHY.HEADER_4,
+        headerTitle: () => null,
+        headerLeft: () => null,
+      }}
       initialRouteName="Tab">
       <Stack.Screen name="Tab" component={TabStack} />
       <Stack.Screen

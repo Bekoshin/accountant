@@ -1,5 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Text, TouchableHighlight} from 'react-native';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableHighlight,
+  SafeAreaView,
+} from 'react-native';
 import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import {styles} from './styles';
@@ -12,8 +18,8 @@ import {applyFilter} from '../../utils/FilterUtils';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 import {COLORS} from '../../constants/colors';
+import {Header} from '../../components/header/Header';
 
 type FiltersScreenProps = {
   route: RouteProp<RootStackParamList, 'Filters'>;
@@ -42,6 +48,18 @@ const FiltersScreen = (props: FiltersScreenProps) => {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [isDateFromInputPressed, setIsDateFromInputPressed] = useState(false);
   const [isDateToInputPressed, setIsDateToInputPressed] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t('filters_screen')}
+        />
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     if (selectedCategories) {
@@ -150,100 +168,97 @@ const FiltersScreen = (props: FiltersScreenProps) => {
 
   return (
     <View style={styles.mainContainer}>
-      <GeneralAppBar
-        onBackButtonPress={navigation.goBack}
-        onSaveButtonPress={handleSaveButton}
-        title={I18n.t('filters_screen')}
-      />
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollViewContent}
-        keyboardShouldPersistTaps="handled">
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{I18n.t('label_category')}</Text>
-          <TouchableHighlight
-            style={styles.touchableContainer}
-            onPress={handleCategoryInputPress}
-            activeOpacity={0.9}
-            underlayColor={COLORS.PRIMARY_DARK}>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="handled">
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_category')}</Text>
+            <TouchableHighlight
+              style={styles.touchableContainer}
+              onPress={handleCategoryInputPress}
+              activeOpacity={0.9}
+              underlayColor={COLORS.PRIMARY_DARK}>
+              <Input
+                value={createCategoriesString()}
+                editable={false}
+                onClearButtonPress={clearAllCategories}
+                onChangeText={() => {}}
+                pointerEvents="none"
+                placeholder={I18n.t('placeholder_select_categories')}
+                multiline={true}
+              />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.leftInputContainer}>
+              <Text style={styles.label}>{I18n.t('label_amount_from')}</Text>
+              <Input
+                value={amountFrom}
+                keyboardType="numeric"
+                selectTextOnFocus={true}
+                onChangeText={changeAmountFrom}
+                placeholder="0 ₽"
+              />
+            </View>
+            <View style={styles.rightInputContainer}>
+              <Text style={styles.label}>{I18n.t('label_amount_to')}</Text>
+              <Input
+                value={amountTo}
+                keyboardType="numeric"
+                selectTextOnFocus={true}
+                onChangeText={changeAmountTo}
+                placeholder="0 ₽"
+              />
+            </View>
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.leftInputContainer}>
+              <Text style={styles.label}>{I18n.t('label_date_from')}</Text>
+              <TouchableHighlight
+                style={styles.touchableContainer}
+                onPress={handleDateFromInputPress}
+                activeOpacity={0.9}
+                underlayColor={COLORS.PRIMARY_DARK}>
+                <Input
+                  editable={false}
+                  value={convertDate(dateFrom)}
+                  onClearButtonPress={clearDateFrom}
+                  onChangeText={() => {}}
+                  pointerEvents="none"
+                />
+              </TouchableHighlight>
+            </View>
+            <View style={styles.rightInputContainer}>
+              <Text style={styles.label}>{I18n.t('label_date_to')}</Text>
+              <TouchableHighlight
+                style={styles.touchableContainer}
+                onPress={handleDateToInputPress}
+                activeOpacity={0.9}
+                underlayColor={COLORS.PRIMARY_DARK}>
+                <Input
+                  editable={false}
+                  value={convertDate(dateTo)}
+                  onClearButtonPress={clearDateTo}
+                  onChangeText={() => {}}
+                  pointerEvents="none"
+                />
+              </TouchableHighlight>
+            </View>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{I18n.t('label_note')}</Text>
             <Input
-              value={createCategoriesString()}
-              editable={false}
-              onClearButtonPress={clearAllCategories}
-              onChangeText={() => {}}
-              pointerEvents="none"
-              placeholder={I18n.t('placeholder_select_categories')}
+              value={note}
+              onChangeText={setNote}
               multiline={true}
-            />
-          </TouchableHighlight>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.leftInputContainer}>
-            <Text style={styles.label}>{I18n.t('label_amount_from')}</Text>
-            <Input
-              value={amountFrom}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={changeAmountFrom}
-              placeholder="0 ₽"
+              placeholder={I18n.t('placeholder_write_note')}
             />
           </View>
-          <View style={styles.rightInputContainer}>
-            <Text style={styles.label}>{I18n.t('label_amount_to')}</Text>
-            <Input
-              value={amountTo}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              onChangeText={changeAmountTo}
-              placeholder="0 ₽"
-            />
-          </View>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.leftInputContainer}>
-            <Text style={styles.label}>{I18n.t('label_date_from')}</Text>
-            <TouchableHighlight
-              style={styles.touchableContainer}
-              onPress={handleDateFromInputPress}
-              activeOpacity={0.9}
-              underlayColor={COLORS.PRIMARY_DARK}>
-              <Input
-                editable={false}
-                value={convertDate(dateFrom)}
-                onClearButtonPress={clearDateFrom}
-                onChangeText={() => {}}
-                pointerEvents="none"
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.rightInputContainer}>
-            <Text style={styles.label}>{I18n.t('label_date_to')}</Text>
-            <TouchableHighlight
-              style={styles.touchableContainer}
-              onPress={handleDateToInputPress}
-              activeOpacity={0.9}
-              underlayColor={COLORS.PRIMARY_DARK}>
-              <Input
-                editable={false}
-                value={convertDate(dateTo)}
-                onClearButtonPress={clearDateTo}
-                onChangeText={() => {}}
-                pointerEvents="none"
-              />
-            </TouchableHighlight>
-          </View>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{I18n.t('label_note')}</Text>
-          <Input
-            value={note}
-            onChangeText={setNote}
-            multiline={true}
-            placeholder={I18n.t('placeholder_write_note')}
-          />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
       <DateTimePickerModal
         date={isDateFromInputPressed ? dateFrom : dateTo}
         isVisible={datePickerVisible}
