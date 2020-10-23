@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import moment from 'moment';
 import 'moment/min/locales';
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import I18n from 'i18n-js';
@@ -30,6 +30,16 @@ import Operation from './entities/Operation';
 import Category from './entities/Category';
 import Subscription from './entities/Subscription';
 import {LineAwesomeIcon} from './constants/LineAwesomeIconSet';
+import {COLORS} from './constants/colors';
+
+const Theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: COLORS.BACKGROUND_2,
+    card: 'white',
+  },
+};
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -156,7 +166,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PaperProvider>
-        <NavigationContainer>
+        <NavigationContainer theme={Theme}>
           <RootStack />
         </NavigationContainer>
       </PaperProvider>
