@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {TYPOGRAPHY} from '../../constants/typography';
 import {COLORS} from '../../constants/colors';
+import {ifIphoneX} from 'react-native-iphone-x-helper';
 
 export const styles = StyleSheet.create({
   mainContainer: {
@@ -39,5 +40,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     marginBottom: 14,
+  },
+  saveButton: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
+    ...ifIphoneX(
+      {
+        bottom: 44,
+      },
+      {
+        bottom: 10,
+      },
+    ),
   },
 });

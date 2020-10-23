@@ -20,6 +20,7 @@ import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {COLORS} from '../../constants/colors';
 import {Header} from '../../components/header/Header';
+import {Button} from '../../components/button/Button';
 
 type FiltersScreenProps = {
   route: RouteProp<RootStackParamList, 'Filters'>;
@@ -258,6 +259,11 @@ const FiltersScreen = (props: FiltersScreenProps) => {
             />
           </View>
         </ScrollView>
+        <Button
+          style={styles.saveButton}
+          label="Сохранить"
+          onPress={handleSaveButton}
+        />
       </SafeAreaView>
       <DateTimePickerModal
         date={isDateFromInputPressed ? dateFrom : dateTo}
