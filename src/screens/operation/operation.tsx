@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -10,7 +10,6 @@ import {
 import {connect} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Operation from '../../entities/Operation';
-import {Checkbox, TouchableRipple} from 'react-native-paper';
 import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
 import Category from '../../entities/Category';
@@ -19,9 +18,10 @@ import {convertDate} from '../../utils/DateUtils';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 import {styles} from './styles';
 import {COLORS} from '../../constants/colors';
+import {Header} from '../../components/header/Header';
+import {Button} from '../../components/button/Button';
 
 type OperationProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
@@ -50,6 +50,20 @@ const OperationScreen = (props: OperationProps) => {
   const [categoryError, setCategoryError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t(
+            operation ? 'operation_screen' : 'new_operation_screen',
+          )}
+        />
+      ),
+    });
+  }, [navigation, operation]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -157,11 +171,6 @@ const OperationScreen = (props: OperationProps) => {
 
   return (
     <View style={styles.mainContainer}>
-      <GeneralAppBar
-        onBackButtonPress={navigation.goBack}
-        onSaveButtonPress={handleSaveButton}
-        title={I18n.t(operation ? 'operation_screen' : 'new_operation_screen')}
-      />
       <SafeAreaView style={styles.mainContainer}>
         <ScrollView
           bounces={false}
@@ -263,6 +272,11 @@ const OperationScreen = (props: OperationProps) => {
             />
           </View>
         </ScrollView>
+        <Button
+          style={styles.saveButton}
+          label={I18n.t('action_save')}
+          onPress={handleSaveButton}
+        />
         <DateTimePickerModal
           date={date}
           isVisible={datePickerVisible}

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableHighlight,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import {Input} from '../../components/input/Input';
 import I18n from '../../i18n/i18n';
@@ -21,6 +22,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {COLORS} from '../../constants/colors';
 import {Header} from '../../components/header/Header';
 import {Button} from '../../components/button/Button';
+import {LineAwesomeIcon} from '../../constants/LineAwesomeIconSet';
 
 type FiltersScreenProps = {
   route: RouteProp<RootStackParamList, 'Filters'>;
@@ -56,8 +58,15 @@ const FiltersScreen = (props: FiltersScreenProps) => {
       headerRight: () => (
         <Header
           onBackButtonPress={navigation.goBack}
-          title={I18n.t('filters_screen')}
-        />
+          title={I18n.t('filters_screen')}>
+          <TouchableOpacity onPress={() => {}}>
+            <LineAwesomeIcon
+              name="close"
+              size={22}
+              color={COLORS.SECONDARY_DARK_1}
+            />
+          </TouchableOpacity>
+        </Header>
       ),
     });
   }, [navigation]);
@@ -261,7 +270,7 @@ const FiltersScreen = (props: FiltersScreenProps) => {
         </ScrollView>
         <Button
           style={styles.saveButton}
-          label="Сохранить"
+          label={I18n.t('action_save')}
           onPress={handleSaveButton}
         />
       </SafeAreaView>
