@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, ScrollView, Alert} from 'react-native';
+import React, {useLayoutEffect, useState} from 'react';
+import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {Divider} from 'react-native-paper';
@@ -13,7 +13,11 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
+import {styles} from './styles';
+import {Header} from '../../components/header/Header';
+import {LineAwesomeIcon} from '../../constants/LineAwesomeIconSet';
+import {COLORS} from '../../constants/colors';
+import {Button} from '../../components/button/Button';
 
 type CategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Categories'>;
@@ -33,12 +37,113 @@ const CategoriesScreen = (props: CategoriesProps) => {
     route.params.selectedCategories || [],
   );
 
+  useLayoutEffect(() => {
+    const handleAddCategoryAppBarButton = () => {
+      navigation.navigate('Category', {});
+    };
+
+    const handleEditCategoryButton = () => {
+      navigation.navigate('Category', {category: selectedCategories[0]});
+    };
+
+    const handleDeleteButton = () => {
+      const message = createMessageForDeleteCategory();
+      Alert.alert(I18n.t('label_deleting'), message, [
+        {
+          text: I18n.t('action_cancel'),
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            console.log('CATEGORIES FOR DELETE: ', selectedCategories);
+            deleteCategories(selectedCategories);
+            dropSelectedCategories();
+          },
+        },
+      ]);
+    };
+
+    const createMessageForDeleteCategory = (): string => {
+      let message: string;
+      if (selectedCategories.length === 1) {
+        const selectedCategory = selectedCategories[0];
+        message =
+          I18n.t('message_delete_category') +
+          ' "' +
+          I18n.t(selectedCategory.name, {
+            defaultValue: selectedCategory.name,
+          }) +
+          '" ?';
+        if (
+          selectedCategory.childCategories &&
+          selectedCategory.childCategories.length > 0
+        ) {
+          message += ' ' + I18n.t('message_child_categories_delete') + '.';
+        }
+      } else {
+        message =
+          I18n.t('message_delete_categories') +
+          '? ' +
+          I18n.t('message_child_categories_delete') +
+          '.';
+      }
+      return message;
+    };
+
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t('categories_screen')}
+          selectedCount={selectedCategories.length}
+          selectMode={canSetSeveralCategory || selectedCategories.length > 0}
+          unselectAllItems={dropSelectedCategories}>
+          {!canSetSeveralCategory && selectedCategories.length === 0 ? (
+            <TouchableOpacity onPress={handleAddCategoryAppBarButton}>
+              <LineAwesomeIcon
+                name="plus"
+                size={22}
+                color={COLORS.SECONDARY_DARK_1}
+              />
+            </TouchableOpacity>
+          ) : null}
+          {selectedCategories.length > 0 ? (
+            <TouchableOpacity onPress={handleDeleteButton}>
+              <LineAwesomeIcon
+                name="trash"
+                size={22}
+                color={COLORS.SECONDARY_DARK_1}
+              />
+            </TouchableOpacity>
+          ) : null}
+          {selectedCategories.length === 1 &&
+          !selectedCategories[0].isDefault ? (
+            <TouchableOpacity
+              style={styles.editButtonContainer}
+              onPress={handleEditCategoryButton}>
+              <LineAwesomeIcon
+                name="pen"
+                size={22}
+                color={COLORS.SECONDARY_DARK_1}
+              />
+            </TouchableOpacity>
+          ) : null}
+        </Header>
+      ),
+    });
+  }, [
+    navigation,
+    selectedCategories.length,
+    canSetSeveralCategory,
+    selectedCategories,
+    deleteCategories,
+  ]);
+
   const dropSelectedCategories = () => {
     setSelectedCategories([]);
-  };
-
-  const handleAddCategoryAppBarButton = () => {
-    navigation.navigate('Category');
   };
 
   const handleAddCategoryButton = (parentCategory?: Category) => {
@@ -55,52 +160,6 @@ const CategoriesScreen = (props: CategoriesProps) => {
     } else {
       navigation.navigate(previousScreen, {selectedCategory: category});
     }
-  };
-
-  const handleDeleteButton = () => {
-    const message = createMessageForDeleteCategory();
-    Alert.alert(I18n.t('label_deleting'), message, [
-      {
-        text: I18n.t('action_cancel'),
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'OK',
-        onPress: () => {
-          console.log('CATEGORIES FOR DELETE: ', selectedCategories);
-          deleteCategories(selectedCategories);
-          dropSelectedCategories();
-        },
-      },
-    ]);
-  };
-
-  const createMessageForDeleteCategory = (): string => {
-    let message: string;
-    if (selectedCategories.length === 1) {
-      const selectedCategory = selectedCategories[0];
-      message =
-        I18n.t('message_delete_category') +
-        ' "' +
-        I18n.t(selectedCategory.name, {
-          defaultValue: selectedCategory.name,
-        }) +
-        '" ?';
-      if (
-        selectedCategory.childCategories &&
-        selectedCategory.childCategories.length > 0
-      ) {
-        message += ' ' + I18n.t('message_child_categories_delete') + '.';
-      }
-    } else {
-      message =
-        I18n.t('message_delete_categories') +
-        '? ' +
-        I18n.t('message_child_categories_delete') +
-        '.';
-    }
-    return message;
   };
 
   const selectCategory = (category: Category) => {
@@ -154,10 +213,6 @@ const CategoriesScreen = (props: CategoriesProps) => {
     }
   };
 
-  const handleEditCategoryButton = () => {
-    navigation.navigate('Category', {category: selectedCategories[0]});
-  };
-
   const Categories = () => {
     let categoryComponents = [];
     for (let category of categories) {
@@ -182,30 +237,20 @@ const CategoriesScreen = (props: CategoriesProps) => {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      <GeneralAppBar
-        title={I18n.t('categories_screen')}
-        selectedCount={selectedCategories.length}
-        forceSelectMode={canSetSeveralCategory}
-        onBackButtonPress={navigation.goBack}
-        onAddButtonPress={handleAddCategoryAppBarButton}
-        onDropButtonPress={dropSelectedCategories}
-        onEditButtonPress={
-          selectedCategories[0] && !selectedCategories[0].isDefault
-            ? handleEditCategoryButton
-            : undefined
-        }
-        onDeleteButtonPress={handleDeleteButton}
-        onConfirmButtonPress={
-          canSetSeveralCategory ? handleConfirmSelectButton : undefined
-        }
-      />
+    <View style={styles.mainContainer}>
       <ScrollView
-        style={{flex: 1}}
         bounces={false}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent}>
         <Categories />
       </ScrollView>
+      {canSetSeveralCategory ? (
+        <Button
+          style={styles.saveButton}
+          label={I18n.t('action_confirm')}
+          onPress={handleConfirmSelectButton}
+        />
+      ) : null}
     </View>
   );
 };

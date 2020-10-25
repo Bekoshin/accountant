@@ -18,9 +18,9 @@ type HeaderProps = {
   onDropdownMenuPress?: () => void;
   dropDownMenuVisible?: boolean;
   dropdownMenuLabel?: string;
-  photoMode?: boolean;
-  selectedPhotosCount?: number;
-  unselectAllPhotos?: () => void;
+  selectMode?: boolean;
+  selectedCount?: number;
+  unselectAllItems?: () => void;
 };
 
 export const Header: FunctionComponent<HeaderProps> = props => {
@@ -38,15 +38,15 @@ export const Header: FunctionComponent<HeaderProps> = props => {
     onDropdownMenuPress,
     dropDownMenuVisible,
     dropdownMenuLabel,
-    photoMode,
-    selectedPhotosCount,
-    unselectAllPhotos,
+    selectMode,
+    selectedCount,
+    unselectAllItems,
   } = props;
 
   const renderBackButton = () => {
-    if (photoMode && selectedPhotosCount) {
+    if (selectMode && selectedCount) {
       return (
-        <TouchableOpacity style={styles.backButton} onPress={unselectAllPhotos}>
+        <TouchableOpacity style={styles.backButton} onPress={unselectAllItems}>
           <LineAwesomeIcon
             name="close"
             size={22}
@@ -95,11 +95,11 @@ export const Header: FunctionComponent<HeaderProps> = props => {
   };
 
   const renderTitle = () => {
-    if (photoMode && selectedPhotosCount) {
+    if (selectMode || selectedCount) {
       return (
         <View style={styles.titleContainer}>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-            {'Выбрано ' + selectedPhotosCount}
+            {'Выбрано ' + selectedCount}
           </Text>
         </View>
       );
