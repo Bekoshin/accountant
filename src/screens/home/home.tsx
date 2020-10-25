@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import moment, {DurationInputArg2} from 'moment';
-import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Alert, View} from 'react-native';
+import {Alert, SafeAreaView, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
@@ -29,6 +28,10 @@ import {
   createRouteTitles,
 } from '../../utils/HomeTabViewUtils';
 import {RewindButton} from '../../components/rewindButton/RewindButton';
+import {styles} from './styles';
+import {Header} from '../../components/header/Header';
+import {LineAwesomeIcon} from "../../constants/LineAwesomeIconSet";
+import {COLORS} from "../../constants/colors";
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -39,7 +42,6 @@ export type GroupedBy = 'date' | 'category';
 export const TABS_COUNT = 12;
 
 type HomeScreenProps = {
-  route: RouteProp<RootStackParamList, 'Tab'>;
   navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
 
   operations: Operation[];
@@ -69,6 +71,32 @@ const HomeScreen = (props: HomeScreenProps) => {
     null,
   );
   const [tabViewRef, setTabViewRef] = useState<ScrollableTabView | null>(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          title={
+            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
+          }
+          searchMode={searchMode}
+          searchButton={true}
+          showSearchBar={showSearchBar}
+          hideSearchBar={hideSearchBar}
+          searchQuery=''
+        >
+          <TouchableOpacity style={{marginLeft: 13 }} onPress={() => {}}>
+            <LineAwesomeIcon
+              name="dots-vertical"
+              size={22}
+              color={COLORS.SECONDARY_DARK_1}
+            />
+          </TouchableOpacity>
+        </Header>
+      ),
+    });
+  }, [navigation, searchMode, total]);
 
   useEffect(() => {
     setRouteOperationsMap(
@@ -120,11 +148,11 @@ const HomeScreen = (props: HomeScreenProps) => {
     setOperationMenuVisible(false);
   };
 
-  const showSearchMode = () => {
+  const showSearchBar = () => {
     setSearchMode(true);
   };
 
-  const hideSearchMode = () => {
+  const hideSearchBar = () => {
     setSearchMode(false);
   };
 
@@ -162,7 +190,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const handleFiltersButton = () => {
     hideMoreMenu();
-    navigation.navigate('Filters');
+    navigation.navigate('Filters', {});
   };
 
   const handleDropFiltersButton = async () => {
@@ -212,57 +240,59 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   console.log('HOME COMPONENT RENDER');
   return (
-    <View style={{flex: 1, justifyContent: 'flex-start'}}>
-      <HomeMainAppBar
-        searchMode={searchMode}
-        title={
-          I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
-        }
-        groupedBy={groupedBy}
-        hasFilter={!!filter}
-        menuVisible={moreMenuVisible}
-        onDropFiltersPress={handleDropFiltersButton}
-        onFilterPress={handleFiltersButton}
-        onGroupByPress={handleGroupBy}
-        onMenuButtonPress={showMoreMenu}
-        onMenuDismiss={hideMoreMenu}
-        onSearchButtonPress={showSearchMode}
-        searchValue={searchValue}
-        onHideSearchBarButtonPress={hideSearchMode}
-        onSearchValueChange={handleChangeSearchValue}
-      />
-      <SegmentedControlTab
-        values={[
-          I18n.t('label_week'),
-          I18n.t('label_month'),
-          I18n.t('label_year'),
-        ]}
-        selectedIndex={unitOfDateIndex}
-        onTabPress={handleUnitOfDateIndexChanged}
-      />
-      {routeTitles.length > 0 ? (
-        <View style={{flex: 1}}>
-          <HomeTabView
-            routeOperationsMap={routeOperationsMap}
-            titles={routeTitles}
-            groupedBy={groupedBy}
-            unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
-            changeIndex={handleTabChange}
-            onOperationPress={handleOperationPress}
-            onOperationLongPress={handleOperationLongPress}
-            setTabViewRef={setTabViewRef}
-          />
-          <RewindButton
-            visible={tabIndex < TABS_COUNT - 1}
-            onPress={goToLastTabPage}
-          />
-        </View>
-      ) : null}
-      <Fab
-        addOperation={() => navigation.navigate('Operation')}
-        addSubscription={() => navigation.navigate('Subscription')}
-      />
-      {renderOperationMenu()}
+    <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
+        <HomeMainAppBar
+          searchMode={searchMode}
+          title={
+            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
+          }
+          groupedBy={groupedBy}
+          hasFilter={!!filter}
+          menuVisible={moreMenuVisible}
+          onDropFiltersPress={handleDropFiltersButton}
+          onFilterPress={handleFiltersButton}
+          onGroupByPress={handleGroupBy}
+          onMenuButtonPress={showMoreMenu}
+          onMenuDismiss={hideMoreMenu}
+          onSearchButtonPress={showSearchBar}
+          searchValue={searchValue}
+          onHideSearchBarButtonPress={hideSearchBar}
+          onSearchValueChange={handleChangeSearchValue}
+        />
+        <SegmentedControlTab
+          values={[
+            I18n.t('label_week'),
+            I18n.t('label_month'),
+            I18n.t('label_year'),
+          ]}
+          selectedIndex={unitOfDateIndex}
+          onTabPress={handleUnitOfDateIndexChanged}
+        />
+        {routeTitles.length > 0 ? (
+          <View style={styles.mainContainer}>
+            <HomeTabView
+              routeOperationsMap={routeOperationsMap}
+              titles={routeTitles}
+              groupedBy={groupedBy}
+              unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
+              changeIndex={handleTabChange}
+              onOperationPress={handleOperationPress}
+              onOperationLongPress={handleOperationLongPress}
+              setTabViewRef={setTabViewRef}
+            />
+            <RewindButton
+              visible={tabIndex < TABS_COUNT - 1}
+              onPress={goToLastTabPage}
+            />
+          </View>
+        ) : null}
+        <Fab
+          addOperation={() => navigation.navigate('Operation', {})}
+          addSubscription={() => navigation.navigate('Subscription', {})}
+        />
+        {renderOperationMenu()}
+      </SafeAreaView>
     </View>
   );
 };

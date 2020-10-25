@@ -45,6 +45,7 @@ const glyphMap = {
   lock: 61475,
   cog: 61459,
   dots: 61761,
+  'dots-vertical': 61762,
   home: 61461,
   sync: 61473,
   bell: 61683,

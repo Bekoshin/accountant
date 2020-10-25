@@ -31,7 +31,7 @@ import Category from './entities/Category';
 import Subscription from './entities/Subscription';
 import {LineAwesomeIcon} from './constants/LineAwesomeIconSet';
 import {COLORS} from './constants/colors';
-import {TYPOGRAPHY} from "./constants/typography";
+import {TYPOGRAPHY} from './constants/typography';
 
 const Theme = {
   ...DefaultTheme,
@@ -72,24 +72,28 @@ const RootStack = () => {
         headerTitleStyle: TYPOGRAPHY.HEADER_4,
         headerTitle: () => null,
         headerLeft: () => null,
+        headerShown: false,
       }}
       initialRouteName="Tab">
       <Stack.Screen name="Tab" component={TabStack} />
       <Stack.Screen
         name="Operation"
         component={OperationScreen}
+        options={{headerShown: true}}
         initialParams={{operation: undefined}}
       />
       <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
       <Stack.Screen
         name="Subscription"
         component={SubscriptionScreen}
+        options={{headerShown: true}}
         initialParams={{subscription: undefined}}
       />
       <Stack.Screen name="Categories" component={CategoriesSreen} />
       <Stack.Screen
         name="Category"
         component={CategoryScreen}
+        options={{headerShown: true}}
         initialParams={{
           category: undefined,
           parentCategory: undefined,
@@ -98,11 +102,13 @@ const RootStack = () => {
       />
       <Stack.Screen
         name="ParentCategories"
+        options={{headerShown: true}}
         component={ParentCategoriesScreen}
       />
       <Stack.Screen
         name="Filters"
         component={FiltersScreen}
+        options={{headerShown: true}}
         initialParams={{selectedCategories: undefined}}
       />
     </Stack.Navigator>
@@ -126,9 +132,8 @@ const TabStack = () => (
     }}>
     <Tab.Screen
       name="Home"
-      component={HomeScreen}
+      component={HomeStack}
       options={{
-        tabBarLabel: 'Home',
         tabBarIcon: ({color}) => (
           <LineAwesomeIcon name="home" color={color} size={26} />
         ),
@@ -162,6 +167,22 @@ const TabStack = () => (
       }}
     />
   </Tab.Navigator>
+);
+
+export type HomeParamList = {
+  Home: undefined;
+};
+
+const NavigationHome = createStackNavigator<HomeParamList>();
+export const HomeStack = () => (
+  <NavigationHome.Navigator
+    screenOptions={{
+      headerTitleStyle: TYPOGRAPHY.HEADER_4,
+      headerTitle: () => null,
+      headerLeft: () => null,
+    }}>
+    <NavigationHome.Screen name="Home" component={HomeScreen}/>
+  </NavigationHome.Navigator>
 );
 
 const App = () => {
