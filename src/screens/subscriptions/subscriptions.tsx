@@ -1,26 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {
-  GestureResponderEvent,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
-import {RouteProp} from '@react-navigation/native';
-import {SubscriptionsAppBar} from '../../components/appBars/subscriptionsAppBar/subscriptionsAppBar';
 import I18n from '../../i18n/i18n';
 import Subscription from '../../entities/Subscription';
 import {AppState} from '../../store/store';
 import {connect} from 'react-redux';
-import {Menu, List, Appbar, Searchbar} from 'react-native-paper';
+import {List} from 'react-native-paper';
 import {
   formatNumberToDecimal,
   groupByCategory,
 } from '../../utils/OperationUtils';
 import {groupByDay} from '../../utils/SubscriptionUtils';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {styles} from './styles';
+import {Header} from '../../components/header/Header';
 
 const DAY = 'day';
 const CATEGORY = 'category';
@@ -28,18 +22,29 @@ type GroupedBy = 'day' | 'category';
 
 type SubscriptionsScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Subscriptions'>;
-  route: RouteProp<RootStackParamList, 'Subscriptions'>;
 
   subscriptions: Subscription[];
 };
 
 const SubscriptionsScreen = (props: SubscriptionsScreenProps) => {
-  const {navigation, route, subscriptions} = props;
+  const {navigation, subscriptions} = props;
 
   const [subscriptionMap, setSubscriptionMap] = useState(
     new Map<string, Subscription[]>(),
   );
   const [groupedBy, setGroupedBy] = useState<GroupedBy>(DAY);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t('subscriptions_screen')}
+        />
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     let newSubscriptionMap = new Map<string, Subscription[]>();
@@ -145,12 +150,8 @@ const SubscriptionsScreen = (props: SubscriptionsScreenProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <SubscriptionsAppBar
-        title={I18n.t('subscriptions_screen')}
-        onBackButtonPress={navigation.goBack}
-      />
-      <SafeAreaView style={{flex: 1}}>
+    <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
         {renderSubscriptionSections()}
       </SafeAreaView>
     </View>
