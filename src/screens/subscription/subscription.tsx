@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -20,7 +20,6 @@ import Subscription from '../../entities/Subscription';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 import {
   createOperationBySubscription,
   needToCreateOperation,
@@ -29,6 +28,8 @@ import Operation from '../../entities/Operation';
 import {saveOperation} from '../../utils/OperationUtils';
 import {styles} from './styles';
 import {COLORS} from '../../constants/colors';
+import {Header} from '../../components/header/Header';
+import {Button} from '../../components/button/Button';
 
 type SubscriptionScreenProps = {
   route: RouteProp<RootStackParamList, 'Subscription'>;
@@ -60,6 +61,20 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   const [amountError, setAmountError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [dayError, setDayError] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t(
+            subscription ? 'subscription_screen' : 'new_subscription_screen',
+          )}
+        />
+      ),
+    });
+  }, [navigation, subscription]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -188,13 +203,6 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
 
   return (
     <View style={styles.mainContainer}>
-      <GeneralAppBar
-        title={I18n.t(
-          subscription ? 'subscription_screen' : 'new_subscription_screen',
-        )}
-        onBackButtonPress={navigation.goBack}
-        onSaveButtonPress={handleSaveButton}
-      />
       <SafeAreaView style={styles.mainContainer}>
         <ScrollView
           bounces={false}
@@ -269,6 +277,11 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
             />
           </View>
         </ScrollView>
+        <Button
+          style={styles.saveButton}
+          label={I18n.t('action_save')}
+          onPress={handleSaveButton}
+        />
       </SafeAreaView>
     </View>
   );
