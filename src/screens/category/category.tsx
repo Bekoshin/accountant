@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -18,9 +18,10 @@ import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
 import {styles} from './styles';
 import {COLORS} from '../../constants/colors';
+import {Button} from '../../components/button/Button';
+import {Header} from '../../components/header/Header';
 
 type CategoryScreenProps = {
   route: RouteProp<RootStackParamList, 'Category'>;
@@ -32,7 +33,6 @@ const CategoryScreen = (props: CategoryScreenProps) => {
   const {navigation, route, saveCategory} = props;
   const params = route.params;
   const {category, selectedParentCategory} = params;
-  console.log('params: ', params);
 
   const [name, setName] = useState<string>(category ? category.name : '');
   const [parentCategory, setParentCategory] = useState<Category | null>(
@@ -43,6 +43,22 @@ const CategoryScreen = (props: CategoryScreenProps) => {
       : null,
   );
   const [nameError, setNameError] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t(
+            params && params.category
+              ? 'category_screen'
+              : 'new_category_screen',
+          )}
+        />
+      ),
+    });
+  }, [navigation, params]);
 
   useEffect(() => {
     if (selectedParentCategory) {
@@ -93,13 +109,6 @@ const CategoryScreen = (props: CategoryScreenProps) => {
 
   return (
     <View style={styles.mainContainer}>
-      <GeneralAppBar
-        title={I18n.t(
-          params && params.category ? 'category_screen' : 'new_category_screen',
-        )}
-        onBackButtonPress={navigation.goBack}
-        onSaveButtonPress={handleSaveButton}
-      />
       <SafeAreaView style={styles.mainContainer}>
         <ScrollView
           bounces={false}
@@ -140,6 +149,11 @@ const CategoryScreen = (props: CategoryScreenProps) => {
             </TouchableHighlight>
           </View>
         </ScrollView>
+        <Button
+          style={styles.saveButton}
+          label={I18n.t('action_save')}
+          onPress={handleSaveButton}
+        />
       </SafeAreaView>
     </View>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import {View, ScrollView, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
@@ -7,7 +7,8 @@ import Category from '../../entities/Category';
 import I18n from '../../i18n/i18n';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {GeneralAppBar} from '../../components/appBars/generalAppBar/generalAppBar';
+import {styles} from './styles';
+import {Header} from '../../components/header/Header';
 
 type ParentCategoriesProps = {
   navigation: StackNavigationProp<RootStackParamList, 'ParentCategories'>;
@@ -16,6 +17,18 @@ type ParentCategoriesProps = {
 
 const ParentCategoriesScreen = (props: ParentCategoriesProps) => {
   const {navigation, categories} = props;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Header
+          onBackButtonPress={navigation.goBack}
+          title={I18n.t('parent_categories_screen')}
+        />
+      ),
+    });
+  }, [navigation]);
 
   const handleCategoryPress = (category: Category) => {
     navigation.navigate('Category', {selectedParentCategory: category});
@@ -40,16 +53,9 @@ const ParentCategoriesScreen = (props: ParentCategoriesProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <GeneralAppBar
-        title={I18n.t('parent_categories_screen')}
-        onBackButtonPress={navigation.goBack}
-      />
-      <SafeAreaView style={{flex: 1}}>
-        <ScrollView
-          style={{flex: 1}}
-          bounces={false}
-          showsVerticalScrollIndicator={false}>
+    <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
           {renderParentCategories()}
         </ScrollView>
       </SafeAreaView>
