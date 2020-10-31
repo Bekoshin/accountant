@@ -89,7 +89,11 @@ const RootStack = () => {
         options={{headerShown: true}}
         initialParams={{subscription: undefined}}
       />
-      <Stack.Screen name="Categories" component={CategoriesSreen} />
+      <Stack.Screen
+        name="Categories"
+        component={CategoriesSreen}
+        options={{headerShown: true}}
+      />
       <Stack.Screen
         name="Category"
         component={CategoryScreen}
@@ -181,7 +185,7 @@ export const HomeStack = () => (
       headerTitle: () => null,
       headerLeft: () => null,
     }}>
-    <NavigationHome.Screen name="Home" component={HomeScreen}/>
+    <NavigationHome.Screen name="Home" component={HomeScreen} />
   </NavigationHome.Navigator>
 );
 

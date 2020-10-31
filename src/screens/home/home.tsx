@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import Operation from '../../entities/Operation';
 import {Menu} from 'react-native-paper';
-import SegmentedControlTab from 'react-native-segmented-control-tab';
 import I18n from '../../i18n/i18n';
 import {
   formatNumberToDecimal,
@@ -31,6 +30,8 @@ import {styles} from './styles';
 import {Header} from '../../components/header/Header';
 import {LineAwesomeIcon} from '../../constants/LineAwesomeIconSet';
 import {COLORS} from '../../constants/colors';
+import {Tabs} from '../../components/tabs/Tabs';
+import {PickerItem} from '../../entities/PickerItem';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -39,6 +40,11 @@ export const CATEGORY = 'category';
 export type GroupedBy = 'date' | 'category';
 
 export const TABS_COUNT = 12;
+const tabs = [
+  {id: 1, name: I18n.t('label_week')},
+  {id: 2, name: I18n.t('label_month')},
+  {id: 3, name: I18n.t('label_year')},
+];
 
 type HomeScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
@@ -53,8 +59,8 @@ type HomeScreenProps = {
 const HomeScreen = (props: HomeScreenProps) => {
   const {operations, navigation, filter} = props;
 
-  const [unitOfDateIndex, setUnitOfDateIndex] = useState(1);
-  const routeTitles = createRouteTitles(UNITS_OF_DATE[unitOfDateIndex]);
+  const [selectedTab, setSelectedTab] = useState(tabs[1]);
+  const routeTitles = createRouteTitles(UNITS_OF_DATE[selectedTab.id - 1]);
   const [tabIndex, setTabIndex] = useState(TABS_COUNT - 1);
   const [routeOperationsMap, setRouteOperationsMap] = useState(
     new Map<number, Operation[]>(),
@@ -118,10 +124,10 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   useEffect(() => {
     setRouteOperationsMap(
-      createRouteOperationsMap(operations, UNITS_OF_DATE[unitOfDateIndex]),
+      createRouteOperationsMap(operations, UNITS_OF_DATE[selectedTab.id - 1]),
     );
     console.log('CREATE ROUT OPERATIONS MAP');
-  }, [operations, unitOfDateIndex]);
+  }, [operations, selectedTab]);
 
   useEffect(() => {
     const filteredOperations = routeOperationsMap.get(tabIndex);
@@ -134,9 +140,9 @@ const HomeScreen = (props: HomeScreenProps) => {
     console.log('TAB INDEX EFFECT');
   }, [routeOperationsMap, tabIndex]);
 
-  const handleUnitOfDateIndexChanged = (index: number) => {
-    setUnitOfDateIndex(index);
-    changeRoutesTitle(routeTitles, UNITS_OF_DATE[index]);
+  const handleSelectedTabChange = (item: PickerItem) => {
+    setSelectedTab(item);
+    changeRoutesTitle(routeTitles, UNITS_OF_DATE[item.id - 1]);
     goToLastTabPage();
   };
 
@@ -232,14 +238,10 @@ const HomeScreen = (props: HomeScreenProps) => {
   return (
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.mainContainer}>
-        <SegmentedControlTab
-          values={[
-            I18n.t('label_week'),
-            I18n.t('label_month'),
-            I18n.t('label_year'),
-          ]}
-          selectedIndex={unitOfDateIndex}
-          onTabPress={handleUnitOfDateIndexChanged}
+        <Tabs
+          tabs={tabs}
+          selectedTab={selectedTab}
+          onTabPress={handleSelectedTabChange}
         />
         {routeTitles.length > 0 ? (
           <View style={styles.mainContainer}>
@@ -247,7 +249,7 @@ const HomeScreen = (props: HomeScreenProps) => {
               routeOperationsMap={routeOperationsMap}
               titles={routeTitles}
               groupedBy={groupedBy}
-              unitOfDate={UNITS_OF_DATE[unitOfDateIndex]}
+              unitOfDate={UNITS_OF_DATE[selectedTab.id - 1]}
               changeIndex={handleTabChange}
               onOperationPress={handleOperationPress}
               onOperationLongPress={handleOperationLongPress}

@@ -184,7 +184,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
       for (let childCategory of category.childCategories) {
         if (
           childCategory.isValid &&
-          !selectedCategories.find(item => item.id === childCategory.id)
+          !selectedCategories.find((item) => item.id === childCategory.id)
         ) {
           newSelectedCategories = [...newSelectedCategories, childCategory];
         }
@@ -196,13 +196,13 @@ const CategoriesScreen = (props: CategoriesProps) => {
   const unselectCategory = (category: Category) => {
     let newSelectedCategories: Category[] = [...selectedCategories];
     let index = newSelectedCategories.findIndex(
-      item => item.id === category.id,
+      (item) => item.id === category.id,
     );
     if (index !== -1) {
       newSelectedCategories.splice(index, 1);
       if (category.parentCategory) {
         index = newSelectedCategories.findIndex(
-          item =>
+          (item) =>
             category.parentCategory && item.id === category.parentCategory.id,
         );
         if (index !== -1) {
@@ -257,7 +257,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
 
 const deleteCategories = (
   categories: Category[],
-): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
+): ThunkAction<void, AppState, null, Action<string>> => async (dispatch) => {
   let storageHandler = await StorageHandler.getInstance();
   await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getCategories({
@@ -277,7 +277,4 @@ const mapDispatchToProps = {
   deleteCategories: (categories: Category[]) => deleteCategories(categories),
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CategoriesScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CategoriesScreen);
