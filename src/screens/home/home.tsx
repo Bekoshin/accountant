@@ -18,7 +18,6 @@ import {Filter} from '../../entities/Filter';
 import {applyFilter} from '../../utils/FilterUtils';
 import {Fab} from './fab/fab';
 import {RootStackParamList} from '../../App';
-import {HomeMainAppBar} from '../../components/appBars/homeMainAppBar/homeMainAppBar';
 import HomeTabView from './homeTabView/homeTabView';
 import ScrollableTabView, {
   ChangeTabProperties,
@@ -30,8 +29,8 @@ import {
 import {RewindButton} from '../../components/rewindButton/RewindButton';
 import {styles} from './styles';
 import {Header} from '../../components/header/Header';
-import {LineAwesomeIcon} from "../../constants/LineAwesomeIconSet";
-import {COLORS} from "../../constants/colors";
+import {LineAwesomeIcon} from '../../constants/LineAwesomeIconSet';
+import {COLORS} from '../../constants/colors';
 
 export type UnitOfDate = 'isoWeek' | 'month' | 'year';
 export const UNITS_OF_DATE: UnitOfDate[] = ['isoWeek', 'month', 'year'];
@@ -61,11 +60,10 @@ const HomeScreen = (props: HomeScreenProps) => {
     new Map<number, Operation[]>(),
   );
   const [total, setTotal] = useState(0);
-  const [moreMenuVisible, setMoreMenuVisible] = useState(false);
   const [operationMenuVisible, setOperationMenuVisible] = useState(false);
   const [groupedBy, setGroupedBy] = useState<GroupedBy>(DATE);
   const [searchMode, setSearchMode] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [menuAnchor, setMenuAnchor] = useState({x: 0, y: 0});
   const [selectedOperation, setSelectedOperation] = useState<Operation | null>(
     null,
@@ -73,6 +71,14 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [tabViewRef, setTabViewRef] = useState<ScrollableTabView | null>(null);
 
   useLayoutEffect(() => {
+    const handleGroupBy = async () => {
+      const attribute = groupedBy === DATE ? CATEGORY : DATE;
+      setGroupedBy(attribute);
+    };
+    const handleFiltersButton = () => {
+      navigation.navigate('Filters', {});
+    };
+
     navigation.setOptions({
       headerRightContainerStyle: styles.headerRightContainer,
       headerRight: () => (
@@ -84,19 +90,31 @@ const HomeScreen = (props: HomeScreenProps) => {
           searchButton={true}
           showSearchBar={showSearchBar}
           hideSearchBar={hideSearchBar}
-          searchQuery=''
-        >
-          <TouchableOpacity style={{marginLeft: 13 }} onPress={() => {}}>
+          searchQuery={searchQuery}
+          changeSearchQuery={setSearchQuery}>
+          <TouchableOpacity style={{marginLeft: 13}} onPress={handleGroupBy}>
             <LineAwesomeIcon
-              name="dots-vertical"
+              name={
+                groupedBy === DATE ? 'sort-alpha-down' : 'sort-numeric-down'
+              }
               size={22}
               color={COLORS.SECONDARY_DARK_1}
             />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{marginLeft: 13}}
+            onPress={handleFiltersButton}>
+            <LineAwesomeIcon
+              name="filter"
+              size={22}
+              color={COLORS.SECONDARY_DARK_1}
+            />
+            {filter ? <View style={styles.filterIconBadge} /> : null}
+          </TouchableOpacity>
         </Header>
       ),
     });
-  }, [navigation, searchMode, total]);
+  }, [navigation, searchMode, total, filter, groupedBy, searchQuery]);
 
   useEffect(() => {
     setRouteOperationsMap(
@@ -116,12 +134,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     console.log('TAB INDEX EFFECT');
   }, [routeOperationsMap, tabIndex]);
 
-  const handleGroupBy = async () => {
-    const attribute = groupedBy === DATE ? CATEGORY : DATE;
-    setGroupedBy(attribute);
-    setMoreMenuVisible(false);
-  };
-
   const handleUnitOfDateIndexChanged = (index: number) => {
     setUnitOfDateIndex(index);
     changeRoutesTitle(routeTitles, UNITS_OF_DATE[index]);
@@ -130,14 +142,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const handleTabChange = (value: ChangeTabProperties) => {
     setTabIndex(value.i);
-  };
-
-  const showMoreMenu = () => {
-    setMoreMenuVisible(true);
-  };
-
-  const hideMoreMenu = () => {
-    setMoreMenuVisible(false);
   };
 
   const showOperationMenu = () => {
@@ -154,10 +158,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const hideSearchBar = () => {
     setSearchMode(false);
-  };
-
-  const handleChangeSearchValue = (text: string) => {
-    setSearchValue(text);
   };
 
   const goToLastTabPage = () => {
@@ -186,16 +186,6 @@ const HomeScreen = (props: HomeScreenProps) => {
         },
       },
     ]);
-  };
-
-  const handleFiltersButton = () => {
-    hideMoreMenu();
-    navigation.navigate('Filters', {});
-  };
-
-  const handleDropFiltersButton = async () => {
-    hideMoreMenu();
-    await props.applyFilter(null);
   };
 
   const handleOperationPress = (operation: Operation) => {
@@ -242,24 +232,6 @@ const HomeScreen = (props: HomeScreenProps) => {
   return (
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.mainContainer}>
-        <HomeMainAppBar
-          searchMode={searchMode}
-          title={
-            I18n.t('label_total') + ': ' + formatNumberToDecimal(total) + ' ₽'
-          }
-          groupedBy={groupedBy}
-          hasFilter={!!filter}
-          menuVisible={moreMenuVisible}
-          onDropFiltersPress={handleDropFiltersButton}
-          onFilterPress={handleFiltersButton}
-          onGroupByPress={handleGroupBy}
-          onMenuButtonPress={showMoreMenu}
-          onMenuDismiss={hideMoreMenu}
-          onSearchButtonPress={showSearchBar}
-          searchValue={searchValue}
-          onHideSearchBarButtonPress={hideSearchBar}
-          onSearchValueChange={handleChangeSearchValue}
-        />
         <SegmentedControlTab
           values={[
             I18n.t('label_week'),
@@ -331,7 +303,4 @@ const mapDispatchToProps = {
   applyFilter: (filter: Filter | null) => applyFilter(filter),
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
