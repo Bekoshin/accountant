@@ -7,13 +7,13 @@ import ru from './ru';
 const locales = RNLocalize.getLocales();
 
 if (Array.isArray(locales)) {
-    I18n.locale = locales[0].languageTag;
+  I18n.locale = locales[0].languageTag;
 }
 
 I18n.fallbacks = true;
 I18n.translations = {
-    en,
-    ru,
+  en,
+  ru,
 };
 
 export default I18n;

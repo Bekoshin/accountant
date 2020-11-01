@@ -22,7 +22,7 @@ import SubscriptionsScreen from './screens/subscriptions/subscriptions';
 import SubscriptionScreen from './screens/subscription/subscription';
 import CategoriesSreen from './screens/categories/categories';
 import CategoryScreen from './screens/category/category';
-import ParentCategoriesScreen from './screens/parentCategories/parentCategories';
+import ParentCategoriesController from './screens/parentCategories/ParentCategoriesController';
 import FiltersScreen from './screens/filters/filters';
 
 import 'react-native-gesture-handler';
@@ -37,7 +37,7 @@ const Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: COLORS.BACKGROUND_1,
+    background: COLORS.BACKGROUND_2,
     card: 'white',
   },
 };
@@ -107,7 +107,7 @@ const RootStack = () => {
       <Stack.Screen
         name="ParentCategories"
         options={{headerShown: true}}
-        component={ParentCategoriesScreen}
+        component={ParentCategoriesController}
       />
       <Stack.Screen
         name="Filters"
