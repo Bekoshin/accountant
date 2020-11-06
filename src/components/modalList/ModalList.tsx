@@ -11,7 +11,7 @@ type ModalListProps<T extends BaseEntity> = {
   visible: boolean;
   onSwipeComplete: () => void;
   data: T[];
-  selectedItem: T | undefined;
+  selectedItem: T | null;
   selectedItems?: T[];
   onSelectItem: (item: T) => void;
   loading?: boolean;

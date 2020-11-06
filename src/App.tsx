@@ -21,8 +21,7 @@ import OperationScreen from './screens/operation/operation';
 import SubscriptionsScreen from './screens/subscriptions/subscriptions';
 import SubscriptionScreen from './screens/subscription/subscription';
 import CategoriesSreen from './screens/categories/categories';
-import CategoryScreen from './screens/category/category';
-import ParentCategoriesController from './screens/parentCategories/ParentCategoriesController';
+import CategoryController from './screens/category/CategoryController';
 import FiltersScreen from './screens/filters/filters';
 
 import 'react-native-gesture-handler';
@@ -54,7 +53,6 @@ export type RootStackParamList = {
   Category: {
     category?: Category;
     parentCategory?: Category;
-    selectedParentCategory?: Category;
   };
   ParentCategories: undefined;
   Filters: {selectedCategories?: Category[]};
@@ -96,18 +94,12 @@ const RootStack = () => {
       />
       <Stack.Screen
         name="Category"
-        component={CategoryScreen}
+        component={CategoryController}
         options={{headerShown: true}}
         initialParams={{
           category: undefined,
           parentCategory: undefined,
-          selectedParentCategory: undefined,
         }}
-      />
-      <Stack.Screen
-        name="ParentCategories"
-        options={{headerShown: true}}
-        component={ParentCategoriesController}
       />
       <Stack.Screen
         name="Filters"
