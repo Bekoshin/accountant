@@ -3,11 +3,11 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import Category from '../../entities/Category';
 import {TouchableRipple} from 'react-native-paper';
-import {ChildCategory} from '../childCategory/childCategory';
+import {ChildCategoryCard} from '../childCategoryCard/ChildCategoryCard';
 import I18n from '../../i18n/i18n';
 import {CheckIcon} from '../checkIcon/checkIcon';
 
-type CategoryProps = {
+type ParentCategoryCardProps = {
   category: Category;
   setCategory: (category: Category) => void;
   selectCategory: (category: Category) => void;
@@ -17,7 +17,7 @@ type CategoryProps = {
   onlySelectMode: boolean;
 };
 
-export const CategoryComponent = (props: CategoryProps) => {
+export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
   const {
     category,
     addCategory,
@@ -30,7 +30,7 @@ export const CategoryComponent = (props: CategoryProps) => {
 
   const checkIsSelected = (checkableCategory: Category): boolean => {
     let foundCategory = selectedCategories.find(
-      item => item.id === checkableCategory.id,
+      (item) => item.id === checkableCategory.id,
     );
     return !!foundCategory;
   };
@@ -66,7 +66,7 @@ export const CategoryComponent = (props: CategoryProps) => {
     backgroundColor: isSelected ? '#00000033' : 'transparent',
   };
 
-  const ChildCategories = () => {
+  const renderChildCategories = () => {
     let categoriesComponent = [];
     if (category.childCategories) {
       for (let childCategory of category.childCategories) {
@@ -74,7 +74,7 @@ export const CategoryComponent = (props: CategoryProps) => {
           childCategory.parentCategory = category; //todo maybe need change
           const childCategoryIsSelected = checkIsSelected(childCategory);
           categoriesComponent.push(
-            <ChildCategory
+            <ChildCategoryCard
               category={childCategory}
               key={childCategory.id}
               onPress={onPressHandle(childCategoryIsSelected)}
@@ -87,7 +87,7 @@ export const CategoryComponent = (props: CategoryProps) => {
       }
     }
     categoriesComponent.push(
-      <ChildCategory
+      <ChildCategoryCard
         onAddPress={() => {
           addCategory(category);
         }}
@@ -116,7 +116,7 @@ export const CategoryComponent = (props: CategoryProps) => {
           <View style={styles.header}>
             <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>
           </View>
-          <ChildCategories />
+          {renderChildCategories()}
         </View>
         <CheckIcon isSelected={isSelected} />
       </View>

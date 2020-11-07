@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {Divider} from 'react-native-paper';
 import Category from '../../entities/Category';
-import {CategoryComponent} from '../../components/category/category';
+import {ParentCategoryCard} from '../../components/parentCategoryCard/ParentCategoryCard';
 import I18n from '../../i18n/i18n';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
@@ -213,13 +213,13 @@ const CategoriesScreen = (props: CategoriesProps) => {
     }
   };
 
-  const Categories = () => {
+  const renderCategories = () => {
     let categoryComponents = [];
     for (let category of categories) {
       if (category.isParentCategory()) {
         categoryComponents.push(
           <View key={category.id}>
-            <CategoryComponent
+            <ParentCategoryCard
               category={category}
               setCategory={handleCategoryPress}
               selectCategory={selectCategory}
@@ -242,7 +242,7 @@ const CategoriesScreen = (props: CategoriesProps) => {
         bounces={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}>
-        <Categories />
+        {renderCategories()}
       </ScrollView>
       {canSetSeveralCategory ? (
         <Button

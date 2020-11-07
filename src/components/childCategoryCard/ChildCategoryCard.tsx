@@ -7,7 +7,7 @@ import Category from '../../entities/Category';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CheckIcon} from '../checkIcon/checkIcon';
 
-type ChildCategoryProps = {
+type ChildCategoryCardProps = {
   category?: Category;
   onPress?: (category: Category) => void;
   onLongPress?: (category: Category) => void;
@@ -16,7 +16,7 @@ type ChildCategoryProps = {
   isSelected?: boolean;
 };
 
-export const ChildCategory = (props: ChildCategoryProps) => {
+export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
   const {category, onPress, onLongPress, onAddPress, isSelected} = props;
 
   const onPressHandle = () => {
