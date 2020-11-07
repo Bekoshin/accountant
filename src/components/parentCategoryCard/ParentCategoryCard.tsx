@@ -1,11 +1,11 @@
 import styles from './styles';
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, TouchableHighlight, View} from 'react-native';
 import Category from '../../entities/Category';
-import {TouchableRipple} from 'react-native-paper';
 import {ChildCategoryCard} from '../childCategoryCard/ChildCategoryCard';
 import I18n from '../../i18n/i18n';
 import {CheckIcon} from '../checkIcon/checkIcon';
+import {COLORS} from '../../constants/colors';
 
 type ParentCategoryCardProps = {
   category: Category;
@@ -42,7 +42,7 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
   const isSelected = checkIsSelected(category);
   const isSelectMode = checkIsSelectMode();
 
-  const onPressHandle = (categoryIsSelected: boolean) => {
+  const handlePress = (categoryIsSelected: boolean) => {
     if (isSelectMode) {
       if (categoryIsSelected) {
         return unselectCategory;
@@ -54,7 +54,7 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
     }
   };
 
-  const onLongPressHandle = () => {
+  const handleLongPress = () => {
     if (!checkIsSelectMode()) {
       return selectCategory;
     } else {
@@ -77,8 +77,8 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
             <ChildCategoryCard
               category={childCategory}
               key={childCategory.id}
-              onPress={onPressHandle(childCategoryIsSelected)}
-              onLongPress={onLongPressHandle()}
+              onPress={handlePress(childCategoryIsSelected)}
+              onLongPress={handleLongPress()}
               isSelected={childCategoryIsSelected}
               selectMode={isSelectMode}
             />,
@@ -107,10 +107,12 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
   };
 
   return (
-    <TouchableRipple
+    <TouchableHighlight
       style={touchableStyle}
-      onPress={() => onPressHandle(isSelected)(category)}
-      onLongPress={() => onLongPressHandle()(category)}>
+      onPress={() => handlePress(isSelected)(category)}
+      onLongPress={() => handleLongPress()(category)}
+      activeOpacity={0.9}
+      underlayColor={COLORS.OUTLINE}>
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <View style={styles.header}>
@@ -120,6 +122,6 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
         </View>
         <CheckIcon isSelected={isSelected} />
       </View>
-    </TouchableRipple>
+    </TouchableHighlight>
   );
 };

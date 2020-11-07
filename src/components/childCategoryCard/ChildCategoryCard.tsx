@@ -1,11 +1,11 @@
 import styles from './styles';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableHighlight, View} from 'react-native';
 import I18n from '../../i18n/i18n';
-import {TouchableRipple} from 'react-native-paper';
 import Category from '../../entities/Category';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CheckIcon} from '../checkIcon/checkIcon';
+import {COLORS} from '../../constants/colors';
 
 type ChildCategoryCardProps = {
   category?: Category;
@@ -19,7 +19,7 @@ type ChildCategoryCardProps = {
 export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
   const {category, onPress, onLongPress, onAddPress, isSelected} = props;
 
-  const onPressHandle = () => {
+  const handlePress = () => {
     if (category && onPress) {
       onPress(category);
     } else if (onAddPress) {
@@ -27,8 +27,7 @@ export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
     }
   };
 
-  const onLongPressHandle = () => {
-    console.log('onLongPressHandle child');
+  const handleLongPress = () => {
     if (category && onLongPress) {
       onLongPress(category);
     }
@@ -71,19 +70,21 @@ export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
 
   const renderIcon = (iconName: string | undefined) => {
     if (iconName) {
-      return <Icon name={iconName} size={48} color="#5a03fc" />;
+      return <Icon name={iconName} size={48} color={COLORS.PRIMARY} />;
     }
   };
 
   return (
-    <TouchableRipple
+    <TouchableHighlight
       style={styles.touchableContainer}
-      onPress={onPressHandle}
-      onLongPress={onLongPressHandle}>
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+      activeOpacity={0.9}
+      underlayColor={COLORS.OUTLINE}>
       <View style={contentStyle}>
         {renderContent()}
         <CheckIcon isSelected={isSelected} />
       </View>
-    </TouchableRipple>
+    </TouchableHighlight>
   );
 };
