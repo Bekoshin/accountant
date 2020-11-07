@@ -1,25 +1,23 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
-import {connect} from 'react-redux';
-import {AppState} from '../../store/store';
-import {Divider} from 'react-native-paper';
-import Category from '../../entities/Category';
-import {ParentCategoryCard} from '../../components/parentCategoryCard/ParentCategoryCard';
-import I18n from '../../i18n/i18n';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {CategoriesView} from './CategoriesView';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {RouteProp} from '@react-navigation/native';
+import Category from '../../entities/Category';
+import {ThunkAction} from 'redux-thunk';
+import {AppState} from '../../store/store';
+import {Action} from 'redux';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {connect} from 'react-redux';
+import {Alert, TouchableOpacity} from 'react-native';
+import I18n from '../../i18n/i18n';
 import {styles} from './styles';
 import {Header} from '../../components/header/Header';
 import {LineAwesomeIcon} from '../../constants/LineAwesomeIconSet';
 import {COLORS} from '../../constants/colors';
-import {Button} from '../../components/button/Button';
 
-type CategoriesProps = {
+type CategoriesControllerProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Categories'>;
   route: RouteProp<RootStackParamList, 'Categories'>;
   categories: Category[];
@@ -27,11 +25,11 @@ type CategoriesProps = {
   deleteCategories: (category: Category[]) => void;
 };
 
-const CategoriesScreen = (props: CategoriesProps) => {
+const CategoriesController = (props: CategoriesControllerProps) => {
   const {navigation, route, categories, deleteCategories} = props;
   const {previousScreen} = route.params;
 
-  const canSetSeveralCategory = previousScreen === 'Filters';
+  const canSetSeveralCategories = previousScreen === 'Filters';
 
   const [selectedCategories, setSelectedCategories] = useState(
     route.params.selectedCategories || [],
@@ -99,9 +97,9 @@ const CategoriesScreen = (props: CategoriesProps) => {
           onBackButtonPress={navigation.goBack}
           title={I18n.t('categories_screen')}
           selectedCount={selectedCategories.length}
-          selectMode={canSetSeveralCategory || selectedCategories.length > 0}
+          selectMode={canSetSeveralCategories || selectedCategories.length > 0}
           unselectAllItems={dropSelectedCategories}>
-          {!canSetSeveralCategory && selectedCategories.length === 0 ? (
+          {!canSetSeveralCategories && selectedCategories.length === 0 ? (
             <TouchableOpacity onPress={handleAddCategoryAppBarButton}>
               <LineAwesomeIcon
                 name="plus"
@@ -137,21 +135,13 @@ const CategoriesScreen = (props: CategoriesProps) => {
   }, [
     navigation,
     selectedCategories.length,
-    canSetSeveralCategory,
+    canSetSeveralCategories,
     selectedCategories,
     deleteCategories,
   ]);
 
   const dropSelectedCategories = () => {
     setSelectedCategories([]);
-  };
-
-  const handleAddCategoryButton = (parentCategory?: Category) => {
-    navigation.navigate('Category', {parentCategory: parentCategory});
-  };
-
-  const handleConfirmSelectButton = () => {
-    navigation.navigate('Filters', {selectedCategories: selectedCategories});
   };
 
   const handleCategoryPress = (category: Category) => {
@@ -213,45 +203,25 @@ const CategoriesScreen = (props: CategoriesProps) => {
     }
   };
 
-  const renderCategories = () => {
-    let categoryComponents = [];
-    for (let category of categories) {
-      if (category.isParentCategory()) {
-        categoryComponents.push(
-          <View key={category.id}>
-            <ParentCategoryCard
-              category={category}
-              setCategory={handleCategoryPress}
-              selectCategory={selectCategory}
-              unselectCategory={unselectCategory}
-              selectedCategories={selectedCategories}
-              onlySelectMode={canSetSeveralCategory}
-              addCategory={handleAddCategoryButton}
-            />
-            <Divider />
-          </View>,
-        );
-      }
-    }
-    return <View>{categoryComponents}</View>;
+  const handleAddCategoryButton = (parentCategory?: Category) => {
+    navigation.navigate('Category', {parentCategory: parentCategory});
+  };
+
+  const handleConfirmSelectButton = () => {
+    navigation.navigate('Filters', {selectedCategories: selectedCategories});
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollViewContent}>
-        {renderCategories()}
-      </ScrollView>
-      {canSetSeveralCategory ? (
-        <Button
-          style={styles.saveButton}
-          label={I18n.t('action_confirm')}
-          onPress={handleConfirmSelectButton}
-        />
-      ) : null}
-    </View>
+    <CategoriesView
+      categories={categories}
+      selectedCategories={selectedCategories}
+      canSetSeveralCategories={canSetSeveralCategories}
+      onCategoryPress={handleCategoryPress}
+      selectCategory={selectCategory}
+      unselectCategory={unselectCategory}
+      onAddCategoryButtonPress={handleAddCategoryButton}
+      onConfirmSelectButtonPress={handleConfirmSelectButton}
+    />
   );
 };
 
@@ -277,4 +247,7 @@ const mapDispatchToProps = {
   deleteCategories: (categories: Category[]) => deleteCategories(categories),
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoriesScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CategoriesController);

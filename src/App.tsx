@@ -20,7 +20,7 @@ import SettingsScreen from './screens/settings/settings';
 import OperationScreen from './screens/operation/operation';
 import SubscriptionsScreen from './screens/subscriptions/subscriptions';
 import SubscriptionScreen from './screens/subscription/subscription';
-import CategoriesSreen from './screens/categories/categories';
+import CategoriesController from './screens/categories/CategoriesController';
 import CategoryController from './screens/category/CategoryController';
 import FiltersScreen from './screens/filters/filters';
 
@@ -89,7 +89,7 @@ const RootStack = () => {
       />
       <Stack.Screen
         name="Categories"
-        component={CategoriesSreen}
+        component={CategoriesController}
         options={{headerShown: true}}
       />
       <Stack.Screen
