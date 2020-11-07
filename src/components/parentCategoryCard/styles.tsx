@@ -1,4 +1,6 @@
 import {StyleSheet} from 'react-native';
+import {TYPOGRAPHY} from '../../constants/typography';
+import {COLORS} from '../../constants/colors';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -18,6 +20,10 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingHorizontal: 8,
+  },
+  parenCategoryName: {
+    ...(TYPOGRAPHY.HEADER_5 as Object),
+    color: COLORS.PRIMARY_DARK,
   },
 });
 

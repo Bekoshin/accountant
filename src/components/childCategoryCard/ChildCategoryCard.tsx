@@ -41,28 +41,22 @@ export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
   const renderContent = () => {
     if (category) {
       return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View style={styles.categoryContentContainer}>
           {renderIcon(category.iconName)}
-          <Text style={styles.headerText}>
-            {I18n.t(category.name, {defaultValue: category.name})}
-          </Text>
+          <View style={styles.nameContainer}>
+            <Text style={styles.categoryName} numberOfLines={2}>
+              {I18n.t(category.name, {defaultValue: category.name})}
+            </Text>
+          </View>
         </View>
       );
     } else {
       return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View style={styles.categoryContentContainer}>
           {renderIcon('plus')}
-          <Text style={styles.headerText}>{I18n.t('action_add')}</Text>
+          <View style={styles.nameContainer}>
+            <Text style={styles.categoryName}>{I18n.t('action_add')}</Text>
+          </View>
         </View>
       );
     }
@@ -70,7 +64,7 @@ export const ChildCategoryCard = (props: ChildCategoryCardProps) => {
 
   const renderIcon = (iconName: string | undefined) => {
     if (iconName) {
-      return <Icon name={iconName} size={48} color={COLORS.PRIMARY} />;
+      return <Icon name={iconName} size={46} color={COLORS.PRIMARY} />;
     }
   };
 

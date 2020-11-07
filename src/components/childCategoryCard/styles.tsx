@@ -1,4 +1,6 @@
 import {StyleSheet} from 'react-native';
+import {TYPOGRAPHY} from '../../constants/typography';
+import {COLORS} from '../../constants/colors';
 
 const styles = StyleSheet.create({
   touchableContainer: {
@@ -19,12 +21,22 @@ const styles = StyleSheet.create({
     width: 90,
     borderRadius: 4,
   },
+  categoryContentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   header: {
     flex: 1,
     flexDirection: 'row',
   },
-  headerText: {
-    fontSize: 14,
+  nameContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  categoryName: {
+    ...(TYPOGRAPHY.TEXT_LINK as Object),
+    color: COLORS.PRIMARY_DARK,
     textAlign: 'center',
   },
 });

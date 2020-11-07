@@ -116,7 +116,9 @@ export const ParentCategoryCard = (props: ParentCategoryCardProps) => {
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <View style={styles.header}>
-            <Text>{I18n.t(category.name, {defaultValue: category.name})}</Text>
+            <Text style={styles.parenCategoryName}>
+              {I18n.t(category.name, {defaultValue: category.name})}
+            </Text>
           </View>
           {renderChildCategories()}
         </View>
