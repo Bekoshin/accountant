@@ -1,121 +1,72 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  View,
-  ScrollView,
-  Text,
   SafeAreaView,
-  TouchableHighlight,
+  ScrollView,
   Switch,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Operation from '../../entities/Operation';
-import {Input} from '../../components/input/Input';
-import I18n from '../../i18n/i18n';
-import Category from '../../entities/Category';
-import {saveOperation} from '../../utils/OperationUtils';
-import {convertDate} from '../../utils/DateUtils';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../App';
-import {RouteProp} from '@react-navigation/native';
 import {styles} from './styles';
+import I18n from '../../i18n/i18n';
+import {Input} from '../../components/input/Input';
 import {COLORS} from '../../constants/colors';
-import {Header} from '../../components/header/Header';
+import {convertDate} from '../../utils/DateUtils';
 import {Button} from '../../components/button/Button';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Category from '../../entities/Category';
 
-type OperationProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'Operation'>;
-  route: RouteProp<RootStackParamList, 'Operation'>;
+type OperationViewProps = {
+  amount: string;
+  changeAmount: (amount: string) => void;
+  amountError: boolean;
+  hideAmountError: () => void;
 
-  saveOperation: (operation: Operation) => void;
+  category: Category | null;
+  onCategoryInputPress: () => void;
+  categoryError: boolean;
+  hideCategoryError: () => void;
+
+  date: Date;
+  changeDate: (date: Date) => void;
+  dateError: boolean;
+  hideDateError: () => void;
+
+  note: string;
+  changeNote: (note: string) => void;
+
+  isIgnored: boolean;
+  changeIsIgnored: (value: boolean) => void;
+
+  isBySubscription: boolean;
+  onSaveButtonPress: () => Promise<void>;
 };
 
-const OperationScreen = (props: OperationProps) => {
-  const {operation, selectedCategory} = props.route.params;
-  const {navigation} = props;
+export const OperationView = (props: OperationViewProps) => {
+  const {
+    amount,
+    changeAmount,
+    amountError,
+    hideAmountError,
+    category,
+    onCategoryInputPress,
+    categoryError,
+    hideCategoryError,
+    date,
+    changeDate,
+    dateError,
+    hideDateError,
+    note,
+    changeNote,
+    isIgnored,
+    changeIsIgnored,
+    isBySubscription,
+    onSaveButtonPress,
+  } = props;
 
-  const isBySubscription = operation ? !!operation.subscriptionId : false;
-  const [amount, setAmount] = useState(
-    operation ? operation.amount.toString() : '0',
-  );
-  const [category, setCategory] = useState(
-    operation ? operation.category : null,
-  );
-  const [date, setDate] = useState(operation ? operation.date : new Date());
-  const [note, setNote] = useState(operation ? operation.note : '');
-  const [isIgnored, setIsIgnored] = useState(
-    operation ? operation.isIgnored : false,
-  );
-  const [amountError, setAmountError] = useState(false);
-  const [categoryError, setCategoryError] = useState(false);
-  const [dateError, setDateError] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRightContainerStyle: styles.headerRightContainer,
-      headerRight: () => (
-        <Header
-          onBackButtonPress={navigation.goBack}
-          title={I18n.t(
-            operation ? 'operation_screen' : 'new_operation_screen',
-          )}
-        />
-      ),
-    });
-  }, [navigation, operation]);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      setCategory(selectedCategory);
-    }
-  }, [selectedCategory]);
-
-  const hideAmountError = () => {
-    setAmountError(false);
-  };
-
-  const showAmountError = () => {
-    setAmountError(true);
-  };
-
-  const hideCategoryError = () => {
-    setCategoryError(false);
-  };
-
-  const showCategoryError = () => {
-    setCategoryError(true);
-  };
-
-  const hideDateError = () => {
-    setDateError(false);
-  };
-
-  const showDateError = () => {
-    setDateError(true);
-  };
-
-  const changeAmount = (newAmount: string) => {
-    if (newAmount.match(/^\d*\.?\d*$/)) {
-      setAmount(newAmount);
-    }
-  };
-
-  const changeDate = (newDate: Date) => {
-    setDatePickerVisible(false);
-    setDate(newDate);
-  };
-
-  const changeNote = (newNote: string) => {
-    setNote(newNote);
-  };
-
-  const changeIsIgnored = () => {
-    setIsIgnored(!isIgnored);
-  };
-
-  const handleDateInputPress = () => {
-    hideDateError();
+  const showDatePicker = () => {
     setDatePickerVisible(true);
   };
 
@@ -123,50 +74,14 @@ const OperationScreen = (props: OperationProps) => {
     setDatePickerVisible(false);
   };
 
-  const allFieldsIsFilled = () => {
-    let allFieldsFilled = true;
-    if (!amount || amount === '0') {
-      allFieldsFilled = false;
-      showAmountError();
-    }
-    if (!category) {
-      allFieldsFilled = false;
-      showCategoryError();
-    }
-    if (!date) {
-      allFieldsFilled = false;
-      showDateError();
-    }
-    return allFieldsFilled;
+  const handleDateInputPress = () => {
+    hideDateError();
+    showDatePicker();
   };
 
-  const handleSaveButton = async () => {
-    console.log('HANDLE SAVE BUTTON');
-    if (allFieldsIsFilled()) {
-      try {
-        let newOperation: Operation = new Operation(
-          parseFloat(amount),
-          category as Category,
-          +date,
-          note,
-          isIgnored,
-          operation ? operation.subscriptionId : null,
-          undefined,
-          operation ? operation.id : undefined,
-        );
-        await props.saveOperation(newOperation);
-        await navigation.goBack();
-      } catch (error) {
-        console.error('HANDLE SAVE BUTTON. ERROR: ', error);
-      }
-    }
-  };
-
-  const handleCategoryInputPress = () => {
-    hideCategoryError();
-    navigation.navigate('Categories', {
-      previousScreen: 'Operation',
-    });
+  const handleChangeDate = (newDate: Date) => {
+    changeDate(newDate);
+    hideDatePicker();
   };
 
   return (
@@ -205,7 +120,7 @@ const OperationScreen = (props: OperationProps) => {
             <Text style={styles.label}>{I18n.t('label_category')}</Text>
             <TouchableHighlight
               style={styles.touchableContainer}
-              onPress={handleCategoryInputPress}
+              onPress={onCategoryInputPress}
               activeOpacity={0.9}
               underlayColor={COLORS.PRIMARY_DARK}>
               <Input
@@ -275,14 +190,14 @@ const OperationScreen = (props: OperationProps) => {
         <Button
           style={styles.saveButton}
           label={I18n.t('action_save')}
-          onPress={handleSaveButton}
+          onPress={onSaveButtonPress}
         />
         <DateTimePickerModal
           date={date}
           isVisible={datePickerVisible}
           mode="date"
           maximumDate={new Date()}
-          onConfirm={changeDate}
+          onConfirm={handleChangeDate}
           onCancel={hideDatePicker}
           headerTextIOS={I18n.t('label_choose_date')}
           cancelTextIOS={I18n.t('action_cancel')}
@@ -293,12 +208,3 @@ const OperationScreen = (props: OperationProps) => {
     </View>
   );
 };
-
-const mapStateToProps = () => ({});
-
-export default connect(
-  mapStateToProps,
-  {
-    saveOperation: (operation: Operation) => saveOperation(operation),
-  },
-)(OperationScreen);

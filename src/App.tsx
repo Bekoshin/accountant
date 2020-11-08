@@ -17,7 +17,7 @@ import HomeScreen from './screens/home/home';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
 import SettingsScreen from './screens/settings/settings';
-import OperationScreen from './screens/operation/operation';
+import OperationController from './screens/operation/OperationController';
 import SubscriptionsScreen from './screens/subscriptions/subscriptions';
 import SubscriptionScreen from './screens/subscription/subscription';
 import CategoriesController from './screens/categories/CategoriesController';
@@ -76,7 +76,7 @@ const RootStack = () => {
       <Stack.Screen name="Tab" component={TabStack} />
       <Stack.Screen
         name="Operation"
-        component={OperationScreen}
+        component={OperationController}
         options={{headerShown: true}}
         initialParams={{operation: undefined}}
       />

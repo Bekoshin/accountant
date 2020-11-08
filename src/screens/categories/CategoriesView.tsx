@@ -4,8 +4,8 @@ import {styles} from './styles';
 import {Button} from '../../components/button/Button';
 import I18n from '../../i18n/i18n';
 import {ParentCategoryCard} from '../../components/parentCategoryCard/ParentCategoryCard';
-import {Divider} from 'react-native-paper';
 import Category from '../../entities/Category';
+import {Separator} from '../../components/separator/Separator';
 
 type CategoriesViewProps = {
   categories: Category[];
@@ -45,7 +45,7 @@ export const CategoriesView = (props: CategoriesViewProps) => {
               onlySelectMode={canSetSeveralCategories}
               addCategory={onAddCategoryButtonPress}
             />
-            <Divider />
+            <Separator />
           </View>,
         );
       }
