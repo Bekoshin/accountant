@@ -1,44 +1,35 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Alert,
-  Text,
-  TouchableHighlight,
-} from 'react-native';
-import {connect} from 'react-redux';
-import {AppState} from '../../store/store';
-import {Input} from '../../components/input/Input';
-import I18n from '../../i18n/i18n';
-import Category from '../../entities/Category';
-import {ThunkAction} from 'redux-thunk';
-import {Action} from 'redux';
-import StorageHandler from '../../storage/StorageHandler';
-import {ACTION_TYPES} from '../../store/ACTION_TYPES';
-import Subscription from '../../entities/Subscription';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Subscription from '../../entities/Subscription';
+import Operation from '../../entities/Operation';
+import Category from '../../entities/Category';
+import {styles} from './styles';
+import {Header} from '../../components/header/Header';
+import I18n from '../../i18n/i18n';
 import {
   createOperationBySubscription,
   needToCreateOperation,
 } from '../../utils/SubscriptionUtils';
-import Operation from '../../entities/Operation';
+import {Alert} from 'react-native';
+import {SubscriptionView} from './SubscriptionView';
+import {ThunkAction} from 'redux-thunk';
+import {AppState} from '../../store/store';
+import {Action} from 'redux';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
+import {connect} from 'react-redux';
 import {saveOperation} from '../../utils/OperationUtils';
-import {styles} from './styles';
-import {COLORS} from '../../constants/colors';
-import {Header} from '../../components/header/Header';
-import {Button} from '../../components/button/Button';
 
-type SubscriptionScreenProps = {
+type SubscriptionControllerProps = {
   route: RouteProp<RootStackParamList, 'Subscription'>;
   navigation: StackNavigationProp<RootStackParamList, 'Subscription'>;
   saveSubscription: (subscription: Subscription) => Promise<void>;
   createOperation: (operation: Operation) => void;
 };
 
-const SubscriptionScreen = (props: SubscriptionScreenProps) => {
+const SubscriptionController = (props: SubscriptionControllerProps) => {
   const {navigation, route, createOperation} = props;
   const {subscription, selectedCategory} = route.params;
 
@@ -159,8 +150,7 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
     return allFieldsFilled;
   };
 
-  const handleSaveButton = async () => {
-    console.log('HANDLE SAVE BUTTON');
+  const handleSaveButtonPress = async () => {
     if (checkFields()) {
       try {
         let newSubscription: Subscription;
@@ -202,99 +192,35 @@ const SubscriptionScreen = (props: SubscriptionScreenProps) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <SafeAreaView style={styles.mainContainer}>
-        <ScrollView
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollViewContent}
-          keyboardShouldPersistTaps="handled">
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{I18n.t('label_name')}</Text>
-            <Input
-              value={name}
-              error={nameError}
-              onFocus={hideNameError}
-              onChangeText={setName}
-              placeholder={I18n.t('placeholder_write_name')}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{I18n.t('label_amount')}</Text>
-            <Input
-              value={amount}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              error={amountError}
-              onFocus={hideAmountError}
-              onChangeText={changeAmount}
-              placeholder="0 ₽"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{I18n.t('label_category')}</Text>
-            <TouchableHighlight
-              style={styles.touchableContainer}
-              onPress={handleCategoryInputPress}
-              activeOpacity={0.9}
-              underlayColor={COLORS.PRIMARY_DARK}>
-              <Input
-                value={
-                  category
-                    ? I18n.t(category.name, {
-                        defaultValue: category.name,
-                      })
-                    : ''
-                }
-                editable={false}
-                error={categoryError}
-                onFocus={hideCategoryError}
-                onChangeText={() => {}}
-                pointerEvents="none"
-                placeholder={I18n.t('placeholder_select_category')}
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{I18n.t('label_day')}</Text>
-            <Input
-              value={day}
-              keyboardType="numeric"
-              selectTextOnFocus={true}
-              error={dayError}
-              onFocus={hideDayError}
-              onChangeText={changeDay}
-              placeholder={I18n.t('placeholder_write_day')}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{I18n.t('label_note')}</Text>
-            <Input
-              value={note}
-              onChangeText={setNote}
-              multiline={true}
-              placeholder={I18n.t('placeholder_write_note')}
-            />
-          </View>
-        </ScrollView>
-        <Button
-          style={styles.saveButton}
-          label={I18n.t('action_save')}
-          onPress={handleSaveButton}
-        />
-      </SafeAreaView>
-    </View>
+    <SubscriptionView
+      name={name}
+      changeName={setName}
+      nameError={nameError}
+      hideNameError={hideNameError}
+      amount={amount}
+      changeAmount={changeAmount}
+      amountError={amountError}
+      hideAmountError={hideAmountError}
+      category={category}
+      onCategoryInputPress={handleCategoryInputPress}
+      categoryError={categoryError}
+      hideCategoryError={hideCategoryError}
+      day={day}
+      changeDay={changeDay}
+      dayError={dayError}
+      hideDayError={hideDayError}
+      note={note}
+      changeNote={setNote}
+      onSaveButtonPress={handleSaveButtonPress}
+    />
   );
 };
 
 const saveSubscription = (
   subscription: Subscription,
-): ThunkAction<
-  Promise<void>,
-  AppState,
-  null,
-  Action<string>
-> => async dispatch => {
+): ThunkAction<Promise<void>, AppState, null, Action<string>> => async (
+  dispatch,
+) => {
   let storageHandler = await StorageHandler.getInstance();
   await storageHandler.saveSubscription(subscription);
   const subscriptions = await storageHandler.getAllSubscriptions();
@@ -306,11 +232,8 @@ const saveSubscription = (
 
 const mapStateToProps = () => ({});
 
-export default connect(
-  mapStateToProps,
-  {
-    saveSubscription: (subscription: Subscription) =>
-      saveSubscription(subscription),
-    createOperation: (operation: Operation) => saveOperation(operation),
-  },
-)(SubscriptionScreen);
+export default connect(mapStateToProps, {
+  saveSubscription: (subscription: Subscription) =>
+    saveSubscription(subscription),
+  createOperation: (operation: Operation) => saveOperation(operation),
+})(SubscriptionController);

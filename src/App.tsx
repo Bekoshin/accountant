@@ -19,7 +19,7 @@ import Analytics from './screens/analytics/analytics';
 import SettingsScreen from './screens/settings/settings';
 import OperationController from './screens/operation/OperationController';
 import SubscriptionsScreen from './screens/subscriptions/subscriptions';
-import SubscriptionScreen from './screens/subscription/subscription';
+import SubscriptionController from './screens/subscription/SubscriptionController';
 import CategoriesController from './screens/categories/CategoriesController';
 import CategoryController from './screens/category/CategoryController';
 import FiltersScreen from './screens/filters/filters';
@@ -83,7 +83,7 @@ const RootStack = () => {
       <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
       <Stack.Screen
         name="Subscription"
-        component={SubscriptionScreen}
+        component={SubscriptionController}
         options={{headerShown: true}}
         initialParams={{subscription: undefined}}
       />
