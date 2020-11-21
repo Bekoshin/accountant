@@ -69,7 +69,7 @@ export const groupByCategory = (
   entities: OperationEntity[],
 ): Map<string, OperationEntity[]> => {
   let entitiesMap = new Map<string, OperationEntity[]>();
-  entities.forEach(entity => {
+  entities.forEach((entity) => {
     const categoryId = entity.category.id;
     if (categoryId) {
       const entityIdStr = categoryId.toString();

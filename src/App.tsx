@@ -18,7 +18,7 @@ import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
 import SettingsScreen from './screens/settings/settings';
 import OperationController from './screens/operation/OperationController';
-import SubscriptionsScreen from './screens/subscriptions/subscriptions';
+import SubscriptionsController from './screens/subscriptions/SubscriptionsController';
 import SubscriptionController from './screens/subscription/SubscriptionController';
 import CategoriesController from './screens/categories/CategoriesController';
 import CategoryController from './screens/category/CategoryController';
@@ -80,7 +80,7 @@ const RootStack = () => {
         options={{headerShown: true}}
         initialParams={{operation: undefined}}
       />
-      <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
+      <Stack.Screen name="Subscriptions" component={SubscriptionsController} options={{headerShown: true}}/>
       <Stack.Screen
         name="Subscription"
         component={SubscriptionController}
