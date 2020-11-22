@@ -13,6 +13,8 @@ export default {
   message_successful_data_wipe: 'Successful data wipe',
   message_successful_restore_default_categories:
     'Default categories successfully restored',
+  message_delete_subscription:
+    'Are you sure you want to delete the selected subscription',
 
   label_required: 'Required',
   label_amount: 'Amount',

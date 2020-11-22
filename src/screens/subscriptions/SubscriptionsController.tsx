@@ -58,11 +58,16 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
     });
   };
 
+  const handleDeleteSubscriptionPress = async (subscription: Subscription) => {
+
+  };
+
   return (
     <SubscriptionsView
       subscriptionMap={subscriptionMap}
       groupedBy={groupedBy}
       onSubscriptionPress={handleSubscriptionPress}
+      deleteSubscription={handleDeleteSubscriptionPress}
     />
   );
 };

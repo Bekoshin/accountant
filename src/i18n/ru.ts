@@ -13,6 +13,8 @@ export default {
   message_successful_data_wipe: 'Все данные успешно удалены',
   message_successful_restore_default_categories:
     'Категории по умолчанию успешно восстановлены',
+  message_delete_subscription:
+    'Вы действительно хотите удалить выбранную подписку',
 
   label_required: 'Обязательно',
   label_amount: 'Сумма',
