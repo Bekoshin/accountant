@@ -22,7 +22,7 @@ type CategoriesControllerProps = {
   route: RouteProp<RootStackParamList, 'Categories'>;
   categories: Category[];
 
-  deleteCategories: (category: Category[]) => void;
+  deleteCategories: (category: Category[]) => Promise<void>;
 };
 
 const CategoriesController = (props: CategoriesControllerProps) => {
@@ -54,9 +54,8 @@ const CategoriesController = (props: CategoriesControllerProps) => {
         },
         {
           text: 'OK',
-          onPress: () => {
-            console.log('CATEGORIES FOR DELETE: ', selectedCategories);
-            deleteCategories(selectedCategories);
+          onPress: async () => {
+            await deleteCategories(selectedCategories);
             dropSelectedCategories();
           },
         },
@@ -227,8 +226,10 @@ const CategoriesController = (props: CategoriesControllerProps) => {
 
 const deleteCategories = (
   categories: Category[],
-): ThunkAction<void, AppState, null, Action<string>> => async (dispatch) => {
-  let storageHandler = await StorageHandler.getInstance();
+): ThunkAction<Promise<void>, AppState, null, Action<string>> => async (
+  dispatch,
+) => {
+  const storageHandler = await StorageHandler.getInstance();
   await storageHandler.markCategoriesInvalid(categories);
   const updatedCategories = await storageHandler.getCategories({
     isValid: true,

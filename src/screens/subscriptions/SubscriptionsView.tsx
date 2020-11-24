@@ -15,7 +15,12 @@ type SubscriptionsViewProps = {
 };
 
 export const SubscriptionsView = (props: SubscriptionsViewProps) => {
-  const {subscriptionMap, groupedBy, onSubscriptionPress} = props;
+  const {
+    subscriptionMap,
+    groupedBy,
+    onSubscriptionPress,
+    deleteSubscription,
+  } = props;
 
   const renderSection = ({item}: {item: [string, Subscription[]]}) => {
     const subscriptions = item[1];
@@ -52,9 +57,10 @@ export const SubscriptionsView = (props: SubscriptionsViewProps) => {
       };
       subscriptionComponents.push(
         <SubscriptionCard
+          key={subscription.id}
           style={styles.subscriptionCard}
           subscription={subscription}
-          onDeletePress={async () => {}}
+          onDeletePress={deleteSubscription}
           onPress={handlePress}
         />,
       );

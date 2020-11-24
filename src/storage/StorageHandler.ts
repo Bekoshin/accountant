@@ -83,14 +83,14 @@ export default class StorageHandler {
   ): Promise<Operation[]> => {
     let operations: Operation[] = [];
     if (this._operationRepo) {
-      const builder: SelectQueryBuilder<
-        Operation
-      > = this._operationRepo.createQueryBuilder('o');
+      const builder: SelectQueryBuilder<Operation> = this._operationRepo.createQueryBuilder(
+        'o',
+      );
       let filtered = false;
 
       if (filter.categories.length > 0) {
         builder.where('o.category_id IN (:...categories)', {
-          categories: filter.categories.map(category => category.id),
+          categories: filter.categories.map((category) => category.id),
         });
         filtered = true;
       }
@@ -211,9 +211,9 @@ export default class StorageHandler {
     const {isValid, isDefault} = options;
     let categories: Category[] = [];
     if (this._categoryRepo) {
-      const builder: SelectQueryBuilder<
-        Category
-      > = await this._categoryRepo.createQueryBuilder('category');
+      const builder: SelectQueryBuilder<Category> = await this._categoryRepo.createQueryBuilder(
+        'category',
+      );
 
       let filtered = false;
       if (isValid !== undefined) {
@@ -268,7 +268,7 @@ export default class StorageHandler {
 
   public markCategoriesInvalid = async (categories: Category[]) => {
     if (this._categoryRepo) {
-      const invalidCategories: Category[] = categories.map(category => {
+      const invalidCategories: Category[] = categories.map((category) => {
         category.isValid = false;
         return category;
       });
@@ -295,6 +295,12 @@ export default class StorageHandler {
         .getMany();
     }
     return subscriptions;
+  };
+
+  public deleteSubscription = async (subscription: Subscription) => {
+    if (this._subscriptionRepo) {
+      await this._subscriptionRepo.remove(subscription);
+    }
   };
 
   public wipeAllData = async () => {

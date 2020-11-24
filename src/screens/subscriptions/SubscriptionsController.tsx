@@ -11,16 +11,23 @@ import {SubscriptionsView} from './SubscriptionsView';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
 import {DAY, CATEGORY} from '../../constants/strings';
+import {Alert} from 'react-native';
+import {ThunkAction} from 'redux-thunk';
+import {Action} from 'redux';
+import StorageHandler from '../../storage/StorageHandler';
+import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 
 export type GroupedBy = 'day' | 'category';
 
 type SubscriptionsControllerProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Subscriptions'>;
   subscriptions: Subscription[];
+
+  deleteSubscription: (subscription: Subscription) => Promise<void>;
 };
 
 const SubscriptionController = (props: SubscriptionsControllerProps) => {
-  const {navigation, subscriptions} = props;
+  const {navigation, subscriptions, deleteSubscription} = props;
 
   const [subscriptionMap, setSubscriptionMap] = useState(
     new Map<string, Subscription[]>(),
@@ -59,7 +66,34 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
   };
 
   const handleDeleteSubscriptionPress = async (subscription: Subscription) => {
+    const message = createMessageForDeleteSubscription(subscription);
+    Alert.alert(I18n.t('label_deleting'), message, [
+      {
+        text: I18n.t('action_cancel'),
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          await deleteSubscription(subscription);
+        },
+      },
+    ]);
+  };
 
+  const createMessageForDeleteSubscription = (
+    subscription: Subscription,
+  ): string => {
+    let message: string;
+    message =
+      I18n.t('message_delete_subscription') +
+      ' "' +
+      I18n.t(subscription.name, {
+        defaultValue: subscription.name,
+      }) +
+      '" ?';
+    return message;
   };
 
   return (
@@ -72,8 +106,30 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
   );
 };
 
+const deleteSubscription = (
+  subscription: Subscription,
+): ThunkAction<Promise<void>, AppState, null, Action<string>> => async (
+  dispatch,
+) => {
+  const storageHandler = await StorageHandler.getInstance();
+  await storageHandler.deleteSubscription(subscription);
+  const updatedSubscriptions = await storageHandler.getAllSubscriptions();
+  dispatch({
+    type: ACTION_TYPES.SUBSCRIPTIONS_LOADED,
+    subscriptions: updatedSubscriptions,
+  });
+};
+
 const mapStateToProps = (state: AppState) => ({
   subscriptions: state.subscriptionReducer.subscriptions,
 });
 
-export default connect(mapStateToProps)(SubscriptionController);
+const mapDispatchToProps = {
+  deleteSubscription: (subscription: Subscription) =>
+    deleteSubscription(subscription),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SubscriptionController);
