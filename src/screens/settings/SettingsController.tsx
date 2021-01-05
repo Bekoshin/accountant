@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {AppState} from '../../store/store';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../App';
 import {StackNavigationProp} from '@react-navigation/stack';
 import I18n from '../../i18n/i18n';
-import {Divider, List} from 'react-native-paper';
-import StorageHandler, {DEFAULT_CATEGORIES_LENGTH} from '../../storage/StorageHandler';
+import StorageHandler, {
+  DEFAULT_CATEGORIES_LENGTH,
+} from '../../storage/StorageHandler';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
 import Subscription from '../../entities/Subscription';
 import Operation from '../../entities/Operation';
 import Category from '../../entities/Category';
+import {SettingsView} from './SettingsView';
 
-type SettingsScreenProps = {
+type SettingsControllerProps = {
   route: RouteProp<RootStackParamList, 'Tab'>;
   navigation: StackNavigationProp<RootStackParamList, 'Tab'>;
   operations: Operation[];
@@ -25,7 +26,7 @@ type SettingsScreenProps = {
   loadCategoriesToStore: (categories: Category[]) => void;
 };
 
-const SettingsScreen = (props: SettingsScreenProps) => {
+const SettingsController = (props: SettingsControllerProps) => {
   const {
     navigation,
     operations,
@@ -45,7 +46,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
     if (categories.length === 0) {
       setCanRestoreDefaultCategories(true);
     } else if (
-      categories.filter(item => item.isDefault).length !==
+      categories.filter((item) => item.isDefault).length !==
       DEFAULT_CATEGORIES_LENGTH //todo maybe need change
     ) {
       setCanRestoreDefaultCategories(true);
@@ -84,7 +85,9 @@ const SettingsScreen = (props: SettingsScreenProps) => {
           isValid: false,
           isDefault: true,
         });
-        deletedDefaultCategories.forEach(category => (category.isValid = true));
+        deletedDefaultCategories.forEach(
+          (category) => (category.isValid = true),
+        );
         await storageHandler.saveCategories(deletedDefaultCategories);
       }
       restoredDefaultCategories = await storageHandler.getCategories({
@@ -98,7 +101,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
     }
   };
 
-  const handleWipeAllDataButton = async () => {
+  const handleWipeAllDataPress = async () => {
     try {
       const storageHandler = await StorageHandler.getInstance();
       await storageHandler.wipeAllData();
@@ -110,56 +113,29 @@ const SettingsScreen = (props: SettingsScreenProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1}}>
-        <ScrollView>
-          <List.Item
-            title={I18n.t('label_category_management')}
-            onPress={handleCategoryManagementPress}
-          />
-          <Divider />
-          <List.Item
-            title={I18n.t('label_subscription_management')}
-            onPress={handleSubscriptionManagementPress}
-          />
-          <Divider />
-          <List.Item
-            titleStyle={{
-              color: canRestoreDefaultCategories ? undefined : 'gray',
-            }}
-            disabled={!canRestoreDefaultCategories}
-            title={I18n.t('label_restore_default_categories')}
-            onPress={handleRestoreDefaultCategoriesPress}
-          />
-          <Divider />
-          <List.Item
-            titleStyle={{color: canWipeData ? undefined : 'gray'}}
-            disabled={!canWipeData}
-            title={I18n.t('label_wipe_all_data')}
-            onPress={handleWipeAllDataButton}
-          />
-          <Divider />
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+    <SettingsView
+      canRestoreDefaultCategories={canRestoreDefaultCategories}
+      canWipeData={canWipeData}
+      onCategoryManagementPress={handleCategoryManagementPress}
+      onSubscriptionManagementPress={handleSubscriptionManagementPress}
+      onRestoreDefaultCategoriesPress={handleRestoreDefaultCategoriesPress}
+      onWipeDataPress={handleWipeAllDataPress}
+    />
   );
 };
 
 const loadCategoriesToStore = (
   categories: Category[],
-): ThunkAction<void, AppState, null, Action<string>> => dispatch => {
+): ThunkAction<void, AppState, null, Action<string>> => (dispatch) => {
   dispatch({
     type: ACTION_TYPES.CATEGORIES_LOADED,
     categories: categories,
   });
 };
 
-const clearAllData = (): ThunkAction<
-  void,
-  AppState,
-  null,
-  Action<string>
-> => dispatch => {
+const clearAllData = (): ThunkAction<void, AppState, null, Action<string>> => (
+  dispatch,
+) => {
   dispatch({
     type: ACTION_TYPES.OPERATIONS_LOADED,
     operations: new Map(),
@@ -185,7 +161,4 @@ const mapDispatchToProps = {
   loadCategoriesToStore,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SettingsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsController);

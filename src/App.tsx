@@ -16,7 +16,7 @@ import WelcomeScreen from './screens/welcome/welсome';
 import HomeScreen from './screens/home/home';
 import Shopping from './screens/shopping/shopping';
 import Analytics from './screens/analytics/analytics';
-import SettingsScreen from './screens/settings/settings';
+import SettingsController from './screens/settings/SettingsController';
 import OperationController from './screens/operation/OperationController';
 import SubscriptionsController from './screens/subscriptions/SubscriptionsController';
 import SubscriptionController from './screens/subscription/SubscriptionController';
@@ -80,7 +80,11 @@ const RootStack = () => {
         options={{headerShown: true}}
         initialParams={{operation: undefined}}
       />
-      <Stack.Screen name="Subscriptions" component={SubscriptionsController} options={{headerShown: true}}/>
+      <Stack.Screen
+        name="Subscriptions"
+        component={SubscriptionsController}
+        options={{headerShown: true}}
+      />
       <Stack.Screen
         name="Subscription"
         component={SubscriptionController}
@@ -155,7 +159,7 @@ const TabStack = () => (
     />
     <Tab.Screen
       name="Settings"
-      component={SettingsScreen}
+      component={SettingsController}
       options={{
         tabBarIcon: ({color}) => (
           <LineAwesomeIcon name="cog" color={color} size={26} />

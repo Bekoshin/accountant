@@ -5,19 +5,15 @@ import Subscription from '../../entities/Subscription';
 import {styles} from './styles';
 import {Header} from '../../components/header/Header';
 import I18n from '../../i18n/i18n';
-import {groupByCategory} from '../../utils/OperationUtils';
 import {groupByDay} from '../../utils/SubscriptionUtils';
 import {SubscriptionsView} from './SubscriptionsView';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../App';
-import {DAY, CATEGORY} from '../../constants/strings';
 import {Alert} from 'react-native';
 import {ThunkAction} from 'redux-thunk';
 import {Action} from 'redux';
 import StorageHandler from '../../storage/StorageHandler';
 import {ACTION_TYPES} from '../../store/ACTION_TYPES';
-
-export type GroupedBy = 'day' | 'category';
 
 type SubscriptionsControllerProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Subscriptions'>;
@@ -32,7 +28,6 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
   const [subscriptionMap, setSubscriptionMap] = useState(
     new Map<string, Subscription[]>(),
   );
-  const [groupedBy, setGroupedBy] = useState<GroupedBy>(DAY);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -48,16 +43,9 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
 
   useEffect(() => {
     let newSubscriptionMap = new Map<string, Subscription[]>();
-    if (groupedBy === CATEGORY) {
-      newSubscriptionMap = groupByCategory(subscriptions) as Map<
-        string,
-        Subscription[]
-      >;
-    } else {
-      newSubscriptionMap = groupByDay(subscriptions);
-    }
+    newSubscriptionMap = groupByDay(subscriptions);
     setSubscriptionMap(newSubscriptionMap);
-  }, [groupedBy, subscriptions]);
+  }, [subscriptions]);
 
   const handleSubscriptionPress = (subscription: Subscription) => {
     navigation.navigate('Subscription', {
@@ -99,7 +87,6 @@ const SubscriptionController = (props: SubscriptionsControllerProps) => {
   return (
     <SubscriptionsView
       subscriptionMap={subscriptionMap}
-      groupedBy={groupedBy}
       onSubscriptionPress={handleSubscriptionPress}
       deleteSubscription={handleDeleteSubscriptionPress}
     />

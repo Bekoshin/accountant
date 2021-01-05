@@ -2,41 +2,26 @@ import React from 'react';
 import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import {styles} from './styles';
 import Subscription from '../../entities/Subscription';
-import {GroupedBy} from './SubscriptionsController';
 import I18n from '../../i18n/i18n';
-import {DAY} from '../../constants/strings';
 import {SubscriptionCard} from '../../components/cards/subscriptionCard/SubscriptionCard';
 
 type SubscriptionsViewProps = {
   subscriptionMap: Map<string, Subscription[]>;
-  groupedBy: GroupedBy;
   onSubscriptionPress: (subscription: Subscription) => void;
   deleteSubscription: (subscription: Subscription) => Promise<void>;
 };
 
 export const SubscriptionsView = (props: SubscriptionsViewProps) => {
-  const {
-    subscriptionMap,
-    groupedBy,
-    onSubscriptionPress,
-    deleteSubscription,
-  } = props;
+  const {subscriptionMap, onSubscriptionPress, deleteSubscription} = props;
 
   const renderSection = ({item}: {item: [string, Subscription[]]}) => {
     const subscriptions = item[1];
     if (subscriptions.length > 0) {
       let key;
       let subheader;
-      if (groupedBy === DAY) {
-        key = subscriptions[0].day;
-        subheader =
-          subscriptions[0].day.toString() + ' ' + I18n.t('label_day_of_month');
-      } else {
-        key = subscriptions[0].category.id;
-        subheader = I18n.t(subscriptions[0].category.name, {
-          defaultValue: subscriptions[0].category.name,
-        });
-      }
+      key = subscriptions[0].day;
+      subheader =
+        subscriptions[0].day.toString() + ' ' + I18n.t('label_day_of_month');
 
       return (
         <View style={styles.sectionContainer} key={key}>
