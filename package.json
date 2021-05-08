@@ -47,7 +47,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.20"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@babel/core": "7.6.4",
